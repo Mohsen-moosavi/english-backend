@@ -33,7 +33,7 @@ const PhraseGame = require("./models/phrasegame")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Q4game = require("./models/q4game")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
-const q4gameQuestion = require("./models/q4gamequestion")(db);
+const q4gameQuestion = require("./models/q4gamequestions")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Role = require("./models/role")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
@@ -68,7 +68,7 @@ User.hasMany(Course, {
     foreignKey: "teacher"
   });
   
-Course.belongsTo(User, { foreignKey: "teacher", as: "teacher" });
+Course.belongsTo(User, { foreignKey: "teacher" });
 
 
 Level.hasMany(Course, {
@@ -82,14 +82,14 @@ Q4game.hasMany(q4gameQuestion, {
     foreignKey: "q4game_id"
   });
   
-q4gameQuestion.belongsTo(Q4game, { foreignKey: "q4game_id", as: "question" });
+q4gameQuestion.belongsTo(Q4game, { foreignKey: "q4game_id", as: "q4game" });
 
 
 MedaiGame.hasMany(MedaiGameQuestion, {
     foreignKey: "mediagame_id"
   });
   
-MedaiGameQuestion.belongsTo(MedaiGame, { foreignKey: "mediagame_id", as: "question" });
+MedaiGameQuestion.belongsTo(MedaiGame, { foreignKey: "mediagame_id", as: "mediagame" });
 
 
 Role.hasMany(User, {

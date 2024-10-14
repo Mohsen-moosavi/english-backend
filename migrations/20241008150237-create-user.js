@@ -48,17 +48,6 @@ module.exports = {
         type : Sequelize.STRING,
         allowNull : true,
       },
-      role: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
-        defaultValue: "user",
-      },
       score : {
         type : Sequelize.STRING,
         allowNull : false,

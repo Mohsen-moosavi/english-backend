@@ -47,17 +47,6 @@ const User = (sequelize) =>
         type : DataTypes.STRING,
         allowNull : true,
       },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
-        defaultValue: "user",
-      },
       score : {
         type : DataTypes.STRING,
         allowNull : false,

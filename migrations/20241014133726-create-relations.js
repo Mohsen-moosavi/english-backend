@@ -58,7 +58,7 @@ module.exports = {
 
       await queryInterface.addColumn("users", "role_id", {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "roles",
           key: "id",
