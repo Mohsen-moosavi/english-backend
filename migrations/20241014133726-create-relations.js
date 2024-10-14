@@ -34,7 +34,7 @@ module.exports = {
         },
       });
 
-      await queryInterface.addColumn("q4gameQuestions", "q4game_id", {
+      await queryInterface.addColumn("q4gamequestions", "q4game_id", {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
@@ -330,7 +330,7 @@ module.exports = {
       await queryInterface.removeColumn("courses", "book_collection_id");
       await queryInterface.removeColumn("courses", "teacher");
       await queryInterface.removeColumn("courses", "level_id");
-      await queryInterface.removeColumn("q4gameQuestions", "q4game_id");
+      await queryInterface.removeColumn("q4gamequestions", "q4game_id");
       await queryInterface.removeColumn("medaiGameQuestions", "mediagame_id");
       await queryInterface.removeColumn("users", "role_id");
       await queryInterface.removeColumn("users", "level_id");

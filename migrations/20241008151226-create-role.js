@@ -14,8 +14,14 @@ module.exports = {
         allowNull: false,
       },
       jobs : {
-        type : Sequelize.ARRAY(Sequelize.STRING),
-        allowNull : false
+        type: Sequelize.STRING,
+        allowNull: false,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        },
       }
     });
   },

@@ -15,8 +15,14 @@ const Roles = (sequelize) =>
         allowNull: false,
       },
       jobs : {
-        type : DataTypes.ARRAY(DataTypes.STRING),
-        allowNull : false
+        type: DataTypes.STRING,
+        allowNull: false,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        },
       }
     },
     {

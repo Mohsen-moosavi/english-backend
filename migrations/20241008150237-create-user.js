@@ -31,13 +31,14 @@ module.exports = {
         allowNull: true,
       },
       friends : {
-        type: Sequelize.ARRAY(Sequelize.TEXT),
-        allowNull : true
-      },
-      score: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue : 0
+        type: Sequelize.STRING,
+        allowNull: true,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        }
       },
       password: {
         type: Sequelize.STRING,
@@ -48,9 +49,20 @@ module.exports = {
         allowNull : true,
       },
       role: {
-        type: Sequelize.ARRAY(Sequelize.STRING),
+        type: Sequelize.STRING,
         allowNull: false,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        },
         defaultValue: "user",
+      },
+      score : {
+        type : Sequelize.STRING,
+        allowNull : false,
+        defaultValue : '0'
       },
       createdAt: {
         allowNull: false,
@@ -64,7 +76,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('users');
   }
 };

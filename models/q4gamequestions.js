@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 
 const Q4question = (sequelize) =>
   sequelize.define(
-    "q4gameQuestion",
+    "q4gamequestions",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -36,7 +36,7 @@ const Q4question = (sequelize) =>
       }
     },
     {
-      tableName: "q4gameQuestions",
+      tableName: "q4gamequestions",
       timestamps: false
     }
   );

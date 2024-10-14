@@ -29,13 +29,15 @@ const User = (sequelize) =>
         allowNull: true,
       },
       friends : {
-        type: DataTypes.ARRAY(DataTypes.TEXT),
+        type: DataTypes.STRING,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        },
+        defaultValue: "user",
         allowNull : true
-      },
-      score: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue : 0
       },
       password: {
         type: DataTypes.STRING,
@@ -46,9 +48,20 @@ const User = (sequelize) =>
         allowNull : true,
       },
       role: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.STRING,
         allowNull: false,
+        get() {
+            return this.getDataValue('favColors').split(';')
+        },
+        set(val) {
+           this.setDataValue('favColors',val.join(';'));
+        },
         defaultValue: "user",
+      },
+      score : {
+        type : DataTypes.STRING,
+        allowNull : false,
+        defaultValue : '0'
       },
     },
     {
