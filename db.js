@@ -19,6 +19,8 @@ const Book = require("./models/book")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Course = require("./models/courses")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Ban = require("./models/ban")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const FreeBook = require("./models/freebook")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const LevelCourse = require("./models/level-course")(db);
@@ -234,4 +236,21 @@ Course.belongsToMany(Level, {
 
 
 
-module.exports = { db };
+module.exports = { 
+  db,
+  Article,
+  Book,
+  Course,
+  FreeBook,
+  Level,
+  MedaiGameQuestion,
+  MedaiGame,
+  PhraseGame,
+  Q4game,
+  q4gameQuestion,
+  Role,
+  Session,
+  Tag,
+  User,
+  Ban,
+  UserSessionGames };

@@ -1,5 +1,5 @@
 //* Helper function to format success response
-const successResponse = (res, statusCode = 200, message, data) => {
+function successResponse (res, statusCode = 200, message, data) {
   return res
     .status(statusCode)
     .json({success: true, status: statusCode, message , data });
@@ -7,7 +7,7 @@ const successResponse = (res, statusCode = 200, message, data) => {
 
 //* Helper function to format error response
 
-const errorResponse = (res, statusCode, message, data) => {
+function errorResponse (res, statusCode, message, data) {
   console.log({ message, data }); // Log error details ...
 
   return res

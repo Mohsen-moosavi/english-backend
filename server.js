@@ -1,10 +1,8 @@
 const { db } = require("./db");
 const app = require("./app");
 const configs = require("./configs");
-const { Redis } = require("ioredis");
 const dotenv = require("dotenv")
-
-const redis = new Redis(configs.redis.uri);
+const redis = require("./redis")
 
 async function startServer() {
 
