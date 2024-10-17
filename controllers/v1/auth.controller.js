@@ -1,12 +1,14 @@
-const {User , Ban} = require("./../../db");
+const {User , Ban, db, Role} = require("./../../db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const configs = require("../../configs");
 const redis = require("../../redis");
 const { validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../../utils/responses");
-const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, getBannedPhonePattern, editOtpAttempts } = require("../../utils/redis.utils");
+const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, getBannedPhonePattern, editOtpAttempts, getVerifiedPhonePattern } = require("../../utils/redis.utils");
 const { sendSMSOtp } = require("../../services/otp");
+const { Op } = require("sequelize");
+const { generateAccessToken, generateRefreshToken } = require("../../utils/auth.utils");
 
 const sendOtp = async (req, res, next) => {
   try {
@@ -101,7 +103,80 @@ const verifyCode = async (req,res,next)=>{
   }
 }
 
+const register = async (req,res,next)=>{
+  try{
+    const validationError = validationResult(req)
+
+    if(validationError?.errors && validationError?.errors[0]){
+      return errorResponse(res,400,validationError.errors[0].msg)
+    }
+
+    const {phone, name, username, password} = req.body;
+
+    const validPhone = await redis.get(getVerifiedPhonePattern(phone))
+    if(!validPhone){
+      return errorResponse(res,400,"مشکل در تشخیص شماره تلفن!")
+    }
+
+    const olduser = await User.findOne({
+      where : {[Op.or] : [{username} ,{phone}]},
+      raw : true
+    })
+
+    console.log('oldUser===>' , olduser)
+
+    if(olduser){
+      if(olduser.username === username){
+        return errorResponse(res,409,"این نام کاربری، قبلا ثبت شده است!")
+      }
+      return errorResponse(res,409,"این شماره تلفن، قبلا ثبت شده است!")
+    }
+
+    const userCount = await User.count()
+
+    console.log('user===>' , userCount)
+
+    let userRole;
+
+    if(userCount > 0){
+      userRole = await Role.findOrCreate({
+        where : {name : 'user'},
+        defaults : {jobs : ['']},
+        raw : true
+      })
+    }else{
+      userRole = await Role.findOrCreate({
+        where : {name : 'manager'},
+        defaults : {
+          jobs : ['admin']
+        },
+        raw : true
+      })
+    }
+
+    console.log('userRole===>' , userRole[0])
+
+    const hashedPassword = bcrypt.hashSync(password,12)
+
+    const newUser = await User.create({
+      name,
+      username,
+      phone,
+      password : hashedPassword,
+      role_id : userRole[0].id
+    })
+
+    const accessToken = generateAccessToken(username)
+    const RefreshToken = generateRefreshToken(username)
+
+    successResponse(res,201,'شما با موفقیت ثبت نام شدید.',{accessToken , RefreshToken})
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   sendOtp,
-  verifyCode
+  verifyCode,
+  register
 }

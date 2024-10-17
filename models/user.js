@@ -29,14 +29,7 @@ const User = (sequelize) =>
         allowNull: true,
       },
       friends : {
-        type: DataTypes.STRING,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
-        defaultValue: "user",
+        type: DataTypes.JSON,
         allowNull : true
       },
       password: {

@@ -13,16 +13,11 @@ const Roles = (sequelize) =>
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique : true
       },
       jobs : {
-        type: DataTypes.STRING,
-        allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
+        type: DataTypes.JSON,
+        allowNull : false
       }
     },
     {

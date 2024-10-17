@@ -30,14 +30,8 @@ module.exports = {
         allowNull : false
       },
       files : {
-        type: Sequelize.STRING,
+        type: Sequelize.JSON,
         allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
       },
       slug : {
         type : Sequelize.STRING,

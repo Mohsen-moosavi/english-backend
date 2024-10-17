@@ -31,14 +31,8 @@ const Books = (sequelize) =>
         allowNull : false
       },
       files : {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
       },
       slug : {
         type : DataTypes.STRING,

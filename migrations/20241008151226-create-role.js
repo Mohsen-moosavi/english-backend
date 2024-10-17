@@ -12,16 +12,11 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique : true
       },
       jobs : {
-        type: Sequelize.STRING,
-        allowNull: false,
-        get() {
-            return this.getDataValue('favColors').split(';')
-        },
-        set(val) {
-           this.setDataValue('favColors',val.join(';'));
-        },
+        type: Sequelize.JSON,
+        allowNull : false
       }
     });
   },
