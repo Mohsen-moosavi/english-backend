@@ -8,17 +8,23 @@ function sendOtpValidator(){
     ]
 }
 
+function resendOtpValidator(){
+    return [
+        body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد.")
+    ]
+}
+
 function verifyOtpValidator(){
     return [
         body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد."),
-        body('code').isString().isLength({max:5 , min:5}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
+        body('code').isLength({max:5 , min:5}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
             /^[0-9]+$/).withMessage("کد فرستاده شده، معتبر نیست")
     ]
 }
 
 function registerValidator(){
     return [
-        body('verifiedPhoneCode').isString().isLength({max:4 , min:4}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
+        body('verifiedPhoneCode').isString().isLength({max:4}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
             /^[0-9]+$/).withMessage("کد فرستاده شده، معتبر نیست"),
         body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد."),
         body('name').isString().isLength({min:3 , max:20}).withMessage("نام باید بین 3 تا 20 کاراکتر باشد."),
@@ -71,6 +77,7 @@ function getCaptchaValidator(){
 
 module.exports = {
     sendOtpValidator,
+    resendOtpValidator,
     verifyOtpValidator,
     registerValidator,
     loginValidator,

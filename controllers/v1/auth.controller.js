@@ -72,6 +72,57 @@ const sendOtp = async (req, res, next) => {
   }
 }
 
+const resendOtp = async (req,res,next)=>{
+  try{
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
+    const { phone} = req.body;
+
+    const banPhone = await Ban.findOne({
+      attributes: ["id"],
+      where: { phone }
+    })
+
+    if (banPhone) {
+      return errorResponse(res, 422, "این شماره تلفن، مسدود شده است!")
+    }
+
+    const oldUser = await User.findOne({
+      attributes: ["id"],
+      where: { phone }
+    })
+
+    if (oldUser) {
+      return errorResponse(res, 409, "این شماره تلفن، قبلا ثبت شده است!")
+    }
+
+    const banPhoneForVerified = await redis.get(getBannedPhonePattern(phone))
+
+    if (banPhoneForVerified) {
+      await redis.del(`captcha:${uuid}`)
+      return errorResponse(res, 429, "لطفا بعدا تلاش کنید.")
+    }
+
+    const { expired, remainingTime } = await getOtpDetails(phone)
+
+    if (!expired) {
+      return successResponse(res, 200, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
+    }
+
+    const otp = await generateOtp(phone);
+
+    await sendSMSOtp(phone, otp);
+
+    return successResponse(res, 200, `کد با موفقیت ارسال شد`);
+  } catch (error) {
+    next(error)
+  }
+}
+
 const verifyCode = async (req, res, next) => {
   try {
     const validationError = validationResult(req)
@@ -366,6 +417,7 @@ const getCaptcha = async (req, res, next) => {
 
 module.exports = {
   sendOtp,
+  resendOtp,
   verifyCode,
   register,
   login,
