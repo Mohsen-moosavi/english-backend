@@ -36,7 +36,7 @@ module.exports = {
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       grate : {
         type : Sequelize.STRING,

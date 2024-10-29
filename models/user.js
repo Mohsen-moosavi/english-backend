@@ -34,7 +34,7 @@ const User = (sequelize) =>
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       grate : {
         type : DataTypes.STRING,

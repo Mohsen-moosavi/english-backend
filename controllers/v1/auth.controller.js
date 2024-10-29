@@ -246,7 +246,7 @@ const login = async (req, res, next) => {
 
     const { phone, password } = req.body;
 
-    const user = await User.findOne({ phone })
+    const user = await User.findOne({ where : {phone} })
 
     if (!user) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
@@ -364,7 +364,7 @@ const resetPassword = async (req, res, next) => {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
 
-    const user = await User.findOne({ phone })
+    const user = await User.findOne({where : {phone} })
     if (!user) {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
