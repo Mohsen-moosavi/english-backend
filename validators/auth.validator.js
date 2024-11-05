@@ -47,12 +47,6 @@ function loginValidator(){
     ]
 }
 
-function forgetPasswordValidator(){
-    return [
-        body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد."),
-    ]
-}
-
 function resetPasswordValidator(){
     return [
         body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد."),
@@ -81,7 +75,6 @@ module.exports = {
     verifyOtpValidator,
     registerValidator,
     loginValidator,
-    forgetPasswordValidator,
     resetPasswordValidator,
     getCaptchaValidator
 }

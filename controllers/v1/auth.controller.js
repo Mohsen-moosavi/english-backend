@@ -7,7 +7,7 @@ const configs = require("../../configs");
 const redis = require("../../redis");
 const { validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../../utils/responses");
-const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, getBannedPhonePattern, editOtpAttempts, getVerifiedPhonePattern, getRefreshPasswordOtpDetails, generateForgetPasswordOtp, getRefreshPasswordOtpRedisPattern, editRefreshPasswordOtpAttempts } = require("../../utils/redis.utils");
+const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, getBannedPhonePattern, editOtpAttempts, getVerifiedPhonePattern, generateForgetPasswordOtp, getRefreshPasswordOtpRedisPattern, editRefreshPasswordOtpAttempts, getّforgetPassOtpDetails } = require("../../utils/redis.utils");
 const { sendSMSOtp } = require("../../services/otp");
 const { Op, where } = require("sequelize");
 const { generateAccessToken, generateRefreshToken } = require("../../utils/auth.utils");
@@ -276,25 +276,33 @@ const forgetPassword = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { phone } = req.body;
+    const { phone , uuid , captcha } = req.body;
+
+    const redisCaptcha = await redis.get(`captcha:${uuid}`)
+    if (redisCaptcha !== captcha) {
+      await redis.del(`captcha:${uuid}`)
+      return errorResponse(res, 422, "کد امنیتی اشتباه است.")
+    }
 
     const user = await User.findOne({ where: { phone } })
 
-
     if (!user) {
+      await redis.del(`captcha:${uuid}`)
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
     const banPhoneForVerified = await redis.get(getBannedPhonePattern(phone))
 
     if (banPhoneForVerified) {
+      await redis.del(`captcha:${uuid}`)
       return errorResponse(res, 429, "لطفا بعدا تلاش کنید.")
     }
 
-    const { expired, remainingTime } = await getRefreshPasswordOtpDetails(phone)
+    const { expired, remainingTime } = await getّforgetPassOtpDetails(phone)
 
     if (!expired) {
-      return successResponse(res, 200, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
+      await redis.del(`captcha:${uuid}`)
+      return successResponse(res, 409, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
     }
 
     const otp = await generateForgetPasswordOtp(phone);
@@ -320,6 +328,7 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
 
 
     const redisOtp = await redis.get(getRefreshPasswordOtpRedisPattern(phone));
+    console.log("redisOtp====>", await redis.keys("*"))
     const [savedOtp, attempts] = redisOtp?.split(',') || []
 
     if (!savedOtp) {
@@ -412,6 +421,56 @@ const getCaptcha = async (req, res, next) => {
   }
 }
 
+const resendForgetpassOtp = async (req,res,next) =>{
+  try{
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
+    const { phone} = req.body;
+
+    const banPhone = await Ban.findOne({
+      attributes: ["id"],
+      where: { phone }
+    })
+
+    if (banPhone) {
+      return errorResponse(res, 422, "این شماره تلفن، مسدود شده است!")
+    }
+
+    const oldUser = await User.findOne({
+      attributes: ["id"],
+      where: { phone }
+    })
+
+    if (!oldUser) {
+      return errorResponse(res, 409, "کاربر یافت نشد!")
+    }
+
+    const banPhoneForVerified = await redis.get(getBannedPhonePattern(phone))
+
+    if (banPhoneForVerified) {
+      return errorResponse(res, 429, "لطفا بعدا تلاش کنید.")
+    }
+
+    const { expired, remainingTime } = await getّforgetPassOtpDetails(phone)
+
+    if (!expired) {
+      return successResponse(res, 200, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
+    }
+
+    const otp = await generateForgetPasswordOtp(phone);
+
+    await sendSMSOtp(phone, otp);
+
+    return successResponse(res, 200, `کد با موفقیت ارسال شد`);
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 
@@ -424,5 +483,6 @@ module.exports = {
   forgetPassword,
   verifyForgetPasswordOtp,
   resetPassword,
-  getCaptcha
+  getCaptcha,
+  resendForgetpassOtp
 }

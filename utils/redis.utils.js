@@ -51,13 +51,13 @@ async function getOtpDetails(phone) {
     return getExpiredRemainingOtp(otp , remainingTime)
 }
 
-
-async function getRefreshPasswordOtpDetails(phone) {
+async function getّforgetPassOtpDetails(phone) {
     const otp = await redis.get(getRefreshPasswordOtpRedisPattern(phone));
     const remainingTime = await redis.ttl(getRefreshPasswordOtpRedisPattern(phone)); // Second
     
     return getExpiredRemainingOtp(otp , remainingTime)
 }
+
 
 async function getRandomCode(length){
     const digist = "0123456789";
@@ -120,5 +120,5 @@ module.exports = {
     getRefreshPasswordOtpRedisPattern,
     generateForgetPasswordOtp,
     editRefreshPasswordOtpAttempts,
-    getRefreshPasswordOtpDetails
+    getّforgetPassOtpDetails
 }
