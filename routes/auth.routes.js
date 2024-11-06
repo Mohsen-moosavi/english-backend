@@ -14,5 +14,6 @@ router.post("/verify-forget-code",verifyOtpValidator(),controller.verifyForgetPa
 router.post("/reset-Password",resetPasswordValidator() ,controller.resetPassword)
 router.post("/get-captcha",getCaptchaValidator(),controller.getCaptcha)
 router.post("/resend-forgetpass-otp" , resendOtpValidator() , controller.resendForgetpassOtp)
+router.post("/login-admins" , loginValidator() , controller.loginAdmins)
 
 module.exports = router

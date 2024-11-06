@@ -201,13 +201,13 @@ const register = async (req, res, next) => {
 
     if (userCount > 0) {
       userRole = await Role.findOrCreate({
-        where: { name: 'user' },
+        where: { name: 'USER' },
         defaults: { jobs: [''] },
         raw: true
       })
     } else {
       userRole = await Role.findOrCreate({
-        where: { name: 'manager' },
+        where: { name: 'MANAGER' },
         defaults: {
           jobs: ['admin']
         },
@@ -228,9 +228,9 @@ const register = async (req, res, next) => {
     })
 
     const accessToken = generateAccessToken(username)
-    const RefreshToken = generateRefreshToken(username)
+    const refreshToken = generateRefreshToken(username)
 
-    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.', { accessToken, RefreshToken })
+    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.', { accessToken, refreshToken })
   } catch (err) {
     next(err);
   }
@@ -259,9 +259,9 @@ const login = async (req, res, next) => {
     }
 
     const accessToken = generateAccessToken(user.username)
-    const RefreshToken = generateRefreshToken(user.username)
+    const refreshToken = generateRefreshToken(user.username)
 
-    successResponse(res, 200, 'شما با موفقیت وارد شدید.', { accessToken, RefreshToken })
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.', { accessToken, refreshToken })
 
   } catch (error) {
     next(error)
@@ -384,9 +384,9 @@ const resetPassword = async (req, res, next) => {
     user.save()
 
     const accessToken = generateAccessToken(user.username)
-    const RefreshToken = generateRefreshToken(user.username)
+    const refreshToken = generateRefreshToken(user.username)
 
-    successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.', { accessToken, RefreshToken })
+    successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.', { accessToken, refreshToken })
   } catch (error) {
     next(error)
   }
@@ -471,6 +471,54 @@ const resendForgetpassOtp = async (req,res,next) =>{
   }
 }
 
+const loginAdmins = async (req,res,next)=>{
+  try {
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
+    const { phone, password } = req.body;
+
+    const user = await User.findOne({ 
+      where : {phone},
+      raw : true,
+      include : [
+        {
+          model : Role,
+          attributes : ['name'],
+          as : 'role'
+        }
+      ]
+    })
+
+    if (!user) {
+      return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
+    }
+
+    console.log('user===>' , user['role.name'])
+    
+    if (user['role.name'] === 'USER') {
+      return errorResponse(res, 401, 'شما مجاز به ورود نیستید!')
+    }
+
+    const isValidPassword = bcrypt.compareSync(password, user.password)
+
+    if (!isValidPassword) {
+      return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
+    }
+
+    const accessToken = generateAccessToken(user.username)
+    const refreshToken = generateRefreshToken(user.username)
+
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.', { accessToken, refreshToken })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 
@@ -484,5 +532,6 @@ module.exports = {
   verifyForgetPasswordOtp,
   resetPassword,
   getCaptcha,
-  resendForgetpassOtp
+  loginAdmins,
+  resendForgetpassOtp,
 }
