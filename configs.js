@@ -25,6 +25,11 @@ module.exports = {
     },
   
     domain: process.env.DOMAIN,
+
+    originDomain : {
+      frontUserDomain : process.env.FRONT_USER_DOMAIN,
+      frontAdminDomain : process.env.FRONT_ADMIN_DOMAIN,
+    },
   
     isProduction: process.env.NODE_ENV === "production",
   };

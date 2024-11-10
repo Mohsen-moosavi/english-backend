@@ -11,6 +11,7 @@ const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, g
 const { sendSMSOtp } = require("../../services/otp");
 const { Op, where } = require("sequelize");
 const { generateAccessToken, generateRefreshToken } = require("../../utils/auth.utils");
+const { path } = require("../../app");
 
 const sendOtp = async (req, res, next) => {
   try {
@@ -230,7 +231,23 @@ const register = async (req, res, next) => {
     const accessToken = generateAccessToken(username)
     const refreshToken = generateRefreshToken(username)
 
-    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.', { accessToken, refreshToken })
+    res.cookie('accessToken', accessToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      expired : 5 * 60 * 1000
+    })
+
+    res.cookie('refrshToken', refreshToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      maxAge : 30 * 24 * 60 * 60 * 1000
+    })
+
+    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.')
   } catch (err) {
     next(err);
   }
@@ -261,7 +278,23 @@ const login = async (req, res, next) => {
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    successResponse(res, 200, 'شما با موفقیت وارد شدید.', { accessToken, refreshToken })
+    res.cookie('accessToken', accessToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      expired : 5 * 60 * 1000
+    })
+
+    res.cookie('refrshToken', refreshToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      maxAge : 30 * 24 * 60 * 60 * 1000
+    })
+
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.')
 
   } catch (error) {
     next(error)
@@ -386,7 +419,23 @@ const resetPassword = async (req, res, next) => {
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.', { accessToken, refreshToken })
+    res.cookie('accessToken', accessToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      expired : 5 * 60 * 1000
+    })
+
+    res.cookie('refrshToken', refreshToken , {
+      origin : configs.originDomain.frontUserDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      maxAge : 30 * 24 * 60 * 60 * 1000
+    })
+
+    successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.')
   } catch (error) {
     next(error)
   }
@@ -490,14 +539,12 @@ const loginAdmins = async (req,res,next)=>{
           attributes : ['name'],
           as : 'role'
         }
-      ]
+      ],
     })
 
     if (!user) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
-
-    console.log('user===>' , user['role.name'])
     
     if (user['role.name'] === 'USER') {
       return errorResponse(res, 401, 'شما مجاز به ورود نیستید!')
@@ -509,10 +556,28 @@ const loginAdmins = async (req,res,next)=>{
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
+    delete user.password
+
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    successResponse(res, 200, 'شما با موفقیت وارد شدید.', { accessToken, refreshToken })
+    res.cookie('accessToken', accessToken , {
+      origin : configs.originDomain.frontAdminDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      expired : 5 * 60 * 1000
+    })
+
+    res.cookie('refrshToken', refreshToken , {
+      origin : configs.originDomain.frontAdminDomain,
+      secure : true,
+      httpOnly: true,
+      path : '/',
+      maxAge : 30 * 24 * 60 * 60 * 1000
+    })
+
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.' )
 
   } catch (error) {
     next(error)

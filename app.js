@@ -1,16 +1,19 @@
 const express = require("express");
-const corsOrigin = require("./middlewares/headers.middleware");
+// const corsOrigin = require("./middlewares/headers.middleware");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 const allroutes = require("./routes/index.routes");
 const {errorResponse} = require('./utils/responses')
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
+const configs = require("./configs");
 
 // const captchaController = require("./controllers/captcha");
 
 const app = express();
 
-app.use(corsOrigin);
+// app.use(corsOrigin);
+app.use(cors({origin:[configs.originDomain.frontAdminDomain , configs.originDomain.frontUserDomain] , credentials : true}))
 app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
