@@ -1,6 +1,7 @@
 const {Router} = require("express")
 const controller = require("../controllers/v1/auth.controller")
 const { sendOtpValidator, registerValidator, loginValidator, verifyOtpValidator, resetPasswordValidator, getCaptchaValidator, resendOtpValidator } = require("../validators/auth.validator")
+const { authMiddleware } = require("../middlewares/auth.middleware")
 
 const router = Router()
 
@@ -15,5 +16,8 @@ router.post("/reset-Password",resetPasswordValidator() ,controller.resetPassword
 router.post("/get-captcha",getCaptchaValidator(),controller.getCaptcha)
 router.post("/resend-forgetpass-otp" , resendOtpValidator() , controller.resendForgetpassOtp)
 router.post("/login-admins" , loginValidator() , controller.loginAdmins)
+router.get("/get-me",authMiddleware , controller.getMe)
+router.post("/refresh-token", controller.refreshToken)
+router.post("/logout", controller.logout)
 
 module.exports = router

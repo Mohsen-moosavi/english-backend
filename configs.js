@@ -32,5 +32,11 @@ module.exports = {
     },
   
     isProduction: process.env.NODE_ENV === "production",
+
+    roles : {
+      manager : 'MANAGER',
+      user : 'USER',
+      teacher : 'TEACHER'
+    }
   };
   

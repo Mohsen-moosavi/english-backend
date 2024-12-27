@@ -43,9 +43,13 @@ module.exports = {
         allowNull : true,
       },
       score : {
-        type : Sequelize.STRING,
+        type : Sequelize.INTEGER,
         allowNull : false,
         defaultValue : '0'
+      },
+      refreshToken : {
+        type : Sequelize.STRING,
+        allowNull : true
       },
       created_at: {
         allowNull: false,

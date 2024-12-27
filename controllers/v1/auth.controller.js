@@ -10,7 +10,7 @@ const { errorResponse, successResponse } = require("../../utils/responses");
 const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, getBannedPhonePattern, editOtpAttempts, getVerifiedPhonePattern, generateForgetPasswordOtp, getRefreshPasswordOtpRedisPattern, editRefreshPasswordOtpAttempts, getّforgetPassOtpDetails } = require("../../utils/redis.utils");
 const { sendSMSOtp } = require("../../services/otp");
 const { Op, where } = require("sequelize");
-const { generateAccessToken, generateRefreshToken } = require("../../utils/auth.utils");
+const { generateAccessToken, generateRefreshToken, verifyAccessToken, refreshTokenHandler } = require("../../utils/auth.utils");
 const { path } = require("../../app");
 
 const sendOtp = async (req, res, next) => {
@@ -73,15 +73,15 @@ const sendOtp = async (req, res, next) => {
   }
 }
 
-const resendOtp = async (req,res,next)=>{
-  try{
+const resendOtp = async (req, res, next) => {
+  try {
     const validationError = validationResult(req)
 
     if (validationError?.errors && validationError?.errors[0]) {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { phone} = req.body;
+    const { phone } = req.body;
 
     const banPhone = await Ban.findOne({
       attributes: ["id"],
@@ -220,31 +220,40 @@ const register = async (req, res, next) => {
 
     const hashedPassword = bcrypt.hashSync(password, 12)
 
-    await User.create({
-      name,
-      username,
-      phone,
-      password: hashedPassword,
-      role_id: userRole[0].id
-    })
 
     const accessToken = generateAccessToken(username)
     const refreshToken = generateRefreshToken(username)
 
-    res.cookie('accessToken', accessToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
-      httpOnly: true,
-      path : '/',
-      expired : 5 * 60 * 1000
+    await User.create({
+      name,
+      username,
+      phone,
+      refreshToken,
+      password: hashedPassword,
+      role_id: userRole[0].id
     })
 
-    res.cookie('refrshToken', refreshToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
+
+    res.cookie('accessToken', accessToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+      maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
+    })
+
+    const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+    res.cookie('expireTime', accessTokenExpireTime, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+    })
+
+    res.cookie('refreshToken', refreshToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
       httpOnly: true,
-      path : '/',
-      maxAge : 30 * 24 * 60 * 60 * 1000
+      path: '/api/v1/auth/',
+      maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
     successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.')
@@ -263,7 +272,7 @@ const login = async (req, res, next) => {
 
     const { phone, password } = req.body;
 
-    const user = await User.findOne({ where : {phone} })
+    const user = await User.findOne({ where: { phone } })
 
     if (!user) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
@@ -275,23 +284,34 @@ const login = async (req, res, next) => {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
+    console.log("cookies===>", req.cookies)
+
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    res.cookie('accessToken', accessToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
-      httpOnly: true,
-      path : '/',
-      expired : 5 * 60 * 1000
+    user.refreshToken = refreshToken;
+    await user.save()
+
+    res.cookie('accessToken', accessToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+      maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
     })
 
-    res.cookie('refrshToken', refreshToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
+    const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+    res.cookie('expireTime', accessTokenExpireTime, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+    })
+
+    res.cookie('refreshToken', refreshToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
       httpOnly: true,
-      path : '/',
-      maxAge : 30 * 24 * 60 * 60 * 1000
+      path: '/api/v1/auth/',
+      maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
     successResponse(res, 200, 'شما با موفقیت وارد شدید.')
@@ -309,7 +329,7 @@ const forgetPassword = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { phone , uuid , captcha } = req.body;
+    const { phone, uuid, captcha } = req.body;
 
     const redisCaptcha = await redis.get(`captcha:${uuid}`)
     if (redisCaptcha !== captcha) {
@@ -406,33 +426,40 @@ const resetPassword = async (req, res, next) => {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
 
-    const user = await User.findOne({where : {phone} })
+    const user = await User.findOne({ where: { phone } })
     if (!user) {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
 
     const hashedPassword = bcrypt.hashSync(password, 12)
 
-    user.password = hashedPassword;
-    user.save()
-
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    res.cookie('accessToken', accessToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
-      httpOnly: true,
-      path : '/',
-      expired : 5 * 60 * 1000
+    user.password = hashedPassword;
+    user.refreshToken = refreshToken;
+    user.save()
+
+    res.cookie('accessToken', accessToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+      maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
     })
 
-    res.cookie('refrshToken', refreshToken , {
-      origin : configs.originDomain.frontUserDomain,
-      secure : true,
+    const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+    res.cookie('expireTime', accessTokenExpireTime, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
+      path: '/',
+    })
+
+    res.cookie('refreshToken', refreshToken, {
+      origin: configs.originDomain.frontUserDomain,
+      secure: true,
       httpOnly: true,
-      path : '/',
-      maxAge : 30 * 24 * 60 * 60 * 1000
+      path: '/api/v1/auth/',
+      maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
     successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.')
@@ -450,7 +477,7 @@ const getCaptcha = async (req, res, next) => {
       await redis.del(`captcha:${uuid}`);
     }
 
-    console.log("keys===>",await redis.keys("*"))
+    console.log("keys===>", await redis.keys("*"))
 
     const captcha = svgCpatcha.create({
       size: 5,
@@ -464,21 +491,21 @@ const getCaptcha = async (req, res, next) => {
 
     await redis.set(`captcha:${newUuid}`, captcha.text.toLowerCase(), "EX", 60 * 5);
 
-    return successResponse(res, 200, 'کد کپچا با موفقیت ایجاد شد.', { uuid : newUuid, captcha: captcha.data })
+    return successResponse(res, 200, 'کد کپچا با موفقیت ایجاد شد.', { uuid: newUuid, captcha: captcha.data })
   } catch (error) {
     next(error)
   }
 }
 
-const resendForgetpassOtp = async (req,res,next) =>{
-  try{
+const resendForgetpassOtp = async (req, res, next) => {
+  try {
     const validationError = validationResult(req)
 
     if (validationError?.errors && validationError?.errors[0]) {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { phone} = req.body;
+    const { phone } = req.body;
 
     const banPhone = await Ban.findOne({
       attributes: ["id"],
@@ -520,7 +547,7 @@ const resendForgetpassOtp = async (req,res,next) =>{
   }
 }
 
-const loginAdmins = async (req,res,next)=>{
+const loginAdmins = async (req, res, next) => {
   try {
     const validationError = validationResult(req)
 
@@ -530,14 +557,13 @@ const loginAdmins = async (req,res,next)=>{
 
     const { phone, password } = req.body;
 
-    const user = await User.findOne({ 
-      where : {phone},
-      raw : true,
-      include : [
+    const user = await User.findOne({
+      where: { phone },
+      include: [
         {
-          model : Role,
-          attributes : ['name'],
-          as : 'role'
+          model: Role,
+          attributes: ['name'],
+          as: 'role'
         }
       ],
     })
@@ -545,7 +571,7 @@ const loginAdmins = async (req,res,next)=>{
     if (!user) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
-    
+
     if (user['role.name'] === 'USER') {
       return errorResponse(res, 401, 'شما مجاز به ورود نیستید!')
     }
@@ -556,34 +582,184 @@ const loginAdmins = async (req,res,next)=>{
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
-    delete user.password
-
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
 
-    res.cookie('accessToken', accessToken , {
-      origin : configs.originDomain.frontAdminDomain,
-      secure : true,
-      httpOnly: true,
-      path : '/',
-      expired : 5 * 60 * 1000
+    user.refreshToken = refreshToken;
+
+    user.save();
+
+    res.cookie('accessToken', accessToken, {
+      origin: configs.originDomain.frontAdminDomain,
+      secure: true,
+      path: '/',
+      expired: configs.auth.accessTokenExpiresInSeconds * 1000
     })
 
-    res.cookie('refrshToken', refreshToken , {
-      origin : configs.originDomain.frontAdminDomain,
-      secure : true,
-      httpOnly: true,
-      path : '/',
-      maxAge : 30 * 24 * 60 * 60 * 1000
+    const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+    res.cookie('expireTime', accessTokenExpireTime, {
+      origin: configs.originDomain.frontAdminDomain,
+      secure: true,
+      path: '/',
     })
 
-    successResponse(res, 200, 'شما با موفقیت وارد شدید.' )
+    res.cookie('refreshToken', refreshToken, {
+      origin: configs.originDomain.frontAdminDomain,
+      secure: true,
+      httpOnly: true,
+      path: '/api/v1/auth/',
+      maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
+    })
+
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.')
 
   } catch (error) {
     next(error)
   }
 }
 
+const getMe = async (req, res, next) => {
+  try {
+
+    const user = req.user;
+    console.log("user====>" , user)
+
+    successResponse(res,200,"", {user})
+  } catch (error) {
+    next(error)
+  }
+}
+
+const refreshToken = async (req, res, next) => {
+  try {
+    const isAdmin = req.query.admin
+    const cookies = req.cookies;
+    if (!cookies?.refreshToken) return errorResponse(res, 401, "مشکل در احراز کاربر");
+    const refreshToken = cookies.refreshToken;
+    res.clearCookie('refreshToken');
+    
+    let foundUser;
+    if(isAdmin){
+      const userRole = await Role.findOne({ where: { name : 'USER' }});
+      foundUser = await User.findOne({ where: { refreshToken , role_id : {[Op.notLike] : `${userRole?._id ? userRole?._id : ''}`}}});
+      console.log('user==========>' , userRole, foundUser )
+    }else{
+      foundUser = await User.findOne({ where: { refreshToken }});
+    }
+
+
+
+
+    // Detected refresh token reuse!
+    if (!foundUser) {
+      jwt.verify(
+        refreshToken,
+        configs.auth.refreshTokenSecretKey,
+        async (err, decoded) => {
+          if (err) return errorResponse(res, 401, "مشکل در احراز کاربر");
+          const hackedUser = await User.findOne({ where: { username: decoded.username } });
+          if (hackedUser) {
+            hackedUser.refreshToken = '';
+            hackedUser.save()
+          }
+        }
+      )
+      return errorResponse(res, 401, "مشکل در احراز کاربر");
+    }
+
+    if(isAdmin && foundUser['role.name'] === 'USER'){
+      return errorResponse(res, 401, "مشکل در احراز کاربر");
+    }
+
+
+    // const newRefreshTokenArray = foundUser.refreshToken.filter(rt => rt !== refreshToken);
+
+    // evaluate jwt 
+    jwt.verify(
+      refreshToken,
+      configs.auth.refreshTokenSecretKey,
+      async (err, decoded) => {
+        if (err) {
+          console.log('expired refresh token')
+          foundUser.refreshToken = '';
+          await foundUser.save();
+        }
+        if (err || foundUser.username !== decoded.username) return errorResponse(res, 401, "مشکل در احراز کاربر");
+
+        // Refresh token was still valid
+        const accessToken = generateAccessToken(foundUser.username)
+        const newRefreshToken = generateRefreshToken(foundUser.username)
+
+        // Saving refreshToken with current user
+        foundUser.refreshToken = newRefreshToken;
+        const result = await foundUser.save();
+        console.log('here=======================>', result)
+        
+        const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+        res.cookie('accessToken', accessToken, {
+          origin: isAdmin ? configs.originDomain.frontAdminDomain : configs.originDomain.frontUserDomain,
+          secure: true,
+          path: '/',
+          maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
+        })
+    
+        res.cookie('expireTime', accessTokenExpireTime, {
+          origin: isAdmin ? configs.originDomain.frontAdminDomain : configs.originDomain.frontUserDomain,
+          secure: true,
+          path: '/',
+        })
+    
+        res.cookie('refreshToken', newRefreshToken, {
+          origin: isAdmin ? configs.originDomain.frontAdminDomain : configs.originDomain.frontUserDomain,
+          secure: true,
+          httpOnly: true,
+          path: '/api/v1/auth/',
+          maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
+        })
+    
+        successResponse(res, 200)
+      }
+    );
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+const logout = async (req, res, next) => {
+  try {
+        // On client, also delete the accessToken
+
+        const cookies = req.cookies;
+        if (!cookies?.refreshToken) return successResponse(res,204,"توکنی وجود ندارد!"); //No content
+        const refreshToken = cookies.refreshToken;
+    
+        // Is refreshToken in db?
+        const foundUser = await User.findOne({where : { refreshToken }});
+        if (!foundUser) {
+            res.clearCookie('refreshToken');
+            res.clearCookie('accessToken');
+            res.clearCookie('expireTime');
+            return successResponse(res,204,'کاربری یافت نشد.');
+        }
+    
+        // Delete refreshToken in db
+        foundUser.refreshToken = ''
+        await foundUser.save();
+    
+        res.cookie('refreshToken', refreshToken, {
+          secure: true,
+          httpOnly: true,
+          path: '/api/v1/auth/',
+          maxAge: 0
+        })
+        res.clearCookie('accessToken');
+        res.clearCookie('expireTime');
+        successResponse(res,204,'با موفقیت از حساب کاربری خارج شدید.');
+  } catch (error) {
+    next(error)
+  }
+}
 
 
 
@@ -599,4 +775,7 @@ module.exports = {
   getCaptcha,
   loginAdmins,
   resendForgetpassOtp,
+  getMe,
+  refreshToken,
+  logout
 }

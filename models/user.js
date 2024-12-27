@@ -41,9 +41,13 @@ const User = (sequelize) =>
         allowNull : true,
       },
       score : {
-        type : DataTypes.STRING,
+        type : DataTypes.INTEGER,
         allowNull : false,
         defaultValue : '0'
+      },
+      refreshToken : {
+        type : DataTypes.STRING,
+        allowNull : true
       },
     },
     {
