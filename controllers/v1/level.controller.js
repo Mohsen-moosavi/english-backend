@@ -14,7 +14,7 @@ const createLevel = async (req,res,next)=>{
 
         await Level.create({name});
 
-        const levels = await Level.findAll();
+        const levels = await Level.findAll({order : [['id' , 'DESC']]});
 
         return successResponse(res,201,'سطح جدید با موفقیت ایجاد شد.' ,{levels})
     } catch (error) {
