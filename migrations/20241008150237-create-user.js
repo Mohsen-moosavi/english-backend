@@ -38,10 +38,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      grate : {
-        type : Sequelize.STRING,
-        allowNull : true,
-      },
       score : {
         type : Sequelize.INTEGER,
         allowNull : false,

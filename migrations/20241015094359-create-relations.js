@@ -34,6 +34,15 @@ module.exports = {
         },
       });
 
+      await queryInterface.addColumn("freebooks", "level_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "levels",
+          key: "id",
+        },
+      });
+
       await queryInterface.addColumn("q4gamequestions", "q4game_id", {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
@@ -255,29 +264,29 @@ module.exports = {
         },
       });
 
-      await queryInterface.createTable("levels_courses", {
-        course_id: {
-          type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: false,
-          references: {
-            model: "courses",
-            key: "id",
-          },
+      // await queryInterface.createTable("levels_courses", {
+      //   course_id: {
+      //     type: Sequelize.INTEGER.UNSIGNED,
+      //     allowNull: false,
+      //     references: {
+      //       model: "courses",
+      //       key: "id",
+      //     },
 
-          onDelete: "CASCADE",
-        },
+      //     onDelete: "CASCADE",
+      //   },
 
-        level_id: {
-          type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: false,
-          references: {
-            model: "levels",
-            key: "id",
-          },
+      //   level_id: {
+      //     type: Sequelize.INTEGER.UNSIGNED,
+      //     allowNull: false,
+      //     references: {
+      //       model: "levels",
+      //       key: "id",
+      //     },
 
-          onDelete: "CASCADE",
-        },
-      });
+      //     onDelete: "CASCADE",
+      //   },
+      // });
 
       await queryInterface.addConstraint("tags_courses", {
         fields: ["course_id", "tag_id"],
@@ -309,11 +318,11 @@ module.exports = {
         name: "unique_user_course",
       });
 
-      await queryInterface.addConstraint("levels_courses", {
-        fields: ["course_id", "level_id"],
-        type: "unique",
-        name: "unique_level_course",
-      });
+      // await queryInterface.addConstraint("levels_courses", {
+      //   fields: ["course_id", "level_id"],
+      //   type: "unique",
+      //   name: "unique_level_course",
+      // });
 
 
 

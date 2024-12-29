@@ -14,10 +14,6 @@ const FreeBooks = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
-      grate : {
-        type : DataTypes.STRING,
-        allowNull : false,
-      },
       cover : {
         type: DataTypes.STRING,
         allowNull : false

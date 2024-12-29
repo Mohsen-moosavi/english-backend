@@ -22,8 +22,8 @@ const Course = require("./models/courses")(db);
 const Ban = require("./models/ban")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const FreeBook = require("./models/freebook")(db);
-/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
-const LevelCourse = require("./models/level-course")(db);
+// /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+// const LevelCourse = require("./models/level-course")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Level = require("./models/level")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
@@ -106,6 +106,12 @@ Level.hasMany(User, {
   });
   
 User.belongsTo(Level, { foreignKey: "level_id", as: "level" });
+
+Level.hasMany(FreeBook, {
+  foreignKey: "level_id"
+});
+
+FreeBook.belongsTo(Level, { foreignKey: "level_id", as: "level" });
 
 
 Course.hasMany(Session, {
@@ -222,17 +228,17 @@ Course.belongsToMany(User, {
 
 
 
-Level.belongsToMany(Course, {
-  through: LevelCourse,
-  foreignKey: "level_id",
-  onDelete: "CASCADE",
-});
+// Level.belongsToMany(Course, {
+//   through: LevelCourse,
+//   foreignKey: "level_id",
+//   onDelete: "CASCADE",
+// });
 
-Course.belongsToMany(Level, {
-  through: LevelCourse,
-  foreignKey: "course_id",
-  onDelete: "CASCADE",
-});
+// Course.belongsToMany(Level, {
+//   through: LevelCourse,
+//   foreignKey: "course_id",
+//   onDelete: "CASCADE",
+// });
 
 
 

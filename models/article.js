@@ -30,6 +30,10 @@ const Articles = (sequelize) =>
         type : DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      isPulished : {
+        type : DataTypes.BOOLEAN,
+        allowNull : false
       }
     },
     {

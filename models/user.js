@@ -36,10 +36,6 @@ const User = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
-      grate : {
-        type : DataTypes.STRING,
-        allowNull : true,
-      },
       score : {
         type : DataTypes.INTEGER,
         allowNull : false,

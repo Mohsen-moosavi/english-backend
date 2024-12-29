@@ -22,10 +22,6 @@ const Courses = (sequelize) =>
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      grate: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       cover : {
         type: DataTypes.STRING,
         allowNull : true

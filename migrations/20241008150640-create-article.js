@@ -30,6 +30,10 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      isPulished : {
+        type : Sequelize.BOOLEAN,
+        allowNull : false,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
