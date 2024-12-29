@@ -24,7 +24,7 @@ const createLevel = async (req,res,next)=>{
 
 const getLevels = async (req,res,next)=>{
     try {
-        const levels = await Level.findAll();
+        const levels = await Level.findAll({order : [['id' , 'DESC']]});
 
         return successResponse(res,200 ,'', {levels})
     } catch (error) {

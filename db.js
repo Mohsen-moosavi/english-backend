@@ -158,7 +158,7 @@ Course.belongsToMany(Tag, {
   onDelete: "CASCADE",
 });
 
-Tag.belongsToMany(Article, {
+Tag.belongsToMany(Course, {
   through: TagCourses,
   foreignKey: "tag_id",
   onDelete: "CASCADE",
@@ -167,13 +167,13 @@ Tag.belongsToMany(Article, {
 
 
 Article.belongsToMany(Tag, {
-  through: TagCourses,
+  through: TagArticles,
   foreignKey: "article_id",
   onDelete: "CASCADE",
 });
 
 Tag.belongsToMany(Article, {
-  through: TagCourses,
+  through: TagArticles,
   foreignKey: "tag_id",
   onDelete: "CASCADE",
 });
