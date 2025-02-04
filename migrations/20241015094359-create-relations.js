@@ -34,6 +34,15 @@ module.exports = {
         },
       });
 
+      await queryInterface.addColumn("articles", "author", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      });
+
       await queryInterface.addColumn("freebooks", "level_id", {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
@@ -339,6 +348,7 @@ module.exports = {
       await queryInterface.removeColumn("courses", "book_collection_id");
       await queryInterface.removeColumn("courses", "teacher");
       await queryInterface.removeColumn("courses", "level_id");
+      await queryInterface.removeColumn("articles", "author");
       await queryInterface.removeColumn("q4gamequestions", "q4game_id");
       await queryInterface.removeColumn("medaiGameQuestions", "mediagame_id");
       await queryInterface.removeColumn("users", "role_id");

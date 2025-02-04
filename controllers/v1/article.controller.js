@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const { successResponse, errorResponse } = require("../../utils/responses");
-const { Article, Tag, TagArticles } = require("../../db");
+const { Article, Tag, TagArticles, User } = require("../../db");
 const { Op, where } = require("sequelize");
 const path = require('path');
 const configs = require("../../configs");
@@ -29,7 +29,7 @@ const createArticle = async(req,res,next)=>{
 
         const [newArticle,isNewArticle] = await Article.findOrCreate({
             where:{[Op.or ] : [{title} , {slug : slugifyedSlug}]},
-            defaults: { title , slug : slugifyedSlug , shortDescription , longDescription , isPublished , links  , cover : `${configs.domain}/public/images/${cover.filename}`},
+            defaults: {author : req.user.id, title , slug : slugifyedSlug , shortDescription , longDescription , isPublished , links  , cover : `${configs.domain}/public/images/${cover.filename}`},
             raw:true
         })
 
@@ -65,10 +65,23 @@ const getArticles = async (req,res,next)=>{
         if (validationError?.errors && validationError?.errors[0]) {
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
-        const {limit , offset , search} = req.query
+        const {limit , offset , search, status , writerId} = req.query
 
+        const finderObject = {title:{[Op.like] : `%${search}%`}}
+        writerId && (finderObject.author = writerId)
+        status === 'published' && (finderObject.isPublished  = 1)
+        status === 'draft' && (finderObject.isPublished  = 0)
+
+        console.log("status=================>" , finderObject)
         
-        const {rows : articles , count} = await Article.findAndCountAll({where:{title:{[Op.like] : `%${search}%`}},limit:Number(limit)  , offset : Number(offset) ,order: [['id' , 'DESC']] , raw : true});
+        const {rows : articles , count} = await Article.findAndCountAll(
+            {where: finderObject,
+            limit:Number(limit),
+            offset : Number(offset),
+            order: [['id' , 'DESC']],
+            attributes : {exclude : ['author']},
+            include : {model : User , attributes :['name']},
+            raw : true});
 
         return successResponse(res,200 ,'', {articles , count})
     } catch (error) {
@@ -84,12 +97,18 @@ const getArticle = async (req,res,next)=>{
         
         const article = await Article.findOne({ 
             where : {id},
-            include : 
+            attributes : {exclude : ['author']},
+            include : [
+                {
+                    model : User,
+                    attributes :['name']
+                },
                 {
                     model : Tag,
                     attributes : ['name'],
                     through : {attributes : []}
                 }
+            ]
             ,
             
         });
@@ -174,7 +193,7 @@ const deleteArticle = async (req,res,next)=>{
         if (validationError?.errors && validationError?.errors[0]) {
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
-        const {limit , offset , search} = req.query
+        const {limit , offset , search, writerId , status} = req.query
 
         const deletedArticle = await Article.findOne({
             where : {id}
@@ -188,7 +207,20 @@ const deleteArticle = async (req,res,next)=>{
 
         await deletedArticle.destroy()
 
-        const {rows : articles , count} = await Article.findAndCountAll({where:{title:{[Op.like] : `%${search}%`}},limit:Number(limit)  , offset : Number(offset) ,order: [['id' , 'DESC']] , raw : true});
+        
+        const finderObject = {title:{[Op.like] : `%${search}%`}}
+        writerId && (finderObject.author = writerId)
+        status === 'published' && (finderObject.isPublished  = 1)
+        status === 'draft' && (finderObject.isPublished  = 0)
+
+        const {rows : articles , count} = await Article.findAndCountAll({
+            where:finderObject,
+            limit:Number(limit),
+            attributes : {exclude : ['author']},
+            include : {model : User , attributes :['name']},
+            offset : Number(offset),
+            order: [['id' , 'DESC']],
+            raw : true});
 
         return successResponse(res,200 ,'مقاله با موفقیت حذف شد.',{articles , count})
     } catch (error) {

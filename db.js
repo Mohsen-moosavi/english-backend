@@ -73,6 +73,13 @@ User.hasMany(Course, {
 Course.belongsTo(User, { foreignKey: "teacher" });
 
 
+User.hasMany(Article, {
+  foreignKey: "author"
+});
+
+Article.belongsTo(User, { foreignKey: "author" });
+
+
 Level.hasMany(Course, {
     foreignKey: "level_id"
   });

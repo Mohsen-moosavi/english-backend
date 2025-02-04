@@ -43,7 +43,7 @@ async function authMiddleware(req,res,next){
         const user = await User.findOne(
           {
             where : {username},
-            attributes : ['name' , 'phone' ,'avatar' , 'score'],
+            attributes : ['id','name' , 'phone' ,'avatar' , 'score'],
             raw:true,
             include: [
               {
