@@ -22,6 +22,10 @@ const Articles = (sequelize) =>
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      links : {
+        type : DataTypes.TEXT,
+        allowNull : false
+      },
       cover : {
         type: DataTypes.STRING,
         allowNull : false
@@ -31,7 +35,7 @@ const Articles = (sequelize) =>
         allowNull: false,
         unique: true,
       },
-      isPulished : {
+      isPublished : {
         type : DataTypes.BOOLEAN,
         allowNull : false
       }

@@ -21,6 +21,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      links : {
+        type : Sequelize.TEXT,
+        allowNull : false
+      },
       cover : {
         type: Sequelize.STRING,
         allowNull : false
@@ -30,7 +34,7 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      isPulished : {
+      isPublished : {
         type : Sequelize.BOOLEAN,
         allowNull : false,
       },

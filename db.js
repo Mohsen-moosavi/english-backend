@@ -259,4 +259,5 @@ module.exports = {
   Tag,
   User,
   Ban,
-  UserSessionGames };
+  UserSessionGames,
+TagArticles };
