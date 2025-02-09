@@ -56,6 +56,8 @@ const UserCourses = require("./models/user-course")(db);
 const User = require("./models/user")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const UserSessionGames = require("./models/usersessiongame")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const File = require("./models/file")(db);
 
 
 Book.hasMany(Course, {
@@ -79,6 +81,11 @@ User.hasMany(Article, {
 
 Article.belongsTo(User, { foreignKey: "author" });
 
+Book.hasMany(File, {
+  foreignKey: "book_id"
+});
+
+File.belongsTo(Book, { foreignKey: "book_id" });
 
 Level.hasMany(Course, {
     foreignKey: "level_id"
@@ -267,4 +274,6 @@ module.exports = {
   User,
   Ban,
   UserSessionGames,
-TagArticles };
+  File,
+  TagBooks,
+  TagArticles };

@@ -30,13 +30,13 @@ const Books = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: false,
       },
+      links : {
+        type : DataTypes.TEXT,
+        allowNull : false
+      },
       cover : {
         type: DataTypes.STRING,
         allowNull : false
-      },
-      files : {
-        type: DataTypes.JSON,
-        allowNull: false,
       },
       slug : {
         type : DataTypes.STRING,

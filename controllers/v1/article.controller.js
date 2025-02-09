@@ -145,12 +145,23 @@ const updateArticle = async(req,res,next)=>{
 
 
         const article = await Article.findOne({
-            where:{id}
+            where:{ id}
         })
 
         if(!article){
             cover && removeFile(cover.filename)
             return errorResponse(res,409,'موردی جهت ویرایش یافت نشد!')
+        }
+
+        if (article.title !== title || article.slug !== slugifyedSlug) {
+            const oldArticle = await Article.findOne({ where:  {id : {[Op.ne] : id} , [Op.or]: {title, slug: slugifyedSlug } }})
+            if(oldArticle){
+              cover && removeFile(cover.filename)
+              if(oldArticle.title === title){
+                return errorResponse(res, 409, 'مقاله ای با این عنوان، از قبل وجود دارد!')
+              }
+              return errorResponse(res, 409, 'مقاله ای با این slug، از قبل وجود دارد!')
+            }
         }
 
         cover && removeFile(article.cover?.split('/')?.reverse()[0])

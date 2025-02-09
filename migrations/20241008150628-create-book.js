@@ -33,21 +33,21 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull : false
       },
-      files : {
-        type: Sequelize.JSON,
-        allowNull: false,
-      },
       slug : {
         type : Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
-      createdAt: {
+      links : {
+        type : Sequelize.TEXT,
+        allowNull : false
+      },
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue : Sequelize.NOW
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue : Sequelize.NOW
