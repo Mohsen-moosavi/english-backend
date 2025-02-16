@@ -1,8 +1,9 @@
-const { db } = require("./db");
+const { db, Role } = require("./db");
 const app = require("./app");
 const configs = require("./configs");
 const dotenv = require("dotenv")
-const redis = require("./redis")
+const redis = require("./redis");
+const { where } = require("sequelize");
 
 async function startServer() {
 
@@ -14,6 +15,10 @@ async function startServer() {
 
     await db.authenticate();
     await redis.ping();
+
+    // for (const role in configs.roles) {
+    //   Role.findOrCreate({where : {name : configs.roles[role]}})
+    // }
 
     app.listen(configs.port, () => {
       console.log(`Listening on port ${configs.port}`);

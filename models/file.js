@@ -23,7 +23,7 @@ const Files = (sequelize) =>
         allowNull : false
       },
       group : {
-        type : DataTypes.TINYINT,
+        type : DataTypes.STRING,
         allowNull : false
       }
     },

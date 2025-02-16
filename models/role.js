@@ -14,10 +14,6 @@ const Roles = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: false,
         unique : true
-      },
-      jobs : {
-        type: DataTypes.JSON,
-        allowNull : false
       }
     },
     {

@@ -35,6 +35,7 @@ module.exports = {
 
     roles : {
       manager : 'MANAGER',
+      admin : 'ADMIN',
       user : 'USER',
       teacher : 'TEACHER',
       writter : 'WRITTER'

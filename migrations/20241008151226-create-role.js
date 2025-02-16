@@ -13,10 +13,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
         unique : true
-      },
-      jobs : {
-        type: Sequelize.JSON,
-        allowNull : false
       }
     });
   },

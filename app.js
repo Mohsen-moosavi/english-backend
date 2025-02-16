@@ -7,6 +7,7 @@ const allroutes = require("./routes/index.routes");
 const {errorResponse} = require('./utils/responses')
 const cookieParser = require("cookie-parser");
 const configs = require("./configs");
+const { uploadCanceled } = require("./utils/fs.utils");
 
 // const captchaController = require("./controllers/captcha");
 
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public',express.static(path.join(__dirname, "public")));
 
 app.use("/api/v1",allroutes)
+app.post('/api/v1/upload-cenceled' , uploadCanceled)
 
 
 app.use((error,req,res,next)=>{

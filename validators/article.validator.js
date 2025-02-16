@@ -4,7 +4,7 @@ function createArticleValidator() {
     return [
         body('title').isString().withMessage("عنوان وارد شده معتبر نمی باشد.").isLength({ min: 3 }).withMessage("عنوان وارد شده باید حداقل 3 کاراکتر باشد."),
         body('shortDescription').isString().withMessage("توضیحات کوتاه وارد شده معتبر نمی باشد.").isLength({ min: 50 }).withMessage("توضیحات کوتاه حداقل باید 50 کاراکتر باشد."),
-        body('longDescription').isString().withMessage('متن وارد شده معتبر نمی باشد.').isLength({ min: 30 }).withMessage("متن مقاله حداقل باید 300 کاراکتر باشد."),
+        body('longDescription').isString().withMessage('متن وارد شده معتبر نمی باشد.').isLength({ min: 300 }).withMessage("متن مقاله حداقل باید 300 کاراکتر باشد."),
         body('slug').isString().withMessage('slug وارد شده معتبر نمی باشد.').isLength({ min: 8 }).withMessage("slug مقاله حداقل باید 8 کاراکتر باشد."),
         body('isPublished').isBoolean().withMessage('مقدار فرستاده شده به عنوان مشخص کننده ی ذخیره شدن به عنوان پیش نویس، معتبر نمی باشد.'),
         body('tags').isArray().withMessage('مقدار فرستاده شده به عنوان تگ ها، معتبر نمی باشد.').custom((value, { req }) => {

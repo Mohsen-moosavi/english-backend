@@ -2,23 +2,19 @@ const { mergeChunks } = require("../../services/uploadFile");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const path = require("path")
 const fs = require("fs");
-const { removeFile } = require("../../utils/fs.utils");
+const { removeImage } = require("../../utils/fs.utils");
 const { validationResult } = require("express-validator");
 const { default: slugify } = require("slugify");
 const { Book, Tag, File, TagBooks } = require("../../db");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const configs = require("../../configs");
 
 const uploadFile = async (req, res, next) => {
   console.log("Hit");
   const chunk = req.file.buffer;
-  const bookId = req.body.bookId;
   const chunkNumber = Number(req.body.chunkNumber); // Sent from the client
   const totalChunks = Number(req.body.totalChunks); // Sent from the client
-  const fileName = req.body.fileName;
-  const name = req.body.name;
-  const type = req.body.type;
-  const group = req.body.group;
+  const { group, type, name, fileName, bookId, canceling } = req.body
 
   const chunkDir = path.join(__dirname, '..', '..', 'public', 'files', 'chunks') // Directory to save chunks
 
@@ -28,17 +24,22 @@ const uploadFile = async (req, res, next) => {
 
   const chunkFilePath = `${chunkDir}/${fileName}.part_${chunkNumber}`;
 
+  if (canceling) {
+    fs.rmdirSync(path.join(__dirname, '..', '..', 'public', 'files', 'chunks'), { recursive: true, force: true })
+    return errorResponse(res, 400, "عملیات لغو شد.")
+  }
+
   try {
     await fs.promises.writeFile(chunkFilePath, chunk);
     let fileLink = '';
 
-    if (chunkNumber === totalChunks - 1) {
+    if (chunkNumber === totalChunks) {
       // If this is the last chunk, merge all chunks into a single file
-      fileLink = await mergeChunks(fileName, totalChunks);
+      fileLink = await mergeChunks(fileName, totalChunks, 'files');
       await File.create({ name, link: fileLink, group, type, book_id: bookId })
     }
 
-    successResponse(res, 200, "آپلود فایل با موفقت انجام شد.", { link: fileLink })
+    return successResponse(res, 200, "آپلود فایل با موفقت انجام شد.", { link: fileLink })
   } catch (error) {
     console.error("Error saving chunk:", error);
     fs.rmdirSync(path.join(__dirname, '..', '..', 'public', 'files', 'chunks'), { recursive: true, force: true })
@@ -52,7 +53,7 @@ const createBook = async (req, res, next) => {
     const cover = req.file;
 
     if (validationError?.errors && validationError?.errors[0]) {
-      removeFile(cover.filename)
+      removeImage(cover.filename)
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
@@ -72,7 +73,7 @@ const createBook = async (req, res, next) => {
     })
 
     if (!isNewBook) {
-      removeFile(cover.filename)
+      removeImage(cover.filename)
       if (newBook.name === name) {
         return errorResponse(res, 409, 'مجموعه ای با این عنوان، از قبل وجود دارد!')
       } else {
@@ -110,7 +111,7 @@ const deleteBookWhitoutGettingAll = async (req, res, next) => {
     })
 
     if (deletedBook) {
-      removeFile(deletedBook.cover?.split('/')?.reverse()[0])
+      removeImage(deletedBook.cover?.split('/')?.reverse()[0])
       await deletedBook.destroy()
     }
 
@@ -204,7 +205,7 @@ const deleteBookWithGettingAll = async (req, res, next) => {
       where: { book_id: id }
     })
 
-    removeFile(deletedBook.cover?.split('/')?.reverse()[0])
+    removeImage(deletedBook.cover?.split('/')?.reverse()[0])
     await deletedBook.destroy()
 
     const { rows: books, count } = await Book.findAndCountAll(
@@ -256,7 +257,7 @@ const updateBook = async (req, res, next) => {
     const cover = req.file;
 
     if (validationError?.errors && validationError?.errors[0]) {
-      cover && removeFile(cover.filename)
+      cover && removeImage(cover.filename)
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
@@ -267,18 +268,18 @@ const updateBook = async (req, res, next) => {
       trim: true
     })
 
-    const updatedBook = await Book.findOne({ where: {id} })
+    const updatedBook = await Book.findOne({ where: { id } })
 
     if (!updatedBook) {
-      cover && removeFile(cover.filename)
+      cover && removeImage(cover.filename)
       return errorResponse(res, 400, "موردی جهت ویرایش یافت نشد.")
     }
 
     if (updatedBook.name !== name || updatedBook?.slug !== slugifyedSlug) {
-      const oldBook = await Book.findOne({ where:  {id : {[Op.ne] : id} , [Op.or]: {name, slug: slugifyedSlug } }})
-      if(oldBook){
-        cover && removeFile(cover.filename)
-        if(oldBook.name === name){
+      const oldBook = await Book.findOne({ where: { id: { [Op.ne]: id }, [Op.or]: { name, slug: slugifyedSlug } } })
+      if (oldBook) {
+        cover && removeImage(cover.filename)
+        if (oldBook.name === name) {
           return errorResponse(res, 409, 'مجموعه ای با این عنوان، از قبل وجود دارد!')
         }
         return errorResponse(res, 409, 'مجموعه ای با این slug، از قبل وجود دارد!')
@@ -287,7 +288,7 @@ const updateBook = async (req, res, next) => {
 
     const copyOfTags = tags[0].split(',')
 
-    cover && removeFile(updatedBook.cover?.split('/')?.reverse()[0])
+    cover && removeImage(updatedBook.cover?.split('/')?.reverse()[0])
 
 
     updatedBook.name = name
@@ -300,22 +301,39 @@ const updateBook = async (req, res, next) => {
     cover && (updatedBook.cover = `${configs.domain}/public/images/${cover.filename}`)
     await updatedBook.save()
 
-    await TagBooks.destroy({where : {book_id : id}})
+    await TagBooks.destroy({ where: { book_id: id } })
 
     let createdTags = copyOfTags.map((tag) =>
-        Tag.findOrCreate({ where: { name: tag.trim() } })
-      );
+      Tag.findOrCreate({ where: { name: tag.trim() } })
+    );
     createdTags = await Promise.all(createdTags);
 
     await updatedBook.addTags(createdTags.map((tag) => tag[0]));
 
-    return successResponse(res, 201, 'مجموعه با موفقیت ویرایش شد.',{bookId : updatedBook.id})
+    return successResponse(res, 201, 'مجموعه با موفقیت ویرایش شد.', { bookId: updatedBook.id })
 
   } catch (error) {
     next(error)
   }
 }
 
+const getBooksGroup = async (req, res, next) => {
+  try {
+
+    const { id } = req.params;
+    const fileGroups = await File.findAll({
+      where: { book_id: id },
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('group')), 'group']
+      ],
+      raw: true
+    })
+
+    return successResponse(res, 200, '', { groups: fileGroups })
+  } catch (error) {
+    next(error)
+  }
+}
 
 
 
@@ -327,5 +345,6 @@ module.exports = {
   getAllBooks,
   deleteBookWithGettingAll,
   getBook,
-  updateBook
+  updateBook,
+  getBooksGroup
 }

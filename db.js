@@ -58,6 +58,12 @@ const User = require("./models/user")(db);
 const UserSessionGames = require("./models/usersessiongame")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const File = require("./models/file")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Sale = require("./models/sale")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Off = require("./models/off")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const OffUsers = require("./models/off-user")(db);
 
 
 Book.hasMany(Course, {
@@ -80,6 +86,21 @@ User.hasMany(Article, {
 });
 
 Article.belongsTo(User, { foreignKey: "author" });
+
+
+User.hasMany(Sale, {
+  foreignKey: "user_id"
+});
+
+Sale.belongsTo(User, { foreignKey: "user_id" });
+
+
+Course.hasMany(Sale, {
+  foreignKey: "course_id"
+});
+
+Sale.belongsTo(Course, { foreignKey: "course_id" });
+
 
 Book.hasMany(File, {
   foreignKey: "book_id"
@@ -170,6 +191,19 @@ User.hasMany(UserSessionGames, {
 UserSessionGames.belongsTo(User, { foreignKey: "user_id", as: "user" });
 
 
+Course.hasMany(Off, {
+  foreignKey: "course_id"
+});
+
+Off.belongsTo(Course, { foreignKey: "course_id" });
+
+
+User.hasMany(Off, {
+  foreignKey: "creator_id"
+});
+
+Off.belongsTo(User, { foreignKey: "creator_id" });
+
 
 
 Course.belongsToMany(Tag, {
@@ -242,6 +276,20 @@ Course.belongsToMany(User, {
 
 
 
+Off.belongsToMany(User, {
+  through: OffUsers,
+  foreignKey: "off_id",
+  onDelete: "CASCADE",
+});
+
+User.belongsToMany(Off, {
+  through: OffUsers,
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+
+
 // Level.belongsToMany(Course, {
 //   through: LevelCourse,
 //   foreignKey: "level_id",
@@ -276,4 +324,9 @@ module.exports = {
   UserSessionGames,
   File,
   TagBooks,
-  TagArticles };
+  TagArticles,
+  TagCourses,
+  Sale,
+  Off,
+  OffUsers
+};

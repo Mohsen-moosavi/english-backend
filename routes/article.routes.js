@@ -32,10 +32,10 @@ const uploadFile = multer({
     }
 })
 
-router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.writter]),uploadFile.single('cover') ,createArticleValidator(),controller.createArticle);
+router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),uploadFile.single('cover') ,createArticleValidator(),controller.createArticle);
 router.get('/' ,getArticlesValidator() , controller.getArticles);
 router.get('/:id' , controller.getArticle);
-router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getArticlesValidator() ,controller.deleteArticle);
+router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin , configs.roles.writter]) , getArticlesValidator() ,controller.deleteArticle);
 router.put('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadFile.single('cover'), createArticleValidator() ,controller.updateArticle);
 
 module.exports = router;

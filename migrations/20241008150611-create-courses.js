@@ -53,7 +53,7 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      book_file : {
+      book_file_group : {
         type : Sequelize.STRING,
         allowNull : false,
       },

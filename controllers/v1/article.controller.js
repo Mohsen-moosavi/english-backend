@@ -5,7 +5,7 @@ const { Op, where } = require("sequelize");
 const path = require('path');
 const configs = require("../../configs");
 const { default: slugify } = require("slugify");
-const { removeFile } = require("../../utils/fs.utils");
+const { removeImage } = require("../../utils/fs.utils");
 
 const createArticle = async(req,res,next)=>{
     try {
@@ -14,7 +14,7 @@ const createArticle = async(req,res,next)=>{
         const cover = req.file;
 
         if (validationError?.errors && validationError?.errors[0]) {
-            removeFile(cover.filename)
+            removeImage(cover.filename)
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
 
@@ -36,7 +36,7 @@ const createArticle = async(req,res,next)=>{
 
 
         if(!isNewArticle){
-            removeFile(cover.filename)
+            removeImage(cover.filename)
             if(newArticle.title === title){
                 return errorResponse(res,409,'مقاله ای با این عنوان، از قبل وجود دارد!')
             }else{
@@ -131,7 +131,7 @@ const updateArticle = async(req,res,next)=>{
         const {id} = req.params;
 
         if (validationError?.errors && validationError?.errors[0]) {
-            cover && removeFile(cover.filename)
+            cover && removeImage(cover.filename)
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
 
@@ -149,14 +149,14 @@ const updateArticle = async(req,res,next)=>{
         })
 
         if(!article){
-            cover && removeFile(cover.filename)
+            cover && removeImage(cover.filename)
             return errorResponse(res,409,'موردی جهت ویرایش یافت نشد!')
         }
 
         if (article.title !== title || article.slug !== slugifyedSlug) {
             const oldArticle = await Article.findOne({ where:  {id : {[Op.ne] : id} , [Op.or]: {title, slug: slugifyedSlug } }})
             if(oldArticle){
-              cover && removeFile(cover.filename)
+              cover && removeImage(cover.filename)
               if(oldArticle.title === title){
                 return errorResponse(res, 409, 'مقاله ای با این عنوان، از قبل وجود دارد!')
               }
@@ -164,7 +164,7 @@ const updateArticle = async(req,res,next)=>{
             }
         }
 
-        cover && removeFile(article.cover?.split('/')?.reverse()[0])
+        cover && removeImage(article.cover?.split('/')?.reverse()[0])
 
         article.title = title
         article.slug = slugifyedSlug
@@ -214,7 +214,7 @@ const deleteArticle = async (req,res,next)=>{
             return errorResponse(res,400 ,'موردی جهت حذف یافت نشد!')
         }
 
-        removeFile(deletedArticle.cover?.split('/')?.reverse()[0])
+        removeImage(deletedArticle.cover?.split('/')?.reverse()[0])
 
         await deletedArticle.destroy()
 

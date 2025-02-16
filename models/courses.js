@@ -54,7 +54,7 @@ const Courses = (sequelize) =>
         allowNull: false,
         unique: true,
       },
-      book_file : {
+      book_file_group : {
         type : DataTypes.STRING,
         allowNull : false,
       }

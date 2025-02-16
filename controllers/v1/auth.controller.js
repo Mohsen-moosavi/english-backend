@@ -693,7 +693,6 @@ const refreshToken = async (req, res, next) => {
         // Saving refreshToken with current user
         foundUser.refreshToken = newRefreshToken;
         const result = await foundUser.save();
-        console.log('here=======================>', result)
         
         const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
         res.cookie('accessToken', accessToken, {
