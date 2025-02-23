@@ -32,7 +32,7 @@ function getCoursesValidator(){
         query("bookId").isNumeric().withMessage('پارامتر bookId معتبر نمی باشد.').optional(),
         query("levelId").isNumeric().withMessage('پارامتر levelId معتبر نمی باشد.').optional(),
         query("priceStatus").isString().withMessage('پارامتر priceStatus معتبر نمی باشد.').isIn(['free','max','min']).optional(),
-        query("scoreStatus").isInt().withMessage('پارامتر scoreStatus معتبر نمی باشد.').isIn(1,2,3,4,5).optional(),
+        query("scoreStatus").isInt().withMessage('پارامتر scoreStatus معتبر نمی باشد.').isIn([1,2,3,4,5]).optional(),
     ]
 }
 

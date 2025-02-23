@@ -199,10 +199,11 @@ Off.belongsTo(Course, { foreignKey: "course_id" });
 
 
 User.hasMany(Off, {
-  foreignKey: "creator_id"
+  foreignKey: "creator_id",
+  as : 'creator'
 });
 
-Off.belongsTo(User, { foreignKey: "creator_id" });
+Off.belongsTo(User, { foreignKey: "creator_id" , as:'creator' });
 
 
 
@@ -279,11 +280,13 @@ Course.belongsToMany(User, {
 Off.belongsToMany(User, {
   through: OffUsers,
   foreignKey: "off_id",
+  as : 'user',
   onDelete: "CASCADE",
 });
 
 User.belongsToMany(Off, {
   through: OffUsers,
+  as : 'user',
   foreignKey: "user_id",
   onDelete: "CASCADE",
 });

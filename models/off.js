@@ -19,7 +19,7 @@ const Offs = (sequelize) =>
         allowNull : true
       },
       expire : {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull : false
       },
       times : {

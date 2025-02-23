@@ -172,7 +172,6 @@ const deleteCourse = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    console.log("==============================================================================")
     const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus } = req.query
 
     const deletedCourse = await Course.findOne({
