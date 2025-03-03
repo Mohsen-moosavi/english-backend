@@ -64,6 +64,8 @@ const Sale = require("./models/sale")(db);
 const Off = require("./models/off")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const OffUsers = require("./models/off-user")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Comment = require("./models/comment")(db);
 
 
 Book.hasMany(Course, {
@@ -93,6 +95,29 @@ User.hasMany(Sale, {
 });
 
 Sale.belongsTo(User, { foreignKey: "user_id" });
+
+
+User.hasMany(Comment, {
+  foreignKey: "user_id"
+});
+
+Comment.belongsTo(User, { foreignKey: "user_id" });
+
+
+Comment.hasMany(Comment, {
+  foreignKey: "parent_id",
+  as : 'replies',
+  onDelete:'CASCADE'
+});
+
+Comment.belongsTo(Comment, { foreignKey: "parent_id", as:'parent' , onDelete:'CASCADE' });
+
+
+Course.hasMany(Comment, {
+  foreignKey: "course_id"
+});
+
+Comment.belongsTo(Course, { foreignKey: "course_id" });
 
 
 Course.hasMany(Sale, {
@@ -331,5 +356,6 @@ module.exports = {
   TagCourses,
   Sale,
   Off,
-  OffUsers
+  OffUsers,
+  Comment
 };

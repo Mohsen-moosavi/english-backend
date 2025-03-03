@@ -7,6 +7,7 @@ const articleRoutes = require("./article.routes")
 const bookRoutes = require("./book.routes")
 const courseRoutes = require("./course.routes")
 const offRoutes = require("./off.routes")
+const commentRoutes = require("./comment.routes")
 
 const router = Router()
 
@@ -18,5 +19,6 @@ router.use("/article" , articleRoutes)
 router.use("/book" , bookRoutes)
 router.use("/course" , courseRoutes)
 router.use("/off" , offRoutes)
+router.use("/comment" , commentRoutes)
 
 module.exports = router
