@@ -220,7 +220,10 @@ const answer = async (req, res, next) => {
             user_id: user.id
         })
 
-        const { items, count } = await findCommentsByQuery(req);
+        const { items, count,error } = await findCommentsByQuery(req);
+        if(error){
+            return next(error)
+        }
 
         successResponse(res, 201, "کامنت، با موفقیت ثبت شد.", { comments: items, count });
 

@@ -10,6 +10,10 @@ const Sessions = (sequelize) =>
         primaryKey: true,
         autoIncrement: true,
       },
+      name : {
+        type: DataTypes.STRING,
+        allowNull: false,        
+      },
       time: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -24,7 +28,7 @@ const Sessions = (sequelize) =>
       },
       file:{
         type : DataTypes.STRING,
-        allowNull : false,
+        allowNull : true,
       }
     },
     {

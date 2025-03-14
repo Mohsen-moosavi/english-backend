@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER.UNSIGNED
       },
+      name : {
+        type: Sequelize.STRING,
+        allowNull: false,        
+      },
       time: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -23,7 +27,7 @@ module.exports = {
       },
       file:{
         type : Sequelize.STRING,
-        allowNull : false,
+        allowNull : true,
       },
       created_at: {
         allowNull: false,

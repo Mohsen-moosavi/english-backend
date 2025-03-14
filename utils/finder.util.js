@@ -1,5 +1,5 @@
 const { Op, QueryTypes } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db } = require("../db");
+const { Course, User, Book, Level, Off, Comment, db, Session } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
@@ -226,10 +226,42 @@ async function setCourseAverageScore(courseId) {
   await mainCourse.save()
 }
 
+async function findSessionsByQuery(req) {
+  try {
+    const { limit, offset, status, search, fileStatus } = req.query
+
+    const finderObject = { name: { [Op.like]: `%${search}%` } , course_id : req.params.courseId };
+    status === 'free' && (finderObject.isFree = 1);
+    status === 'notFree' && (finderObject.isFree = 0);
+
+    fileStatus === 'fileExist' && (finderObject.file = { [Op.not]: null });
+    fileStatus === 'fileNotExist' && (finderObject.file = { [Op.is]: null });
+
+    const { rows: sessions, count } = await Session.findAndCountAll(
+      {
+        where: finderObject,
+        limit: Number(limit),
+        offset: Number(offset),
+        attributes: { exclude: ['video','q4game_id', 'mediagame_id','phrasegame_id']},
+        order: [['id', 'DESC']],
+        raw: true
+      });
+
+      for (let index = 0; index < sessions.length; index++) {
+        sessions[index].file = sessions[index].file ? true : false; 
+      }
+
+    return { items: sessions, count }
+  } catch (error) {
+    return { error }
+  }
+}
+
 module.exports = {
   findCoursesByQuery,
   findOffsByQuery,
   findCommentsByQuery,
   findCommentReplies,
-  setCourseAverageScore
+  setCourseAverageScore,
+  findSessionsByQuery
 }

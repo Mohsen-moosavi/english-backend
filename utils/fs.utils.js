@@ -4,13 +4,13 @@ const path = require('path');
 
 function removeImage(filename) {
     if (fs.existsSync(path.join(__dirname, '..', 'public', 'images', filename))) {
-        fs.rmSync(path.join(__dirname, '..', 'public', 'images', filename))
+        fs.unlinkSync(path.join(__dirname, '..', 'public', 'images', filename))
     }
 }
 
 function removeIntroductionVideo(filename) {
     if (fs.existsSync(path.join(__dirname, '..', 'public', 'introductionVideo', filename))) {
-        fs.rmSync(path.join(__dirname, '..', 'public', 'introductionVideo', filename))
+        fs.unlinkSync(path.join(__dirname, '..', 'public', 'introductionVideo', filename))
     }
 }
 
@@ -32,6 +32,16 @@ async function uploadCanceled(req,res,next){
                 files.map(file=>{
                     if(file.startsWith(`${nicName}___`)){
                         fs.unlinkSync(path.join(__dirname,'..','public','files','chunks',file))
+                    }
+                })
+            })
+        }
+
+        if(fs.existsSync(path.join(__dirname,'..','public','videos','chunks'))){
+            fs.readdir(path.join(__dirname,'..','public','videos','chunks'),(err,files)=>{
+                files.map(file=>{
+                    if(file.startsWith(`${nicName}___`)){
+                        fs.unlinkSync(path.join(__dirname,'..','public','videos','chunks',file))
                     }
                 })
             })
