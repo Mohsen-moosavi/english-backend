@@ -96,6 +96,13 @@ User.hasMany(Sale, {
 
 Sale.belongsTo(User, { foreignKey: "user_id" });
 
+User.hasMany(Sale, {
+  foreignKey: "adminSaler",
+  as : 'adminSaller'
+});
+
+Sale.belongsTo(User, { foreignKey: "adminSaler",paranoid:false ,as : 'adminSaller' });
+
 
 User.hasMany(Comment, {
   foreignKey: "user_id"

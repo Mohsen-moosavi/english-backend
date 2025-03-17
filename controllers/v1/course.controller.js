@@ -401,6 +401,19 @@ const updateStatus = async (req,res,next)=>{
   }
 }
 
+const getShortCourseData = async (req, res, next) => {
+  try {
+    const courses = await Course.findAll({
+      attributes : ['id' , 'name']
+    })
+
+    return successResponse(res, 200, '', { courses })
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 module.exports = {
   getCreatingData,
   uploadVideo,
@@ -411,5 +424,6 @@ module.exports = {
   getCourse,
   updateCourse,
   updateVideo,
-  updateStatus
+  updateStatus,
+  getShortCourseData
 }

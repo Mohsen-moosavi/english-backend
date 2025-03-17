@@ -1,5 +1,5 @@
-const { Op, QueryTypes } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db, Session } = require("../db");
+const { Op, QueryTypes, Sequelize } = require("sequelize");
+const { Course, User, Book, Level, Off, Comment, db, Session, Sale } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
@@ -257,11 +257,91 @@ async function findSessionsByQuery(req) {
   }
 }
 
+async function findSalesByQuery(req) {
+  try {
+    const { limit, offset, status, search, userId, priceStatus, saleStatus } = req.query;
+    const { startDate, endDate } = req.body;
+    
+    const replacements = { limit: Number(limit), offset: Number(offset) };
+    let whereClause = "1=1"; // شرط پایه برای WHERE
+    
+    // فیلتر بر اساس وضعیت تخفیف
+    if (status === 'hasOff') whereClause += " AND s.off > 0";
+    if (status === 'hasNotOff') whereClause += " AND s.off = 0";
+    
+    // فیلتر بر اساس قیمت
+    if (priceStatus === 'free') whereClause += " AND s.mainPrice = 0";
+    if (priceStatus === 'notFree') whereClause += " AND s.mainPrice > 0";
+    
+    // فیلتر بر اساس فروشنده
+    if (saleStatus === 'admin') whereClause += " AND s.adminSaler IS NOT NULL";
+    if (saleStatus === 'user') whereClause += " AND s.adminSaler IS NULL";
+    
+    // فیلتر بر اساس تاریخ
+    if (startDate && endDate) {
+        whereClause += " AND s.created_at BETWEEN :startDate AND :endDate";
+        replacements.startDate = new Date(startDate);
+        replacements.endDate = new Date(endDate);
+    } else if (startDate) {
+        whereClause += " AND s.created_at >= :startDate";
+        replacements.startDate = new Date(startDate);
+    } else if (endDate) {
+        whereClause += " AND s.created_at <= :endDate";
+        replacements.endDate = new Date(endDate);
+    }
+    
+    // فیلتر بر اساس userId
+    if (Number(userId)) {
+        whereClause += " AND s.user_id = :userId";
+        replacements.userId = userId;
+    }
+    
+    // فیلتر بر اساس search روی نام دوره (course.name)
+    if (search) {
+        whereClause += " AND c.name LIKE :search";
+        replacements.search = `%${search}%`;
+    }
+    
+    // کوئری نهایی که همه چیز را باهم دارد
+    const query = `
+        SELECT s.*, 
+               u.id AS user_id, 
+               u.name AS user_name, 
+               a.id AS admin_id, 
+               a.name AS admin_name, 
+               c.id AS course_id, 
+               c.name AS course_name,
+               COUNT(*) OVER() AS total_count, 
+               SUM(s.price) OVER() AS total_price
+        FROM sales s
+        JOIN users u ON s.user_id = u.id
+        LEFT JOIN users a ON s.adminSaler = a.id
+        JOIN courses c ON s.course_id = c.id
+        WHERE ${whereClause}
+        ORDER BY s.id DESC
+        LIMIT :limit OFFSET :offset;`
+    ;
+    
+    const sales = await db.query(query, {
+        replacements,
+        type: QueryTypes.SELECT
+    });
+    
+    // خروجی نهایی
+    const total_count = sales.length > 0 ? sales[0].total_count : 0;
+    const total_price = sales.length > 0 ? sales[0].total_price : 0;
+return {items : sales , count :total_count, totalPrice : total_price}
+  } catch (error) {
+    return {error}
+  }
+}
+
 module.exports = {
   findCoursesByQuery,
   findOffsByQuery,
   findCommentsByQuery,
   findCommentReplies,
   setCourseAverageScore,
-  findSessionsByQuery
+  findSessionsByQuery,
+  findSalesByQuery
 }

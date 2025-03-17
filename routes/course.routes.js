@@ -42,6 +42,7 @@ router.post('/upload-video' ,authMiddleware , roleGardMiddleware([configs.roles.
 router.get('/creating-data' ,authMiddleware , roleGardMiddleware([configs.roles.admin]) ,controller.getCreatingData);
 router.post('/delete-video',authMiddleware,roleGardMiddleware([configs.roles.admin]),controller.deleteFile)
 router.get('/',controller.getCourses);
+router.get('/short-date',controller.getShortCourseData);
 router.get('/:id',controller.getCourse);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getCoursesValidator() ,controller.deleteCourse);
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
