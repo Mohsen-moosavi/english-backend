@@ -1,4 +1,5 @@
 const configs = require("../configs");
+const { errorResponse } = require("../utils/responses");
 
 function roleGardMiddleware(roles) {
   return async (req, res, next) => {

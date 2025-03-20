@@ -66,6 +66,10 @@ const Off = require("./models/off")(db);
 const OffUsers = require("./models/off-user")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Comment = require("./models/comment")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Ticket = require("./models/ticket")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const TicketMessage = require("./models/ticketMessage")(db);
 
 
 Book.hasMany(Course, {
@@ -238,6 +242,27 @@ User.hasMany(Off, {
 Off.belongsTo(User, { foreignKey: "creator_id" , as:'creator' });
 
 
+User.hasMany(Ticket,{
+  foreignKey : 'user_id'
+})
+
+Ticket.belongsTo(User, {foreignKey:'user_id'})
+
+
+Ticket.hasMany(TicketMessage,{
+  foreignKey : 'ticket_id',
+  as : 'messages'
+})
+
+TicketMessage.belongsTo(Ticket, {foreignKey:'ticket_id'})
+
+
+User.hasMany(TicketMessage,{
+  foreignKey : 'sender_id'
+})
+
+TicketMessage.belongsTo(User, {foreignKey:'sender_id',as: 'sender'})
+
 
 Course.belongsToMany(Tag, {
   through: TagCourses,
@@ -364,5 +389,7 @@ module.exports = {
   Sale,
   Off,
   OffUsers,
-  Comment
+  Comment,
+  Ticket,
+  TicketMessage
 };

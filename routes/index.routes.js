@@ -10,6 +10,7 @@ const offRoutes = require("./off.routes")
 const commentRoutes = require("./comment.routes")
 const sessionRoutes = require("./session.routes")
 const saleRoutes = require("./sale.routes")
+const ticketRoutes = require("./ticket.routes")
 
 const router = Router()
 
@@ -24,5 +25,6 @@ router.use("/off" , offRoutes)
 router.use("/comment" , commentRoutes)
 router.use("/session" , sessionRoutes)
 router.use("/sale" , saleRoutes)
+router.use("/ticket" , ticketRoutes)
 
 module.exports = router

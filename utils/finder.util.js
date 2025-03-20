@@ -1,5 +1,5 @@
 const { Op, QueryTypes, Sequelize } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db, Session, Sale } = require("../db");
+const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
@@ -336,6 +336,44 @@ return {items : sales , count :total_count, totalPrice : total_price}
   }
 }
 
+async function findTicketsByQuery(req) {
+  try {
+    const { limit, offset, status, subject,userId } = req.query;
+    
+    const finderObject = {};
+
+    Number(userId) && (finderObject.user_id = userId)
+
+    status === 'open' && (finderObject.status = 'open');
+    status === 'answered' && (finderObject.status = 'answered');
+    status === 'pending' && (finderObject.status = 'pending');
+    status === 'closed' && (finderObject.status = 'closed');
+   
+    subject === 'fiscal' && (finderObject.subject = 'fiscal');
+    subject === 'scholastic' && (finderObject.subject = 'scholastic');
+    subject === 'counseling' && (finderObject.subject = 'counseling');
+    subject === 'offer' && (finderObject.subject ='offer' );
+    subject === 'support' && (finderObject.subject = 'support');
+    subject === 'other' && (finderObject.subject = {[Op.notIn] :['fiscal', 'scholastic', 'counseling', 'offer', 'support']});
+
+    const { rows: tickets, count } = await Ticket.findAndCountAll(
+      {
+        where: finderObject,
+        limit: Number(limit),
+        offset: Number(offset),
+        order:  [['id', 'DESC']],
+        include: [
+          { model: User, attributes: ['name']},
+        ],
+        raw: true
+      });
+
+    return {items : tickets , count}
+  } catch (error) {
+    return {error}
+  }
+}
+
 module.exports = {
   findCoursesByQuery,
   findOffsByQuery,
@@ -343,5 +381,6 @@ module.exports = {
   findCommentReplies,
   setCourseAverageScore,
   findSessionsByQuery,
-  findSalesByQuery
+  findSalesByQuery,
+  findTicketsByQuery
 }
