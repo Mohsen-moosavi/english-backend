@@ -30,10 +30,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      friends : {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
       password: {
         type: Sequelize.STRING,
         allowNull: false,

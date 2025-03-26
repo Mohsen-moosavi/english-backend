@@ -3,7 +3,8 @@ const UserCourses = (sequelize) =>
     "users_courses",
     {},
     {
-      tableName: "users_courses"
+      tableName: "users_courses",
+      timestamps : false
     }
   );
 

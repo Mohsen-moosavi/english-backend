@@ -1,5 +1,5 @@
 const { Op, QueryTypes, Sequelize } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket } = require("../db");
+const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
@@ -374,6 +374,252 @@ async function findTicketsByQuery(req) {
   }
 }
 
+// async function findUsersByQuery(req) {
+//   try {
+//     const { searchName='' , searchPhone='', roleStatus, purchaseStatus , scoreStatus , levelStatus, deletedUser=false,scorePriority=false, limit , offset} = req.query;
+
+//     console.log('values===================>',searchName , searchPhone, roleStatus, purchaseStatus , scoreStatus , levelStatus, deletedUser,scorePriority, limit , offset)
+
+//     const finderObject = {};
+//     // const finderObject = { name: { [Op.like]: `%${searchName}%`}, phone :{ [Op.like]: `%${searchPhone}%` }};
+//     Boolean(deletedUser) && (finderObject.deleted_at = {[Op.not] : null})
+
+//     const orderArray = [['id', 'DESC']]
+
+//     if(Boolean(scorePriority)){
+//       purchaseStatus === 'max' && orderArray.unshift([Sequelize.literal('totalSpent'), 'DESC']);
+//       purchaseStatus === 'min' && orderArray.unshift([Sequelize.literal('totalSpent')]);
+
+//       scoreStatus === 'max' && orderArray.unshift(['score', 'DESC']);
+//       scoreStatus === 'min' && orderArray.unshift(['score']);
+//     }else{
+//       scoreStatus === 'max' && orderArray.unshift(['score', 'DESC']);
+//       scoreStatus === 'min' && orderArray.unshift(['score']);
+
+//       purchaseStatus === 'max' && orderArray.unshift([Sequelize.literal('totalSpent'), 'DESC']);
+//       purchaseStatus === 'min' && orderArray.unshift([Sequelize.literal('totalSpent')]);
+//     }
+
+//     const roleFinderObject = {}
+//     Number(roleStatus) && (roleFinderObject.id = roleStatus)
+
+//     const levelFinderObject = {}
+//     Number(levelStatus) && (levelFinderObject.id = levelStatus)
+
+//     // const { rows: users, count } = await User.findAndCountAll({
+//     //   where: finderObject,
+//     //   limit: Number(limit),
+//     //   offset: Number(offset),
+//     //   attributes: ['id', 'name','username', 'phone', 'score', 'created_at', 'updated_at', [Sequelize.fn('SUM', Sequelize.col('sales.price')), 'totalSpent']],
+//     //   include: [
+//     //     { model: Role, attributes: ['id', 'name'], as : 'role', where: roleFinderObject },
+//     //     { model: Level, attributes: ['id','name'], as : 'level', where: levelFinderObject, required:false },
+//     //     {
+//     //       model: Sale,
+//     //       attributes: [
+//     //         [Sequelize.fn('SUM', Sequelize.col('sales.price')), 'totalSpent'], // جمع price ها
+//     //       ],
+//     //       required: false,
+//     //     },
+//     //   ],
+//     //   group: ['User.id', 'Role.id', 'Level.id'],
+//     //   order: orderArray,
+//     //   paranoid: !Boolean(deletedUser),
+//     //   raw: true,
+//     // });
+
+//     const { rows: users, count } = await User.findAndCountAll({
+//       where: finderObject,
+//       limit: Number(limit),
+//       offset: Number(offset),
+//       attributes: ['id', 'name','username', 'phone', 'score', 'created_at', 'updated_at',  [Sequelize.fn('COALESCE', Sequelize.col('level.name'), 'No Level'), 'levelName'],[Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('sales.price')), 0), 'totalSpent']],
+//       include: [
+//         { model: Role, attributes: ['id', 'name'], as : 'role', where: roleFinderObject },
+//         { model: Level, attributes: ['id','name'], as : 'level', where: levelFinderObject},
+//         {
+//           model: Sale,
+//           attributes:[
+//             [Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('sales.price')), 0), 'totalSpent'], // 👈 اصلاح شده
+//           ],
+//           as: 'sales',
+//           required: false,
+//         },
+//       ],
+//       // group: ['User.id', 'Role.id', 'Level.id'],
+//       group: ['User.id'],
+//       order: orderArray,
+//       // paranoid: !Boolean(deletedUser),
+//       raw: false,
+//     });
+
+//     console.log("here=========================================>",finderObject,levelFinderObject , roleFinderObject,users)
+
+
+//     return { items: users, count }
+//   } catch (error) {
+//     return { error }
+//   }
+// }
+
+// async function findUsersByQuery(req) {
+//   const { searchName = '', searchPhone = '', roleStatus, purchaseStatus, scoreStatus, levelStatus, deletedUser = false, scorePriority = false, limit, offset } = req.query;
+
+// // ایجاد بخش WHERE
+// let whereClause = `WHERE u.name LIKE '%${searchName}%' AND u.phone LIKE '%${searchPhone}%'`;
+
+// if (Boolean(deletedUser)) {
+//   whereClause +=  `AND u.deleted_at IS NOT NULL`;
+// }
+
+// let orderClause = 'ORDER BY u.id DESC';
+
+// if (Boolean(scorePriority)) {
+//   if (purchaseStatus === 'max') {
+//     orderClause = 'ORDER BY totalSpent DESC';
+//   } else if (purchaseStatus === 'min') {
+//     orderClause = 'ORDER BY totalSpent ASC';
+//   }
+
+//   if (scoreStatus === 'max') {
+//     orderClause = 'ORDER BY u.score DESC';
+//   } else if (scoreStatus === 'min') {
+//     orderClause = 'ORDER BY u.score ASC';
+//   }
+// } else {
+//   if (scoreStatus === 'max') {
+//     orderClause = 'ORDER BY u.score DESC';
+//   } else if (scoreStatus === 'min') {
+//     orderClause = 'ORDER BY u.score ASC';
+//   }
+
+//   if (purchaseStatus === 'max') {
+//     orderClause = 'ORDER BY totalSpent DESC';
+//   } else if (purchaseStatus === 'min') {
+//     orderClause = 'ORDER BY totalSpent ASC';
+//   }
+// }
+
+// let roleCondition = '';
+// if (roleStatus) {
+//   roleCondition = `AND r.name = '${roleStatus}'`;
+// }
+
+// let levelCondition = '';
+// if (levelStatus) {
+//   levelCondition = `AND l.name = '${levelStatus}'`;
+// }
+
+// // کوئری برای دریافت داده‌ها
+// const query = `
+//   SELECT u.id, u.name, u.username, u.phone, u.score, 
+//          COALESCE(SUM(s.price), 0) AS totalSpent,
+//          COALESCE(l.name, 'No Level') AS levelName
+//   FROM users u
+//   LEFT JOIN sales s ON u.id = s.user_id
+//   LEFT JOIN roles r ON u.role_id = r.id
+//   LEFT JOIN levels l ON u.level_id = l.id
+//   ${whereClause}
+//   ${roleCondition}
+//   ${levelCondition}
+//   GROUP BY u.id
+//   ${orderClause}
+//   LIMIT ${offset}, ${limit};`
+// ;
+
+// // اجرای کوئری
+// const result = await db.query(query, {
+//   type: QueryTypes.SELECT
+// });
+
+// console.log("result===============>" , result)
+
+// return result;
+// }
+
+async function findUsersByQuery(req) {
+  try {
+    const { searchName = '', searchPhone = '', roleStatus, scoreStatus, levelStatus, deletedUser = 0,purchaseStatus, scorePriority, limit, offset } = req.query;
+
+    const finderObject = [];
+    if (Number(deletedUser)){
+      finderObject.push('u.deleted_at IS NOT NULL');
+    }else{
+      finderObject.push('u.deleted_at IS NULL');
+    }
+    
+    if (searchName) finderObject.push(`u.name LIKE '%${searchName}%'`);
+    if (searchPhone) finderObject.push(`u.phone LIKE '%${searchPhone}%'`);
+    
+    // فیلتر بر اساس role و level اگر لازم باشد
+    if (roleStatus) finderObject.push(`r.id = ${roleStatus}`);
+    if (levelStatus) finderObject.push(`l.id = ${levelStatus}`);
+    
+    // ترتیب‌دهی برای score و purchase
+    // let orderClause = 'u.id DESC'; // پیش‌فرض
+    
+    // if (Number(scorePriority)) {
+    //   if (scoreStatus === 'max') orderClause = 'u.score DESC';
+    //   if (scoreStatus === 'min') orderClause = 'u.score ASC';
+    //   if (purchaseStatus === 'max') orderClause = 'totalSpent DESC';
+    //   if (purchaseStatus === 'min') orderClause = 'totalSpent ASC';
+    // } else {
+    //   if (scoreStatus === 'max') orderClause = 'u.score DESC';
+    //   if (scoreStatus === 'min') orderClause = 'u.score ASC';
+    //   if (purchaseStatus === 'max') orderClause = 'totalSpent DESC';
+    //   if (purchaseStatus === 'min') orderClause = 'totalSpent ASC';
+    // }
+
+
+    let orderClause = ''; // پیش‌فرض
+    
+    if (Number(scorePriority)) {
+      if (scoreStatus === 'max') orderClause += 'u.score DESC ,';
+      if (scoreStatus === 'min') orderClause += 'u.score ASC ,';
+      if (purchaseStatus === 'max') orderClause += 'totalSpent DESC ,';
+      if (purchaseStatus === 'min') orderClause += 'totalSpent ASC ,';
+    } else {
+      if (purchaseStatus === 'max') orderClause += 'totalSpent DESC ,';
+      if (purchaseStatus === 'min') orderClause += 'totalSpent ASC ,';
+      if (scoreStatus === 'max') orderClause += 'u.score DESC ,';
+      if (scoreStatus === 'min') orderClause += 'u.score ASC ,';
+    }
+
+    orderClause += 'u.id DESC'
+
+    // console.log("order=======================>" , !!Number(scorePriority))
+    
+    // ساخت کوئری SQL برای دریافت داده‌ها و تعداد کل رکوردها
+    const sqlQuery = `
+      SELECT 
+        u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, 
+        COALESCE(l.name, 'No Level') AS levelName, 
+        COALESCE(SUM(s.price), 0) AS totalSpent,
+        COUNT(*) OVER() AS totalCount
+      FROM users u
+      LEFT JOIN sales s ON u.id = s.user_id
+      LEFT JOIN levels l ON u.level_id = l.id
+      LEFT JOIN roles r ON u.role_id = r.id  
+      ${finderObject.length > 0 ? `WHERE ${finderObject.join(' AND ')}` : ''}
+      GROUP BY u.id, l.name
+      ORDER BY ${orderClause}
+      LIMIT ${limit} OFFSET ${offset};`
+    ;
+    
+    const users = await db.query(sqlQuery, {
+      type: QueryTypes.SELECT,
+      raw: true
+    });
+    
+    const totalCount = users.length ? users[0].totalCount : 0; // تعداد کل رکوردها از totalCount
+
+    return {items : users , count : totalCount}
+  } catch (error) {
+    return error
+  }
+
+}
+
+
 module.exports = {
   findCoursesByQuery,
   findOffsByQuery,
@@ -382,5 +628,6 @@ module.exports = {
   setCourseAverageScore,
   findSessionsByQuery,
   findSalesByQuery,
-  findTicketsByQuery
+  findTicketsByQuery,
+  findUsersByQuery
 }

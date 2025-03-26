@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator")
 const { errorResponse, successResponse } = require("../../utils/responses")
 const { findSalesByQuery } = require("../../utils/finder.util")
-const { Course, User, Sale } = require("../../db")
+const { Course, User, Sale, UserCourses } = require("../../db")
 
 const createSaleByAdmin = async (req, res, next) => {
     try {
@@ -24,9 +24,18 @@ const createSaleByAdmin = async (req, res, next) => {
             return errorResponse(res, 400, 'کاربر مربوطه یافت نشد!')
         }
 
-        const mainPrice = course.price;
+        const [,isNewItem] = await UserCourses.findOrCreate({
+            where :{
+                course_id : course.id,
+                user_id : user.id
+            }
+        })
 
-        console.log('course======>', course.id, course)
+        if(!isNewItem){
+            return errorResponse(res, 400, 'این دوره از قبل برای کاربر موجود است.')
+        }
+
+        const mainPrice = course.price;
 
         await Sale.create({
             price,

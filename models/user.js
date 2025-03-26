@@ -28,10 +28,6 @@ const User = (sequelize) =>
         type: DataTypes.STRING,
         allowNull: true,
       },
-      friends : {
-        type: DataTypes.JSON,
-        allowNull : true
-      },
       password: {
         type: DataTypes.STRING,
         allowNull: false,

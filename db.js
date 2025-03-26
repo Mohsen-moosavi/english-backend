@@ -81,7 +81,8 @@ Course.belongsTo(Book, { foreignKey: "book_collection_id", as: "book_collection"
 
 
 User.hasMany(Course, {
-    foreignKey: "teacher"
+    foreignKey: "teacher",
+    as:'lessons'
   });
   
 Course.belongsTo(User, { foreignKey: "teacher" });
@@ -95,7 +96,8 @@ Article.belongsTo(User, { foreignKey: "author" });
 
 
 User.hasMany(Sale, {
-  foreignKey: "user_id"
+  foreignKey: "user_id",
+  as:'sales'
 });
 
 Sale.belongsTo(User, { foreignKey: "user_id" });
@@ -324,6 +326,7 @@ User.belongsToMany(Course, {
   through: UserCourses,
   foreignKey: "user_id",
   onDelete: "CASCADE",
+  as : 'userCourses'
 });
 
 Course.belongsToMany(User, {
@@ -391,5 +394,6 @@ module.exports = {
   OffUsers,
   Comment,
   Ticket,
-  TicketMessage
+  TicketMessage,
+  UserCourses
 };

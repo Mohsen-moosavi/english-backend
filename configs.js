@@ -38,7 +38,8 @@ module.exports = {
       admin : 'ADMIN',
       user : 'USER',
       teacher : 'TEACHER',
-      writter : 'WRITTER'
+      writter : 'WRITTER',
+      teacherWritter : 'TEACHERWRITTER',
     }
   };
   
