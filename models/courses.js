@@ -62,6 +62,8 @@ const Courses = (sequelize) =>
     {
       tableName: "courses",
       timestamps: true,
+      paranoid: true,
+      deletedAt: "deleted_at",
       createdAt: "created_at",
       updatedAt: "updated_at",
     }

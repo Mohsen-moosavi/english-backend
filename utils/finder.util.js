@@ -3,7 +3,7 @@ const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role
 
 async function findCoursesByQuery(req) {
   try {
-    const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus } = req.query
+    const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus,userId } = req.query
 
     const finderObject = { name: { [Op.like]: `%${search}%` } };
     Number(teacherId) && (finderObject.teacher = teacherId);
@@ -18,6 +18,17 @@ async function findCoursesByQuery(req) {
     priceStatus === 'max' && orderArray.unshift(['price', 'DESC']) && (finderObject.price = { [Op.ne]: 0 })
     priceStatus === 'min' && orderArray.unshift(['price']) && (finderObject.price = { [Op.ne]: 0 })
 
+    
+    const includeArray = [
+      { model: User, attributes: ['name']},
+      { model: Book, attributes: ['name'], as: 'book_collection' },
+      { model: Level, attributes: ['name'], as: 'level' },
+      { model: Off, attributes: ['id', 'percent'] }
+    ]
+    if(Number(userId)){
+      includeArray.push({ model: User, attributes: ['id','name'] , as : 'coursesUser' , where : {id : userId} })
+    }
+
     const { rows: courses, count } = await Course.findAndCountAll(
       {
         where: finderObject,
@@ -25,12 +36,8 @@ async function findCoursesByQuery(req) {
         offset: Number(offset),
         order: orderArray,
         attributes: { exclude: ['teacher'] },
-        include: [
-          { model: User, attributes: ['name'] },
-          { model: Book, attributes: ['name'], as: 'book_collection' },
-          { model: Level, attributes: ['name'], as: 'level' },
-          { model: Off, attributes: ['id', 'percent'] },
-        ],
+        include: includeArray,
+        paranoid : false,
         raw: true
       });
 
@@ -373,168 +380,6 @@ async function findTicketsByQuery(req) {
     return {error}
   }
 }
-
-// async function findUsersByQuery(req) {
-//   try {
-//     const { searchName='' , searchPhone='', roleStatus, purchaseStatus , scoreStatus , levelStatus, deletedUser=false,scorePriority=false, limit , offset} = req.query;
-
-//     console.log('values===================>',searchName , searchPhone, roleStatus, purchaseStatus , scoreStatus , levelStatus, deletedUser,scorePriority, limit , offset)
-
-//     const finderObject = {};
-//     // const finderObject = { name: { [Op.like]: `%${searchName}%`}, phone :{ [Op.like]: `%${searchPhone}%` }};
-//     Boolean(deletedUser) && (finderObject.deleted_at = {[Op.not] : null})
-
-//     const orderArray = [['id', 'DESC']]
-
-//     if(Boolean(scorePriority)){
-//       purchaseStatus === 'max' && orderArray.unshift([Sequelize.literal('totalSpent'), 'DESC']);
-//       purchaseStatus === 'min' && orderArray.unshift([Sequelize.literal('totalSpent')]);
-
-//       scoreStatus === 'max' && orderArray.unshift(['score', 'DESC']);
-//       scoreStatus === 'min' && orderArray.unshift(['score']);
-//     }else{
-//       scoreStatus === 'max' && orderArray.unshift(['score', 'DESC']);
-//       scoreStatus === 'min' && orderArray.unshift(['score']);
-
-//       purchaseStatus === 'max' && orderArray.unshift([Sequelize.literal('totalSpent'), 'DESC']);
-//       purchaseStatus === 'min' && orderArray.unshift([Sequelize.literal('totalSpent')]);
-//     }
-
-//     const roleFinderObject = {}
-//     Number(roleStatus) && (roleFinderObject.id = roleStatus)
-
-//     const levelFinderObject = {}
-//     Number(levelStatus) && (levelFinderObject.id = levelStatus)
-
-//     // const { rows: users, count } = await User.findAndCountAll({
-//     //   where: finderObject,
-//     //   limit: Number(limit),
-//     //   offset: Number(offset),
-//     //   attributes: ['id', 'name','username', 'phone', 'score', 'created_at', 'updated_at', [Sequelize.fn('SUM', Sequelize.col('sales.price')), 'totalSpent']],
-//     //   include: [
-//     //     { model: Role, attributes: ['id', 'name'], as : 'role', where: roleFinderObject },
-//     //     { model: Level, attributes: ['id','name'], as : 'level', where: levelFinderObject, required:false },
-//     //     {
-//     //       model: Sale,
-//     //       attributes: [
-//     //         [Sequelize.fn('SUM', Sequelize.col('sales.price')), 'totalSpent'], // جمع price ها
-//     //       ],
-//     //       required: false,
-//     //     },
-//     //   ],
-//     //   group: ['User.id', 'Role.id', 'Level.id'],
-//     //   order: orderArray,
-//     //   paranoid: !Boolean(deletedUser),
-//     //   raw: true,
-//     // });
-
-//     const { rows: users, count } = await User.findAndCountAll({
-//       where: finderObject,
-//       limit: Number(limit),
-//       offset: Number(offset),
-//       attributes: ['id', 'name','username', 'phone', 'score', 'created_at', 'updated_at',  [Sequelize.fn('COALESCE', Sequelize.col('level.name'), 'No Level'), 'levelName'],[Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('sales.price')), 0), 'totalSpent']],
-//       include: [
-//         { model: Role, attributes: ['id', 'name'], as : 'role', where: roleFinderObject },
-//         { model: Level, attributes: ['id','name'], as : 'level', where: levelFinderObject},
-//         {
-//           model: Sale,
-//           attributes:[
-//             [Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('sales.price')), 0), 'totalSpent'], // 👈 اصلاح شده
-//           ],
-//           as: 'sales',
-//           required: false,
-//         },
-//       ],
-//       // group: ['User.id', 'Role.id', 'Level.id'],
-//       group: ['User.id'],
-//       order: orderArray,
-//       // paranoid: !Boolean(deletedUser),
-//       raw: false,
-//     });
-
-//     console.log("here=========================================>",finderObject,levelFinderObject , roleFinderObject,users)
-
-
-//     return { items: users, count }
-//   } catch (error) {
-//     return { error }
-//   }
-// }
-
-// async function findUsersByQuery(req) {
-//   const { searchName = '', searchPhone = '', roleStatus, purchaseStatus, scoreStatus, levelStatus, deletedUser = false, scorePriority = false, limit, offset } = req.query;
-
-// // ایجاد بخش WHERE
-// let whereClause = `WHERE u.name LIKE '%${searchName}%' AND u.phone LIKE '%${searchPhone}%'`;
-
-// if (Boolean(deletedUser)) {
-//   whereClause +=  `AND u.deleted_at IS NOT NULL`;
-// }
-
-// let orderClause = 'ORDER BY u.id DESC';
-
-// if (Boolean(scorePriority)) {
-//   if (purchaseStatus === 'max') {
-//     orderClause = 'ORDER BY totalSpent DESC';
-//   } else if (purchaseStatus === 'min') {
-//     orderClause = 'ORDER BY totalSpent ASC';
-//   }
-
-//   if (scoreStatus === 'max') {
-//     orderClause = 'ORDER BY u.score DESC';
-//   } else if (scoreStatus === 'min') {
-//     orderClause = 'ORDER BY u.score ASC';
-//   }
-// } else {
-//   if (scoreStatus === 'max') {
-//     orderClause = 'ORDER BY u.score DESC';
-//   } else if (scoreStatus === 'min') {
-//     orderClause = 'ORDER BY u.score ASC';
-//   }
-
-//   if (purchaseStatus === 'max') {
-//     orderClause = 'ORDER BY totalSpent DESC';
-//   } else if (purchaseStatus === 'min') {
-//     orderClause = 'ORDER BY totalSpent ASC';
-//   }
-// }
-
-// let roleCondition = '';
-// if (roleStatus) {
-//   roleCondition = `AND r.name = '${roleStatus}'`;
-// }
-
-// let levelCondition = '';
-// if (levelStatus) {
-//   levelCondition = `AND l.name = '${levelStatus}'`;
-// }
-
-// // کوئری برای دریافت داده‌ها
-// const query = `
-//   SELECT u.id, u.name, u.username, u.phone, u.score, 
-//          COALESCE(SUM(s.price), 0) AS totalSpent,
-//          COALESCE(l.name, 'No Level') AS levelName
-//   FROM users u
-//   LEFT JOIN sales s ON u.id = s.user_id
-//   LEFT JOIN roles r ON u.role_id = r.id
-//   LEFT JOIN levels l ON u.level_id = l.id
-//   ${whereClause}
-//   ${roleCondition}
-//   ${levelCondition}
-//   GROUP BY u.id
-//   ${orderClause}
-//   LIMIT ${offset}, ${limit};`
-// ;
-
-// // اجرای کوئری
-// const result = await db.query(query, {
-//   type: QueryTypes.SELECT
-// });
-
-// console.log("result===============>" , result)
-
-// return result;
-// }
 
 async function findUsersByQuery(req) {
   try {

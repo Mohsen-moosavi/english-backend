@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -150,6 +150,8 @@ const getCourses = async (req, res, next) => {
     if (validationError?.errors && validationError?.errors[0]) {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
+
+    
     const {items , count , error} = await findCoursesByQuery(req)
 
     if(error){
@@ -172,51 +174,28 @@ const deleteCourse = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus } = req.query
-
     const deletedCourse = await Course.findOne({
-      where: { id }
+      where: { id },
+      paranoid : false
     })
 
     if (!deletedCourse) {
-      return errorResponse(res, 400, 'موردی جهت حذف یافت نشد!')
+      return errorResponse(res, 400, 'موردی جهت تغییر فعال سازی یافت نشد!')
     }
 
-    removeImage(deletedCourse.cover?.split('/')?.reverse()[0])
-    removeIntroductionVideo(deletedCourse.introductionVideo?.split('/')?.reverse()[0])
+    if(deletedCourse.deleted_at){
+      await deletedCourse.restore()
+    }else{  
+      await deletedCourse.destroy()
+    }
 
-    await deletedCourse.destroy()
+    const {items , count , error} = await findCoursesByQuery(req)
 
+    if(error){
+      return next(error)
+    }
 
-    const finderObject = { name: { [Op.like]: `%${search}%` } };
-    Number(teacherId) && (finderObject.teacher = teacherId);
-    Number(bookId) && (finderObject.book_collection_id = bookId);
-    Number(levelId) && (finderObject.level_id = levelId);
-    Number(scoreStatus) && (finderObject.score = { [Op.between]: [scoreStatus - 0.9, scoreStatus] });
-    status === 'completed' && (finderObject.isCompleted = 1);
-    status === 'notCompleted' && (finderObject.isCompleted = 0);
-    priceStatus === 'free' && (finderObject.price = 0);
-
-    const orderArray = [['id', 'DESC']]
-    priceStatus === 'max' && orderArray.unshift(['price', 'DESC']) && (finderObject.price = { [Op.ne]: 0 })
-    priceStatus === 'min' && orderArray.unshift(['price']) && (finderObject.price = { [Op.ne]: 0 })
-
-    const { rows: courses, count } = await Course.findAndCountAll(
-      {
-        where: finderObject,
-        limit: Number(limit),
-        offset: Number(offset),
-        order: orderArray,
-        attributes: { exclude: ['teacher'] },
-        include: [
-          { model: User, attributes: ['name'] },
-          { model: Book, attributes: ['name'], as: 'book_collection' },
-          { model: Level, attributes: ['name'], as: 'level' }
-        ],
-        raw: true
-      })
-
-    return successResponse(res, 200, 'دوره با موفقیت حذف شد.', { courses, count })
+    return successResponse(res, 200, 'دوره با موفقیت تغییر وضعیت داد.', { courses : items, count })
   } catch (error) {
     next(error)
   }
@@ -376,10 +355,15 @@ const updateVideo = async (req, res, next) => {
 
 const updateStatus = async (req,res,next)=>{
   try {
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
     const {id} = req.params;
 
-    console.log('items======================================>')
-    const course = await Course.findOne({where : {id}})
+    const course = await Course.findOne({where : {id} , paranoid : false})
 
     if(!course){
       return errorResponse(res,400,'دوره مورد نظر یافت نشد.')
@@ -388,8 +372,9 @@ const updateStatus = async (req,res,next)=>{
     course.isCompleted = !course.isCompleted;
     await course.save()
 
+    
     const {items , count , error} = await findCoursesByQuery(req)
-
+    
     if(error){
       return next(error)
     }
@@ -404,7 +389,8 @@ const updateStatus = async (req,res,next)=>{
 const getShortCourseData = async (req, res, next) => {
   try {
     const courses = await Course.findAll({
-      attributes : ['id' , 'name']
+      attributes : ['id' , 'name'],
+      paranoid : true,
     })
 
     return successResponse(res, 200, '', { courses })

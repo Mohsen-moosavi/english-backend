@@ -333,6 +333,7 @@ Course.belongsToMany(User, {
   through: UserCourses,
   foreignKey: "course_id",
   onDelete: "CASCADE",
+  as : 'coursesUser'
 });
 
 

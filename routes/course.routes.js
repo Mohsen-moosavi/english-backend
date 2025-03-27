@@ -41,13 +41,13 @@ router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.admin]), upl
 router.post('/upload-video' ,authMiddleware , roleGardMiddleware([configs.roles.admin]), uploadVideo.single('video') ,controller.uploadVideo);
 router.get('/creating-data' ,authMiddleware , roleGardMiddleware([configs.roles.admin]) ,controller.getCreatingData);
 router.post('/delete-video',authMiddleware,roleGardMiddleware([configs.roles.admin]),controller.deleteFile)
-router.get('/',controller.getCourses);
+router.get('/',authMiddleware,roleGardMiddleware([configs.roles.admin]),getCoursesValidator(),controller.getCourses);
 router.get('/short-date',controller.getShortCourseData);
 router.get('/:id',controller.getCourse);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getCoursesValidator() ,controller.deleteCourse);
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
 router.post('/update-video/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadVideo.single('video'),controller.updateVideo);
-router.post('/change-status/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),controller.updateStatus);
+router.post('/change-status/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),getCoursesValidator(),controller.updateStatus);
 
 
 module.exports = router;

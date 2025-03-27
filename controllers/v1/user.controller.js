@@ -1,8 +1,8 @@
-const { Op, Sequelize } = require("sequelize");
-const { User, Role, Level, Course, Sale, Ticket, Comment, Article } = require("../../db");
+const { Op, Sequelize, QueryTypes } = require("sequelize");
+const { User, Role, Level, Course, Sale, Ticket, Comment, Article, UserCourses, db } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { validationResult } = require("express-validator");
-const { findUsersByQuery } = require("../../utils/finder.util");
+const { findUsersByQuery, findCoursesByQuery } = require("../../utils/finder.util");
 
 const getUsers = async (req,res,next)=>{
     try {
@@ -59,87 +59,82 @@ const getFinderParams = async (req,res,next)=>{
 
 const getUserDetails = async (req,res,next)=>{
     try {
-        // const {id} = req.params;
-        
-        // const user = await User.findOne({
-        //     where : {id},
-        //     attributes: [
-        //       'id',
-        //       'name',
-        //       'username',
-        //       'phone',
-        //       'avatar',
-        //       'score',
-        //       'created_at',
-        //       'updated_at',
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('COUNT', Sequelize.col('comments.id')), 0),'commentCount'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('AVG', Sequelize.col('comments.score')) , 0),'avgScore'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('COUNT', Sequelize.col('userCourses.id')) , 0),'courseCount'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('COUNT', Sequelize.col('sales.id')) , 0),'saleCount'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('SUM', Sequelize.col('sales.price')) , 0),'sumSales'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('COUNT', Sequelize.col('tickets.id')) , 0),'ticketCount'],
-        //       [Sequelize.fn('COALESCE' , Sequelize.fn('COUNT', Sequelize.col('articles.id')) , 0),'articleCount'],
-        //     ],
-        //     include: [
-        //       {model: Comment,attributes: [], required:false},
-        //       {model: Role,as: 'role',attributes: ['name'], required:false},
-        //       {model: Level,as: 'level',attributes: ['name'], required:false},
-        //       {model: Course , as:'userCourses',attributes: [], required:false},
-        //       {model: Sale,as: 'sales',attributes: [], required:false},
-        //       {model: Ticket,attributes: [], required:false},
-        //       {model: Article,attributes: [], required:false},
-        //     ],
-        //     subQuery : false,
-        //     group: ['User.id'],
-        //     // raw: true
-        //   })
-
         const {id} = req.params;
         
-const user = await User.findOne({
-  where: { id },
-  attributes: [
-    'id',
-    'name',
-    'username',
-    'phone',
-    'avatar',
-    'score',
-    'created_at',
-    'updated_at',
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('comments.id'))),0), 'commentCount'],
+        const query = `
+          SELECT 
+            u.id,
+            u.name,
+            u.username,
+            u.phone,
+            u.avatar,
+            u.score,
+            u.created_at,
+            u.updated_at,
+            COALESCE(COUNT(DISTINCT c.id), 0) AS commentCount,
+            COALESCE(COUNT(DISTINCT uc.course_id), 0) AS courseCount,
+            COALESCE(COUNT(DISTINCT l.id), 0) AS lessonCount,
+            COALESCE(COUNT(DISTINCT s.id), 0) AS saleCount,
+            COALESCE(COUNT(DISTINCT t.id), 0) AS ticketCount,
+            COALESCE(COUNT(DISTINCT a.id), 0) AS articleCount,
+            COALESCE(AVG(c.score), 0) AS avgScore,
+            COALESCE(SUM(s.price), 0) AS sumSales,
+            r.name AS roleName,
+            lvl.name AS levelName
+          FROM 
+            users u
+          LEFT JOIN comments c ON u.id = c.user_id
+          LEFT JOIN users_courses uc ON u.id = uc.user_id
+          LEFT JOIN courses l ON uc.course_id = l.id
+          LEFT JOIN sales s ON u.id = s.user_id
+          LEFT JOIN tickets t ON u.id = t.user_id
+          LEFT JOIN articles a ON u.id = a.author
+          LEFT JOIN roles r ON u.role_id = r.id
+          LEFT JOIN levels lvl ON u.level_id = lvl.id
+          WHERE 
+            u.id = :id
+          GROUP BY 
+            u.id, r.id, lvl.id`;
 
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('userCourses.id'))), 0), 'courseCount'],
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('lessons.id'))),0), 'lessonCount'],
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('sales.id'))),0), 'saleCount'],
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('tickets.id'))),0), 'ticketCount'],
-    [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('articles.id'))),0), 'articleCount'],
+        const user = await db.query(query, {
+            replacements: { id },
+            type: QueryTypes.SELECT,
+        });
+
+        return successResponse(res,200,'',{user : user[0] ? user[0] : {}})
+    } catch (error) {
+        next(error)
+    }
+}
+
+const deleteCourseOfUser = async ( req,res,next)=>{
+    try {
+        const { userId,courseId } = req.params
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
+    const deletedCourseOfUser = await UserCourses.findOne({
+      where: { user_id : userId , course_id : courseId }
+    })
+
+    if (!deletedCourseOfUser) {
+      return errorResponse(res, 400, 'موردی جهت حذف یافت نشد!')
+    }
+
+    await deletedCourseOfUser.destroy()
 
 
+    const {items , count , error} = await findCoursesByQuery(req)
 
-    [Sequelize.fn('COALESCE', Sequelize.fn('AVG', Sequelize.col('comments.score')), 0), 'avgScore'],
-    // [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.col('lessons.id')), 0), 'lessonCount'],
-    // [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.col('sales.id')), 0), 'saleCount'],
-    [Sequelize.fn('COALESCE', Sequelize.fn('SUM', Sequelize.col('sales.price')), 0), 'sumSales'],
-    // [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.col('tickets.id')), 0), 'ticketCount'],
-    // [Sequelize.fn('COALESCE', Sequelize.fn('COUNT', Sequelize.col('articles.id')), 0), 'articleCount'],
-  ],
-  include: [
-    { model: Comment, attributes: [], required: false },
-    { model: Role, as: 'role', attributes: ['name'], required: false },
-    { model: Level, as: 'level', attributes: ['name'], required: false },
-    { model: Course, as: 'userCourses', attributes: [], required: false },
-    { model: Course, as: 'lessons', attributes: [], required: false },
-    { model: Ticket, attributes: [], required: false },
-    { model: Article, attributes: [], required: false },
-    { model: Sale, as: 'sales', attributes: [], required: false },
-  ],
-  subQuery: false,
-  group: ['User.id', 'role.id', 'level.id','userCourses.id','comments.id','tickets.id','articles.id','lessons.id'],
-  raw: false,
-});
+    if(error){
+      return next(error)
+    }
 
-        return successResponse(res,200,'',{user})
+    return successResponse(res, 200, 'دوره با موفقیت برای کاربر حذف شد.', { courses : items, count })
+
     } catch (error) {
         next(error)
     }
@@ -149,15 +144,6 @@ module.exports = {
     getUsers,
     getAdmins,
     getFinderParams,
-    getUserDetails
+    getUserDetails,
+    deleteCourseOfUser
 }
-
-
-
-            //   [Sequelize.fn('COUNT', Sequelize.col('comments.id')), 'commentCount'],
-            //   [Sequelize.fn('AVG', Sequelize.col('comments.score')), 'avgScore'],
-            //   [Sequelize.fn('COUNT', Sequelize.col('courses.id')), 'courseCount'],
-            //   [Sequelize.fn('COUNT', Sequelize.col('sales.id')), 'saleCount'],
-            //   [Sequelize.fn('SUM', Sequelize.col('sales.price')), 'sumSales'],
-            //   [Sequelize.fn('COUNT', Sequelize.col('tickets.id')), 'ticketCount'],
-            //   [Sequelize.fn('COUNT', Sequelize.col('articles.id')), 'articleCount'],
