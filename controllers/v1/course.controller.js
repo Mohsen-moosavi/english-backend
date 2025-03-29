@@ -28,6 +28,7 @@ const getCreatingData = async (req, res, next) => {
         as: 'role',
         where: { name: { [Op.notIn]: [configs.roles.user, configs.roles.writter] } }
       },
+      paranoid:false,
       raw: true,
       attributes: ['name', 'id']
     })

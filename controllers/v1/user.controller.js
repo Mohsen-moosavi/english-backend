@@ -85,7 +85,7 @@ const getUserDetails = async (req,res,next)=>{
             users u
           LEFT JOIN comments c ON u.id = c.user_id
           LEFT JOIN users_courses uc ON u.id = uc.user_id
-          LEFT JOIN courses l ON uc.course_id = l.id
+          LEFT JOIN courses l ON u.id = l.teacher
           LEFT JOIN sales s ON u.id = s.user_id
           LEFT JOIN tickets t ON u.id = t.user_id
           LEFT JOIN articles a ON u.id = a.author
