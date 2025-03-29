@@ -6,6 +6,7 @@ const path = require('path');
 const configs = require("../../configs");
 const { default: slugify } = require("slugify");
 const { removeImage } = require("../../utils/fs.utils");
+const { findArticlesByQuery } = require("../../utils/finder.util");
 
 const createArticle = async(req,res,next)=>{
     try {
@@ -65,25 +66,14 @@ const getArticles = async (req,res,next)=>{
         if (validationError?.errors && validationError?.errors[0]) {
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
-        const {limit , offset , search, status , writerId} = req.query
-
-        const finderObject = {title:{[Op.like] : `%${search}%`}}
-        writerId && (finderObject.author = writerId)
-        status === 'published' && (finderObject.isPublished  = 1)
-        status === 'draft' && (finderObject.isPublished  = 0)
-
-        console.log("status=================>" , finderObject)
         
-        const {rows : articles , count} = await Article.findAndCountAll(
-            {where: finderObject,
-            limit:Number(limit),
-            offset : Number(offset),
-            order: [['id' , 'DESC']],
-            attributes : {exclude : ['author']},
-            include : {model : User , attributes :['name']},
-            raw : true});
+        const {items , count , error} = await findArticlesByQuery(req)
 
-        return successResponse(res,200 ,'', {articles , count})
+        if(error){
+            next(error)
+        }
+
+        return successResponse(res,200 ,'', {articles : items , count})
     } catch (error) {
         next(error)
     }
@@ -204,7 +194,7 @@ const deleteArticle = async (req,res,next)=>{
         if (validationError?.errors && validationError?.errors[0]) {
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
-        const {limit , offset , search, writerId , status} = req.query
+        console.log("response delete ================================================>")
 
         const deletedArticle = await Article.findOne({
             where : {id}
@@ -218,22 +208,13 @@ const deleteArticle = async (req,res,next)=>{
 
         await deletedArticle.destroy()
 
-        
-        const finderObject = {title:{[Op.like] : `%${search}%`}}
-        writerId && (finderObject.author = writerId)
-        status === 'published' && (finderObject.isPublished  = 1)
-        status === 'draft' && (finderObject.isPublished  = 0)
+        const {items , count , error} = await findArticlesByQuery(req)
 
-        const {rows : articles , count} = await Article.findAndCountAll({
-            where:finderObject,
-            limit:Number(limit),
-            attributes : {exclude : ['author']},
-            include : {model : User , attributes :['name']},
-            offset : Number(offset),
-            order: [['id' , 'DESC']],
-            raw : true});
+        if(error){
+            next(error)
+        }
 
-        return successResponse(res,200 ,'مقاله با موفقیت حذف شد.',{articles , count})
+        return successResponse(res,200 ,'مقاله با موفقیت حذف شد.',{articles : items , count})
     } catch (error) {
         next(error)
     }

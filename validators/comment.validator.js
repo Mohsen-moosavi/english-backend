@@ -17,6 +17,7 @@ function getCommentsValidator(){
         query("status").isString().withMessage('پارامتر status معتبر نمی باشد.').isIn(['accept','notAccept','none']).optional(),
         query("parentStatus").isString().withMessage('پارامتر parentStatus معتبر نمی باشد.').isIn(['main','answer']).optional(),
         query("score").isNumeric().withMessage('پارامتر score معتبر نمی باشد.').isIn([0,1,2,3,4,5]).optional(),
+        query("userId").isNumeric().withMessage('پارامتر userId معتبر نمی باشد.').optional(),
     ]
 }
 
@@ -37,6 +38,7 @@ function answerValidator() {
         query("status").isString().withMessage('پارامتر status معتبر نمی باشد.').isIn(['accept','notAccept','none']).optional(),
         query("parentStatus").isString().withMessage('پارامتر parentStatus معتبر نمی باشد.').isIn(['main','answer']).optional(),
         query("score").isNumeric().withMessage('پارامتر score معتبر نمی باشد.').isIn([0,1,2,3,4,5]).optional(),
+        query("userId").isNumeric().withMessage('پارامتر userId معتبر نمی باشد.').optional(),
     ]
 }
 

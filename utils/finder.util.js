@@ -1,5 +1,5 @@
-const { Op, QueryTypes, Sequelize } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role } = require("../db");
+const { Op, QueryTypes, Sequelize, where } = require("sequelize");
+const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role, Article } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
@@ -20,7 +20,7 @@ async function findCoursesByQuery(req) {
 
     
     const includeArray = [
-      { model: User, attributes: ['name']},
+      { model: User, attributes: ['name','id'] , paranoid : false},
       { model: Book, attributes: ['name'], as: 'book_collection' },
       { model: Level, attributes: ['name'], as: 'level' },
       { model: Off, attributes: ['id', 'percent'] }
@@ -44,6 +44,38 @@ async function findCoursesByQuery(req) {
     return { items: courses, count }
   } catch (error) {
     return { error }
+  }
+}
+
+async function findArticlesByQuery(req) {
+  try {
+    const {limit , offset , search, status , writerId , userId} = req.query
+
+    const finderObject = {title:{[Op.like] : `%${search}%`}}
+    writerId && (finderObject.author = writerId)
+    status === 'published' && (finderObject.isPublished  = 1)
+    status === 'draft' && (finderObject.isPublished  = 0)
+
+    const includeArray = []
+
+    if(Number(userId)){
+      includeArray.push( {model : User , attributes :['name' , 'id'] , paranoid : false, where : {id : userId}})
+    }else{
+      includeArray.push( {model : User , attributes :['name', 'id'] , paranoid : false})
+    }
+    
+    const {rows : articles , count} = await Article.findAndCountAll(
+    {where: finderObject,
+      limit:Number(limit),
+      offset : Number(offset),
+      order: [['id' , 'DESC']],
+      attributes : {exclude : ['author']},
+      include : includeArray,
+      raw : true});
+
+      return {items : articles , count}
+  } catch (error) {
+    return {error}
   }
 }
 
@@ -80,7 +112,7 @@ async function findOffsByQuery(req) {
         order: orderArray,
         attributes: { exclude: ['course_id'] },
         include: [
-          { model: User, attributes: ['id', 'name'], as: 'creator' },
+          { model: User, attributes: ['id', 'name'], as: 'creator' , paranoid:false },
           { model: Course, attributes: ['id', 'name'], as: 'course', where: { name: { [Op.like]: `%${search}%` } } },
         ],
         raw: true
@@ -96,7 +128,7 @@ async function findOffsByQuery(req) {
 
 async function findCommentsByQuery(req) {
   try {
-    const { limit, offset, status, score, search, parentStatus } = req.query
+    const { limit, offset, status, score, search, parentStatus , userId } = req.query
 
     const finderObject = {};
     Number(score) && Number(score) > 0 && (finderObject.score = score);
@@ -108,6 +140,16 @@ async function findCommentsByQuery(req) {
     parentStatus === 'answer' && (finderObject.parent_id = { [Op.not]: null });
     parentStatus === 'main' && (finderObject.parent_id = { [Op.is]: null });
 
+    const includeArray = [
+      { model: Course, attributes: ['id','name'], where: { name: { [Op.like]: `%${search}%` } } }
+    ]
+
+    if(Number(userId)){
+      includeArray.push({ model: User, attributes: ['id', 'name'] ,paranoid : false ,where : {id : userId}})
+    }else{
+      includeArray.push({ model: User, attributes: ['id', 'name'] ,paranoid : false})
+    }
+
     const { rows: comments, count } = await Comment.findAndCountAll(
       {
         where: finderObject,
@@ -115,10 +157,7 @@ async function findCommentsByQuery(req) {
         offset: Number(offset),
         attributes: { exclude: ['course_id', 'user_id'] },
         order: [['id', 'DESC']],
-        include: [
-          { model: User, attributes: ['id', 'name'] },
-          { model: Course, attributes: ['id','name'], where: { name: { [Op.like]: `%${search}%` } } },
-        ],
+        include: includeArray,
         raw: true
       });
 
@@ -370,7 +409,7 @@ async function findTicketsByQuery(req) {
         offset: Number(offset),
         order:  [['id', 'DESC']],
         include: [
-          { model: User, attributes: ['name']},
+          { model: User, attributes: ['name'] , paranoid:false},
         ],
         raw: true
       });
@@ -474,5 +513,6 @@ module.exports = {
   findSessionsByQuery,
   findSalesByQuery,
   findTicketsByQuery,
-  findUsersByQuery
+  findUsersByQuery,
+  findArticlesByQuery
 }
