@@ -1,4 +1,4 @@
-const { query } = require("express-validator")
+const { query, body } = require("express-validator")
 
 function getUsersValidator(){
     return [
@@ -15,6 +15,15 @@ function getUsersValidator(){
     ]
 }
 
+
+function changeRoleValidator(){
+    return [
+        body("userId").isNumeric().withMessage('آی دی کاربر معتبر نمی باشد.'),
+        body("roleId").isNumeric().withMessage('نقش انتخاب شده معتبر نمی باشد.'),
+    ]
+}
+
 module.exports = {
-    getUsersValidator
+    getUsersValidator,
+    changeRoleValidator
 }

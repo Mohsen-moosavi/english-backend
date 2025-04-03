@@ -503,6 +503,54 @@ async function findUsersByQuery(req) {
 
 }
 
+async function findUserDetailsByUserId(userId) {
+  try {
+    const query = `
+    SELECT 
+      u.id,
+      u.name,
+      u.username,
+      u.phone,
+      u.avatar,
+      u.score,
+      u.created_at,
+      u.updated_at,
+      COALESCE(COUNT(DISTINCT c.id), 0) AS commentCount,
+      COALESCE(COUNT(DISTINCT uc.course_id), 0) AS courseCount,
+      COALESCE(COUNT(DISTINCT l.id), 0) AS lessonCount,
+      COALESCE(COUNT(DISTINCT s.id), 0) AS saleCount,
+      COALESCE(COUNT(DISTINCT t.id), 0) AS ticketCount,
+      COALESCE(COUNT(DISTINCT a.id), 0) AS articleCount,
+      COALESCE(AVG(c.score), 0) AS avgScore,
+      COALESCE(SUM(s.price), 0) AS sumSales,
+      r.name AS roleName,
+      lvl.name AS levelName
+    FROM 
+      users u
+    LEFT JOIN comments c ON u.id = c.user_id
+    LEFT JOIN users_courses uc ON u.id = uc.user_id
+    LEFT JOIN courses l ON u.id = l.teacher
+    LEFT JOIN sales s ON u.id = s.user_id
+    LEFT JOIN tickets t ON u.id = t.user_id
+    LEFT JOIN articles a ON u.id = a.author
+    LEFT JOIN roles r ON u.role_id = r.id
+    LEFT JOIN levels lvl ON u.level_id = lvl.id
+    WHERE 
+      u.id = :id
+    GROUP BY 
+      u.id, r.id, lvl.id`;
+
+  const user = await db.query(query, {
+      replacements: { id : userId },
+      type: QueryTypes.SELECT,
+  });
+    return {user : user[0] ? user[0] : {}}
+  } catch (error) {
+    return error
+  }
+
+}
+
 
 module.exports = {
   findCoursesByQuery,
@@ -514,5 +562,6 @@ module.exports = {
   findSalesByQuery,
   findTicketsByQuery,
   findUsersByQuery,
-  findArticlesByQuery
+  findArticlesByQuery,
+  findUserDetailsByUserId
 }
