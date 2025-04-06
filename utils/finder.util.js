@@ -1,9 +1,9 @@
 const { Op, QueryTypes, Sequelize, where } = require("sequelize");
-const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role, Article } = require("../db");
+const { Course, User, Book, Level, Off, Comment, db, Session, Sale, Ticket, Role, Article, Tag } = require("../db");
 
 async function findCoursesByQuery(req) {
   try {
-    const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus,userId } = req.query
+    const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus,userId, tagId } = req.query
 
     const finderObject = { name: { [Op.like]: `%${search}%` } };
     Number(teacherId) && (finderObject.teacher = teacherId);
@@ -28,6 +28,9 @@ async function findCoursesByQuery(req) {
     if(Number(userId)){
       includeArray.push({ model: User, attributes: ['id','name'] , as : 'coursesUser' , where : {id : userId} })
     }
+    if(Number(tagId)){
+      includeArray.push({ model: Tag, through :{ attributes : []}, attributes: [] , where : {id : tagId} })
+    }
 
     const { rows: courses, count } = await Course.findAndCountAll(
       {
@@ -49,7 +52,7 @@ async function findCoursesByQuery(req) {
 
 async function findArticlesByQuery(req) {
   try {
-    const {limit , offset , search, status , writerId , userId} = req.query
+    const {limit , offset , search, status , writerId , userId, tagId} = req.query
 
     const finderObject = {title:{[Op.like] : `%${search}%`}}
     writerId && (finderObject.author = writerId)
@@ -62,6 +65,10 @@ async function findArticlesByQuery(req) {
       includeArray.push( {model : User , attributes :['name' , 'id'] , paranoid : false, where : {id : userId}})
     }else{
       includeArray.push( {model : User , attributes :['name', 'id'] , paranoid : false})
+    }
+
+    if(Number(tagId)){
+      includeArray.push( {model : Tag ,through :{ attributes : []}, attributes: [] , where : {id : tagId}})
     }
     
     const {rows : articles , count} = await Article.findAndCountAll(
@@ -551,6 +558,68 @@ async function findUserDetailsByUserId(userId) {
 
 }
 
+async function findTagsByQuery(req) {
+  try {
+    const { limit, offset, search='' } = req.query;
+    
+    const count = await Tag.count({where : {name : {[Op.like] : `%${search}%`}}})
+
+    const tags  = await Tag.findAll(
+      {
+        where: {name : {[Op.like] : `%${search}%`}},
+        limit: Number(limit),
+        offset: Number(offset),
+        order:  [['id', 'DESC']],
+        attributes: [
+          'id',
+          'name',
+          [Sequelize.fn('COALESCE',Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('books.id'))) , 0), 'bookCount'],
+          [Sequelize.fn('COALESCE',Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('articles.id'))),0), 'articleCount'],
+          [Sequelize.fn('COALESCE',Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('courses.id'))),0), 'courseCount'],
+        ],
+        include: [
+          { model: Book, attributes: [], through: { attributes: [] }, required: false },
+          { model: Article, attributes: [], through: { attributes: [] }, required: false },
+          { model: Course, attributes: [], through: { attributes: [] }, required: false },
+        ],
+        group: ['Tag.id'],
+        subQuery: false
+      });
+
+    return {items : tags , count}
+  } catch (error) {
+    return {error}
+  }
+}
+
+async function findBooksByQuery(req) {
+  try {
+    const { limit, offset, search, tagId } = req.query
+
+    const includeArray = []
+
+
+    
+    if(Number(tagId)){
+      includeArray.push({ model: Tag, through :{ attributes : []}, attributes: [] , where : {id : tagId} })
+    }
+    console.log("here===========================================>", tagId, req.query)
+
+    const { rows: books, count } = await Book.findAndCountAll(
+      {
+        where: { name: { [Op.like]: `%${search}%` } },
+        limit: Number(limit),
+        offset: Number(offset),
+        order: [['id', 'DESC']],
+        include: includeArray,
+        raw: true
+      });
+    return {items : books , count}
+  } catch (error) {
+    return {error}
+  }
+}
+
 
 module.exports = {
   findCoursesByQuery,
@@ -563,5 +632,7 @@ module.exports = {
   findTicketsByQuery,
   findUsersByQuery,
   findArticlesByQuery,
-  findUserDetailsByUserId
+  findUserDetailsByUserId,
+  findTagsByQuery,
+  findBooksByQuery
 }

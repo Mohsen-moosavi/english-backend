@@ -34,6 +34,7 @@ function getCoursesValidator(){
         query("priceStatus").isString().withMessage('پارامتر priceStatus معتبر نمی باشد.').isIn(['free','max','min']).optional(),
         query("scoreStatus").isInt().withMessage('پارامتر scoreStatus معتبر نمی باشد.').isIn([1,2,3,4,5]).optional(),
         query("userId").isInt().withMessage('پارامتر userId معتبر نمی باشد.').optional(),
+        query("tagId").isInt().withMessage('پارامتر tagId معتبر نمی باشد.').optional(),
     ]
 }
 

@@ -194,7 +194,6 @@ const deleteArticle = async (req,res,next)=>{
         if (validationError?.errors && validationError?.errors[0]) {
           return errorResponse(res, 400, validationError.errors[0].msg)
         }
-        console.log("response delete ================================================>")
 
         const deletedArticle = await Article.findOne({
             where : {id}

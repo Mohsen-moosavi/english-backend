@@ -26,6 +26,7 @@ function getArticlesValidator(){
         query("status").isString().withMessage('پارامتر وضعیت معتبر نمی باشد.').isIn(['published', 'draft']).optional(),
         query("writerId").isNumeric().withMessage('آی دی کابر معتبر نمی باشد.').optional(),
         query('userId').isNumeric().withMessage('آی دی کابر معتبر نمی باشد.').optional(),
+        query('tagId').isNumeric().withMessage('آی دی تگ معتبر نمی باشد.').optional(),
     ]
 }
 

@@ -8,6 +8,7 @@ const { default: slugify } = require("slugify");
 const { Book, Tag, File, TagBooks } = require("../../db");
 const { Op, Sequelize } = require("sequelize");
 const configs = require("../../configs");
+const { findBooksByQuery } = require("../../utils/finder.util");
 
 const uploadFile = async (req, res, next) => {
   console.log("Hit");
@@ -151,18 +152,14 @@ const getAllBooks = async (req, res, next) => {
     if (validationError?.errors && validationError?.errors[0]) {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
-    const { limit, offset, search } = req.query
 
-    const { rows: books, count } = await Book.findAndCountAll(
-      {
-        where: { name: { [Op.like]: `%${search}%` } },
-        limit: Number(limit),
-        offset: Number(offset),
-        order: [['id', 'DESC']],
-        raw: true
-      });
+    const { items, count, error } = await findBooksByQuery(req)
 
-    return successResponse(res, 200, '', { books, count })
+    if(error){
+      next(error)
+    }
+
+    return successResponse(res, 200, '', { books: items, count })
   } catch (error) {
     next(error)
   }
@@ -208,16 +205,13 @@ const deleteBookWithGettingAll = async (req, res, next) => {
     removeImage(deletedBook.cover?.split('/')?.reverse()[0])
     await deletedBook.destroy()
 
-    const { rows: books, count } = await Book.findAndCountAll(
-      {
-        where: { name: { [Op.like]: `%${search}%` } },
-        limit: Number(limit),
-        offset: Number(offset),
-        order: [['id', 'DESC']],
-        raw: true
-      });
+    const { items, count, error } = await findBooksByQuery(req)
 
-    return successResponse(res, 200, "مجموعه با موفقیت حذف شد.", { books, count })
+    if(error){
+      next(error)
+    }
+
+    return successResponse(res, 200, "مجموعه با موفقیت حذف شد.", { books: items, count })
   } catch (error) {
     next(error)
   }

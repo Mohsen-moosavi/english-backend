@@ -35,6 +35,9 @@ function getAllBooksValidator(){
     return [
         query('limit').isNumeric().withMessage("تعداد وارد شده معتبر نمی باشد.").isFloat({min : 1}).withMessage("تعداد وارد شده باید بیشتر از 1 باشد."),
         query('offset').isNumeric().withMessage("تعداد وارد شده معتبر نمی باشد.").isFloat({min : 0}).withMessage("تعداد وارد شده باید بیشتر از 0 باشد."),
+        query("search").isString().withMessage('پارامتر search معتبر نمی باشد.'),
+        query("tagId").isInt().withMessage('پارامتر tagId معتبر نمی باشد.').optional(),
+    
     ]
 }
 

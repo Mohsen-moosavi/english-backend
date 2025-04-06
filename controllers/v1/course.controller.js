@@ -209,7 +209,7 @@ const getCourse = async (req, res, next) => {
     const course = await Course.findOne({
       where: { id },
       include: [
-        { model: User, attributes: ["id", 'name'] },
+        { model: User, attributes: ["id", 'name'] , paranoid:false},
         { model: Book, attributes: ["id", 'name'], as: 'book_collection' },
         { model: Level, attributes: ['id', 'name'], as: 'level' },
         {
