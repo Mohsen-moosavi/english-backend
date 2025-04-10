@@ -1,3 +1,4 @@
+const moment = require("moment-jalaali");
 const { DataTypes } = require("sequelize");
 
 const Sales = (sequelize) =>
@@ -23,6 +24,10 @@ const Sales = (sequelize) =>
         allowNull: false,
         defaultValue : 0
       },
+      shamsi_month:{
+        type : DataTypes.STRING,
+        allowNull: true
+      },
       offPercent : {
         type: DataTypes.TINYINT,
         allowNull: false,
@@ -30,6 +35,12 @@ const Sales = (sequelize) =>
       },
     },
     {
+      hooks : {
+          beforeCreate: (user, options) => {
+          const createdAt = user.created_at || new Date();
+          user.shamsi_month = moment(createdAt).format('jYYYY-jMM');
+        }
+      },
       tableName: "sales",
       timestamps: true,
       createdAt: "created_at",

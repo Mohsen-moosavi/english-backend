@@ -12,6 +12,7 @@ const sessionRoutes = require("./session.routes")
 const saleRoutes = require("./sale.routes")
 const ticketRoutes = require("./ticket.routes")
 const roleRoutes = require("./role.routes")
+const consoleRoutes = require("./Console.routes")
 
 const router = Router()
 
@@ -28,5 +29,6 @@ router.use("/session" , sessionRoutes)
 router.use("/sale" , saleRoutes)
 router.use("/ticket" , ticketRoutes)
 router.use("/role" , roleRoutes)
+router.use("/console" , consoleRoutes)
 
 module.exports = router

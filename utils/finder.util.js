@@ -5,6 +5,8 @@ async function findCoursesByQuery(req) {
   try {
     const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus,userId, tagId } = req.query
 
+    console.log("userId=========================================================>" , userId)
+
     const finderObject = { name: { [Op.like]: `%${search}%` } };
     Number(teacherId) && (finderObject.teacher = teacherId);
     Number(bookId) && (finderObject.book_collection_id = bookId);
