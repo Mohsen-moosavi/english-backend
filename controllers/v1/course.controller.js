@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -400,6 +400,39 @@ const getShortCourseData = async (req, res, next) => {
   }
 }
 
+const getLastCourses = async (req,res,next)=>{
+  try {
+    const courses = await Course.findAll({
+      limit:6,
+      attributes : ['id','name','cover','price','score','slug'],
+      order : [['id', 'DESC']],
+      include:[
+        {model: User , attributes:['id','name'], paranoid:false},
+        {model: Level , attributes:['id','name'], as:'level'},
+        {model: Off , attributes:['percent'] ,where:{public : 1}, required:false},
+      ]
+    })
+
+    const lastCourses = courses.map(item =>({
+      id: item.id,
+      name: item.name,
+      cover: item.cover,
+      price: item.price,
+      score: item.score,
+      slug: item.slug,
+      teacherName: item.user?.name,
+      teacherId: item.user?.id,
+      levelName: item.level?.name,
+      levelId: item.level?.id,
+      offPercent: item.offs.length ? item.offs[0].percent : null,
+    }))
+
+    return successResponse(res,200,'',{courses : lastCourses})
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 module.exports = {
   getCreatingData,
@@ -412,5 +445,6 @@ module.exports = {
   updateCourse,
   updateVideo,
   updateStatus,
-  getShortCourseData
+  getShortCourseData,
+  getLastCourses
 }

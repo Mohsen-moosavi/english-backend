@@ -5,7 +5,7 @@ const fs = require("fs");
 const { removeImage } = require("../../utils/fs.utils");
 const { validationResult } = require("express-validator");
 const { default: slugify } = require("slugify");
-const { Book, Tag, File, TagBooks } = require("../../db");
+const { Book, Tag, File, TagBooks, Course } = require("../../db");
 const { Op, Sequelize } = require("sequelize");
 const configs = require("../../configs");
 const { findBooksByQuery } = require("../../utils/finder.util");
@@ -329,6 +329,28 @@ const getBooksGroup = async (req, res, next) => {
   }
 }
 
+const getLastBook = async (req,res,next)=>{
+  try {
+    const books = await Book.findAll({
+      // limit:6,
+      attributes : [
+        'name',
+        'slug',
+        'cover',
+        [Sequelize.fn('COALESCE',Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('courses.id'))) , 0), 'courseCount'],
+      ],
+      include:[
+        { model: Course, attributes: [], required: false },
+      ],
+      group:['Book.id']
+    })
+
+    successResponse(res,200,'',{books})
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 module.exports = {
@@ -340,5 +362,6 @@ module.exports = {
   deleteBookWithGettingAll,
   getBook,
   updateBook,
-  getBooksGroup
+  getBooksGroup,
+  getLastBook
 }

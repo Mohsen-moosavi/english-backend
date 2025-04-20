@@ -1,4 +1,4 @@
-const { User, Ban, db, Role } = require("./../../db");
+const { User, Ban, db, Role, Level } = require("./../../db");
 const svgCpatcha = require("svg-captcha");
 const uuidv4 = require("uuid").v4;
 const bcrypt = require("bcryptjs");
@@ -59,7 +59,7 @@ const sendOtp = async (req, res, next) => {
     const { expired, remainingTime } = await getOtpDetails(phone)
 
     if (!expired) {
-      return successResponse(res, 200, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
+      return errorResponse(res, 400, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
     }
 
     const otp = await generateOtp(phone);
@@ -111,7 +111,7 @@ const resendOtp = async (req, res, next) => {
     const { expired, remainingTime } = await getOtpDetails(phone)
 
     if (!expired) {
-      return successResponse(res, 200, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
+      return successResponse(res, 400, `کد فرستاده شده هنوز منقضی نشده. لفطا بعد از ${remainingTime} دقیقه دیگر مجددا تلاش کنید.`);
     }
 
     const otp = await generateOtp(phone);
@@ -139,7 +139,7 @@ const verifyCode = async (req, res, next) => {
     const [savedOtp, attempts] = redisOtp?.split(',') || []
 
     if (!savedOtp) {
-      return errorResponse(res, 400, "مشکل در شناسایی شماره تلفن");
+      return errorResponse(res, 400, "کد اشتباه است!");
     }
 
     if (attempts > 4) {
@@ -224,7 +224,7 @@ const register = async (req, res, next) => {
     const accessToken = generateAccessToken(username)
     const refreshToken = generateRefreshToken(username)
 
-    await User.create({
+    const newUser = await User.create({
       name,
       username,
       phone,
@@ -256,7 +256,16 @@ const register = async (req, res, next) => {
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
-    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.')
+    const userData =  {
+      avatar : null,
+      name: newUser.name,
+      phone: newUser.phone,
+      score:newUser.score,
+      level:newUser.level || null,
+      role:newUser.role?.name || userRole[0].name
+    }
+
+    successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.',{user : userData})
   } catch (err) {
     next(err);
   }
@@ -272,7 +281,22 @@ const login = async (req, res, next) => {
 
     const { phone, password } = req.body;
 
-    const user = await User.findOne({ where: { phone } })
+    const user = await User.findOne(
+      { where: { phone },
+      include: [
+        {
+          model: Role,
+          attributes: ['name'],
+          as: 'role'
+        },
+        {
+          model: Level,
+          attributes: ['name'],
+          as: 'level',
+          required : false
+        }
+      ],
+    })
 
     if (!user) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
@@ -314,7 +338,16 @@ const login = async (req, res, next) => {
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
-    successResponse(res, 200, 'شما با موفقیت وارد شدید.')
+    const userData =  {
+      name: user.name,
+      phone: user.phone,
+      avatar:user.avatar,
+      score:user.score,
+      level:user.level || null,
+      role:user.role?.name || null
+    }
+
+    successResponse(res, 200, 'شما با موفقیت وارد شدید.',{user : userData})
 
   } catch (error) {
     next(error)
@@ -462,7 +495,7 @@ const resetPassword = async (req, res, next) => {
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
-    successResponse(res, 200, 'شما با موفقیت ثبت نام شدید.')
+    successResponse(res, 200, 'رمز عبور شما، با موفقیت ویرایش شد.')
   } catch (error) {
     next(error)
   }
@@ -472,6 +505,7 @@ const getCaptcha = async (req, res, next) => {
   try {
 
     const { uuid } = req.body;
+    console.log("uuid==============================>" , uuid)
 
     if (uuid) {
       await redis.del(`captcha:${uuid}`);
@@ -622,7 +656,6 @@ const getMe = async (req, res, next) => {
   try {
 
     const user = req.user;
-    console.log("user====>" , user)
 
     successResponse(res,200,"", {user})
   } catch (error) {
@@ -642,7 +675,7 @@ const refreshToken = async (req, res, next) => {
     if(isAdmin){
       const userRole = await Role.findOne({ where: { name : 'USER' }});
       foundUser = await User.findOne({ where: { refreshToken , role_id : {[Op.notLike] : `${userRole?._id ? userRole?._id : ''}`}}});
-      console.log('user==========>' , userRole, foundUser )
+      console.log('user refrshToken==============================================>' ,refreshToken )
     }else{
       foundUser = await User.findOne({ where: { refreshToken }});
     }

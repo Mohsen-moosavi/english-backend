@@ -41,6 +41,7 @@ router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin])
 router.delete('/:id/get-all' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),getAllBooksValidator(),controller.deleteBookWithGettingAll);
 router.get('/' ,getAllBooksValidator() , controller.getAllBooks);
 router.get('/get-group/:id' , controller.getBooksGroup);
+router.get('/last-book' , controller.getLastBook);
 router.get('/:id' , controller.getBook);
 router.put('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),uploadCoverFile.single('cover'), createBookValidator() ,controller.updateBook);
 

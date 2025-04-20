@@ -4,6 +4,7 @@ const { Article, Tag, TagArticles, User } = require("../../db");
 const { Op, where } = require("sequelize");
 const path = require('path');
 const configs = require("../../configs");
+const moment = require('moment-jalaali');
 const { default: slugify } = require("slugify");
 const { removeImage } = require("../../utils/fs.utils");
 const { findArticlesByQuery } = require("../../utils/finder.util");
@@ -219,11 +220,39 @@ const deleteArticle = async (req,res,next)=>{
     }
 }
 
+const getLastArticles = async (req,res,next)=>{
+    try {
+        const articles = await Article.findAll({
+            limit : 6,
+            attributes : ['id','title','shortDescription','cover','slug','created_at'],
+            include : [
+                {model:User , attributes:['id','name'] , paranoid:false}
+            ]
+        })
+
+        const lastArticles = articles.map(item =>({
+            id: item.id,
+            title: item.title,
+            cover: item.cover,
+            shortDescription: item.shortDescription.slice(0,150),
+            slug: item.slug,
+            author: item.user?.name,
+            created_at : moment(item.created_at).format('jYYYY-jMM-jDD'),
+            authorId: item.user?.id
+        }))
+
+        successResponse(res,200,'',{articles : lastArticles})
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 module.exports = {
     createArticle,
     getArticles,
     getArticle,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    getLastArticles
 }
