@@ -3,7 +3,7 @@ const { body, param, query } = require("express-validator")
 function createCommentValidator() {
     return [
         body('content').isString().withMessage("نظر وارد شده معتبر نمی باشد.").isLength({ min: 3 }).withMessage("متن کامنت باید حداقل 3 کاراکتر باشد."),
-        body('score').isNumeric().withMessage("توضیحات کوتاه وارد شده معتبر نمی باشد.").isIn([1,2,3,4,5]).withMessage("امتیاز باید مقداری بین 1 تا 5 باشد."),
+        body('score').isNumeric().withMessage("امتیاز وارد شده معتبر نمی باشد.").isIn([1,2,3,4,5]).withMessage("امتیاز باید مقداری بین 1 تا 5 باشد."),
         body('courseId').isNumeric({min : 1}).withMessage("مشخصه دوره، برای ثبت کامنت، معتبر نمی باشد."),
         body('parentId').isNumeric({min : 1}).withMessage("مشخصه کامنت، برای ثبت پاسخ، معتبر نمی باشد.").optional()
     ]

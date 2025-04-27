@@ -1,7 +1,7 @@
-const { Op } = require("sequelize");
+const { Op, QueryTypes, Sequelize } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -222,7 +222,7 @@ const getCourse = async (req, res, next) => {
     });
 
     if (!course) {
-      errorResponse(res, 404, "موردی یافت نشد!")
+      return errorResponse(res, 404, "موردی یافت نشد!")
     }
 
     return successResponse(res, 200, '', { course })
@@ -433,6 +433,126 @@ const getLastCourses = async (req,res,next)=>{
   }
 }
 
+const getUserSideCourse = async (req, res, next) => {
+  try {
+    const { slug } = req.params
+
+    const course = await Course.findOne({
+      where: { slug },
+      include: [
+        { model: User, attributes: ["id", 'name'] , paranoid:false},
+        { model: Book, attributes: ["id", 'name', 'ageGrate'], as: 'book_collection' },
+        { model: Level, attributes: ['id', 'name'], as: 'level' },
+        {model: Tag, attributes: ['name'], through: { attributes: [] }},
+        {model: Off , attributes:['percent','id'] ,where:{public : 1}, required:false},
+        {model: Session , attributes:['id','name','time','isFree'], order:[['id']], limit: 3, required:false},
+        {model: Comment ,
+          attributes:['id','content','score','created_at'],
+          where:{isAccept:1,parent_id : null},
+          order:[['id' , 'DESC']], 
+          limit: 3,
+          required:false,
+          include: [
+            {model : Comment, as:'replies', attributes:['id','content','score','created_at'],where:{isAccept:1},required:false,
+              include:[{model : User, attributes:['name','avatar'],paranoid:false,include:[{model:Role,as:'role',attributes:['name']}]}]},
+            {model : User, attributes:['name','avatar'],paranoid:false,include:[{model:Role,as:'role',attributes:['name']}]},
+          ]
+        },
+      ],
+      attributes: {
+        exclude: ['teacherId', 'levelId', 'book_collection_id']
+      }
+    });
+
+    
+    if (!course) {
+      return errorResponse(res, 404, "موردی یافت نشد!")
+    }
+
+    const [result] = await db.query(
+      `SELECT 
+        COUNT(sessions.id) AS total_sessions,
+        FLOOR(SUM(CAST(SUBSTRING_INDEX(sessions.time, ':', 1) AS UNSIGNED) * 60 + 
+                  CAST(SUBSTRING_INDEX(sessions.time, ':', -1) AS UNSIGNED)) / 60) AS total_minutes,
+        MOD(SUM(CAST(SUBSTRING_INDEX(sessions.time, ':', 1) AS UNSIGNED) * 60 + 
+                CAST(SUBSTRING_INDEX(sessions.time, ':', -1) AS UNSIGNED)), 60) AS remaining_seconds,
+        (
+          SELECT COUNT(*) 
+          FROM comments 
+          WHERE comments.course_id = :courseId AND comments.parent_id IS NULL AND comments.isAccept = 1
+        ) AS total_comments
+      FROM sessions
+      WHERE sessions.course_id = :courseId`
+    , {
+      replacements: { courseId: course.id },
+      type: QueryTypes.SELECT,
+    });
+
+    const courseTime = (result.total_minutes === null) ? 'منتشر نشده' : `${result.total_minutes}:${result.remaining_seconds}`
+
+
+    return successResponse(res, 200, '', { course , sessionCount:result.total_sessions, commentCount:result.total_comments , time:courseTime })
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getRelatedCourse = async (req, res, next) => {
+  try {
+    const { slug } = req.params
+
+    const mainCourse = await Course.findOne({
+      where:{slug},
+      include:[{model:Tag , attributes:['id']}]
+    })
+    
+    const relatedType1 = await Course.findAll({
+      where:{book_collection_id:mainCourse.book_collection_id , id:{[Op.ne] : mainCourse.id}},
+      limit:5,
+      attributes:['id','name','slug','cover']
+    })
+    let relatedType2 = [];
+    let relatedType3 = [];
+
+    
+    if(relatedType1.length < 5){
+      const tagIds = mainCourse.tags.map(tag=>tag.id)
+
+      const results = await db.query(
+        `SELECT 
+          c.id,
+          c.name,
+          c.slug,
+          c.cover,
+          COUNT(t.id) AS matchCount
+        FROM courses c
+        JOIN tags_courses tc ON c.id = tc.course_id
+        JOIN tags t ON t.id = tc.tag_id
+        WHERE t.id IN (:tagIds)
+        GROUP BY c.id
+        ORDER BY matchCount DESC
+        LIMIT 3`
+      , {
+        replacements: { tagIds },
+        type: QueryTypes.SELECT
+      });
+      relatedType2 = [...results]
+
+      if(relatedType1.length + relatedType2.length < 5){
+        relatedType3 = await Course.findAll({
+          attributes:['id','name','slug','cover'],
+          order: [['id','DESC']],
+          limit: (5 - (relatedType1.length + relatedType2.length))
+        })
+      }
+    }
+    return successResponse(res,200,'',{courses:[...relatedType1,...relatedType2,...relatedType3]})
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 module.exports = {
   getCreatingData,
@@ -446,5 +566,7 @@ module.exports = {
   updateVideo,
   updateStatus,
   getShortCourseData,
-  getLastCourses
+  getLastCourses,
+  getUserSideCourse,
+  getRelatedCourse
 }

@@ -108,6 +108,7 @@ async function authMiddleware(req, res, next) {
         { model: Role, attributes: ["name"], as: "role" },
         { model: Level, attributes: ["name"], as: "level", required: false },
       ],
+      raw:true
     });
 
     if (!user) return errorResponse(res, 404, "کاربر یافت نشد!");

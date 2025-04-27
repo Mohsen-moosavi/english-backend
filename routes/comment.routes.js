@@ -9,6 +9,7 @@ const router = Router();
 
 router.post('/' ,authMiddleware , createCommentValidator() ,controller.createComment);
 router.get('/',getCommentsValidator() ,controller.getComments);
+router.get('/user-side/:courseId',controller.getCommentsForUserSide);
 router.get('/:id', authMiddleware , roleGardMiddleware([configs.roles.teacher]) ,controller.getCommentLoop);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),getCommentsValidator() ,controller.deleteComment);
 router.put('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]), [...getCommentsValidator(),...changeAcceptValidator()] ,controller.changeStatus);

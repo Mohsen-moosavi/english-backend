@@ -16,6 +16,7 @@ router.post('/upload-video' ,authMiddleware , roleGardMiddleware([configs.roles.
 router.post('/update-video' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),uploadVideo.single('video'),updateVideoValidator(),controller.updateVideo);
 router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),uploadFile.single('file'),controller.uploadSessionDetails);
 router.post('/without-file' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),updateDetailsWithoutFileValidator(),controller.uploadSessionDetailsWithoutFile);
+router.get('/user-side/:id' , controller.getSessionsForUserSide);
 router.get('/:courseId' ,getSessionValidator() , controller.getSessions);
 router.get('/single/:id' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),controller.getSingleSessionforAdmin);
 // router.get('/:id' , controller.getArticle);

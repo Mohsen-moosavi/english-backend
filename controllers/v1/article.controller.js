@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const { successResponse, errorResponse } = require("../../utils/responses");
-const { Article, Tag, TagArticles, User } = require("../../db");
-const { Op, where } = require("sequelize");
+const { Article, Tag, TagArticles, User, db, Course } = require("../../db");
+const { Op, where, QueryTypes } = require("sequelize");
 const path = require('path');
 const configs = require("../../configs");
 const moment = require('moment-jalaali');
@@ -247,6 +247,52 @@ const getLastArticles = async (req,res,next)=>{
     }
 }
 
+const getRelatedArticles = async (req, res, next) => {
+    try {
+        const { slug } = req.params
+  
+        const mainCourse = await Course.findOne({
+          where:{slug},
+          include:[{model:Tag , attributes:['id']}]
+        })
+        const tagIds = mainCourse.tags.map(tag=>tag.id)
+
+        const results = await db.query(
+            `SELECT 
+              a.id,
+              a.title,
+              a.slug,
+              a.cover,
+              COUNT(t.id) AS matchCount
+            FROM articles a
+            JOIN tags_articles ta ON a.id = ta.article_id
+            JOIN tags t ON t.id = ta.tag_id
+            WHERE t.id IN (:tagIds)
+            GROUP BY a.id
+            ORDER BY matchCount DESC
+            LIMIT 5`
+          , {
+            replacements: { tagIds },
+            type: QueryTypes.SELECT
+          });
+
+          const relatedType1 = [...results]
+          let relatedType2 = []
+        
+          if(relatedType1.length < 5){
+            relatedType2 = await Article.findAll({
+              attributes:['id','title','slug','cover'],
+              order: [['id','DESC']],
+              limit: (5 - (relatedType1.length))
+            })
+          }
+
+        return successResponse(res,200,'',{articles:[...relatedType1,...relatedType2]})
+    } catch (error) {
+      next(error)
+    }
+  }
+
 
 module.exports = {
     createArticle,
@@ -254,5 +300,6 @@ module.exports = {
     getArticle,
     updateArticle,
     deleteArticle,
-    getLastArticles
+    getLastArticles,
+    getRelatedArticles
 }

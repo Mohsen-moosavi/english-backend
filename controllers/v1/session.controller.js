@@ -346,6 +346,25 @@ const deleteSession = async (req,res,next)=>{
     }
 }
 
+const getSessionsForUserSide = async (req,res,next)=>{
+    try {
+        const {id} = req.params;
+        const sessions= await Session.findAll({
+            where:{
+                course_id : id
+            },
+            offset:3,
+            attributes:['id','name','time','isFree'],
+            order: [['id']],
+            offset:3
+        })
+
+        successResponse(res,200,'',{sessions})
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     uploadVideo,
     uploadSessionDetails,
@@ -353,5 +372,6 @@ module.exports = {
     getSessions,
     getSingleSessionforAdmin,
     updateVideo,
-    deleteSession
+    deleteSession,
+    getSessionsForUserSide
 }
