@@ -1,4 +1,4 @@
-const { db, Role } = require("./db");
+const { db, Role, Level } = require("./db");
 const app = require("./app");
 const configs = require("./configs");
 const dotenv = require("dotenv")
@@ -18,6 +18,10 @@ async function startServer() {
 
     // for (const role in configs.roles) {
     //   Role.findOrCreate({where : {name : configs.roles[role]}})
+    // }
+
+    // for (const level in configs.levels) {
+    //   await Level.findOrCreate({where : {name : configs.levels[level]}})
     // }
 
     app.listen(configs.port, () => {

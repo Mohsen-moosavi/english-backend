@@ -26,7 +26,7 @@ const Sales = (sequelize) =>
       },
       shamsi_month:{
         type : DataTypes.STRING,
-        allowNull: true
+        allowNull: false
       },
       offPercent : {
         type: DataTypes.TINYINT,
@@ -36,9 +36,9 @@ const Sales = (sequelize) =>
     },
     {
       hooks : {
-          beforeCreate: (user, options) => {
-          const createdAt = user.created_at || new Date();
-          user.shamsi_month = moment(createdAt).format('jYYYY-jMM');
+          beforeCreate: (sale, options) => {
+          const createdAt = sale.created_at || new Date();
+          sale.shamsi_month = moment(createdAt).format('jYYYY-jMM');
         }
       },
       tableName: "sales",

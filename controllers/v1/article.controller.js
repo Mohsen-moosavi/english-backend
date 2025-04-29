@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const { successResponse, errorResponse } = require("../../utils/responses");
-const { Article, Tag, TagArticles, User, db, Course } = require("../../db");
+const { Article, Tag, TagArticles, User, db, Course, Comment } = require("../../db");
 const { Op, where, QueryTypes } = require("sequelize");
 const path = require('path');
 const configs = require("../../configs");
@@ -247,7 +247,7 @@ const getLastArticles = async (req,res,next)=>{
     }
 }
 
-const getRelatedArticles = async (req, res, next) => {
+const getRelatedArticlesToCourse = async (req, res, next) => {
     try {
         const { slug } = req.params
   
@@ -278,11 +278,85 @@ const getRelatedArticles = async (req, res, next) => {
 
           const relatedType1 = [...results]
           let relatedType2 = []
-        
+
+          
           if(relatedType1.length < 5){
+            const type1Ids = relatedType1.map(article=>article.id)
+
             relatedType2 = await Article.findAll({
               attributes:['id','title','slug','cover'],
               order: [['id','DESC']],
+              where:{id : {[Op.notIn] : type1Ids}},
+              limit: (5 - (relatedType1.length))
+            })
+          }
+
+        return successResponse(res,200,'',{articles:[...relatedType1,...relatedType2]})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  const getArticleInfo = async (req,res,next) => {
+    try {
+        const {slug} = req.params;
+
+        const article = await Article.findOne({
+            where: {slug},
+            attributes:{exclude:['author']},
+            include:[
+                {model: User, attributes:['id','name'],params:false},
+            ]
+        })
+
+        return successResponse(res,200,'',{article})
+    } catch (error) {
+        next(error)
+    }
+  }
+
+  const getRelatedArticlesToArticle = async (req, res, next) => {
+    try {
+        const { slug } = req.params
+  
+        const mainArticle = await Article.findOne({
+          where:{slug},
+          include:[{model:Tag , attributes:['id']}]
+        })
+        const tagIds = mainArticle.tags.map(tag=>tag.id)
+
+        let relatedType1 = []
+        let relatedType2 = []
+
+        if(tagIds.length){
+          const results = await db.query(
+              `SELECT 
+                a.id,
+                a.title,
+                a.slug,
+                a.cover,
+                COUNT(t.id) AS matchCount
+              FROM articles a
+              JOIN tags_articles ta ON a.id = ta.article_id
+              JOIN tags t ON t.id = ta.tag_id
+              WHERE t.id IN (:tagIds) AND a.id != :mainArticleId
+              GROUP BY a.id
+              ORDER BY matchCount DESC
+              LIMIT 5`
+            , {
+              replacements: { tagIds , mainArticleId : mainArticle.id },
+              type: QueryTypes.SELECT
+            });
+  
+            relatedType1 = [...results]
+        }
+        
+          if(relatedType1.length < 5){
+            const type1Ids = relatedType1.map(article=>article.id)
+            relatedType2 = await Article.findAll({
+              attributes:['id','title','slug','cover'],
+              order: [['id','DESC']],
+              where:{id : {[Op.notIn] : [mainArticle.id,...type1Ids]}},
               limit: (5 - (relatedType1.length))
             })
           }
@@ -301,5 +375,7 @@ module.exports = {
     updateArticle,
     deleteArticle,
     getLastArticles,
-    getRelatedArticles
+    getRelatedArticlesToCourse,
+    getArticleInfo,
+    getRelatedArticlesToArticle
 }

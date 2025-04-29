@@ -1,7 +1,7 @@
 const { Op, QueryTypes, Sequelize } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment, Article } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -517,29 +517,35 @@ const getRelatedCourse = async (req, res, next) => {
     
     if(relatedType1.length < 5){
       const tagIds = mainCourse.tags.map(tag=>tag.id)
+      const type1Ids = relatedType1.map(course=>course.id)
 
-      const results = await db.query(
-        `SELECT 
-          c.id,
-          c.name,
-          c.slug,
-          c.cover,
-          COUNT(t.id) AS matchCount
-        FROM courses c
-        JOIN tags_courses tc ON c.id = tc.course_id
-        JOIN tags t ON t.id = tc.tag_id
-        WHERE t.id IN (:tagIds)
-        GROUP BY c.id
-        ORDER BY matchCount DESC
-        LIMIT 3`
-      , {
-        replacements: { tagIds },
-        type: QueryTypes.SELECT
-      });
-      relatedType2 = [...results]
+      if(tagIds.length){
+        const results = await db.query(
+          `SELECT 
+            c.id,
+            c.name,
+            c.slug,
+            c.cover,
+            COUNT(t.id) AS matchCount
+          FROM courses c
+          JOIN tags_courses tc ON c.id = tc.course_id
+          JOIN tags t ON t.id = tc.tag_id
+          WHERE t.id IN (:tagIds) AND c.id != :mainCourseId ${type1Ids.length ? 'And c.id NOT IN (:type1Ids)':''}
+          GROUP BY c.id
+          ORDER BY matchCount DESC
+          LIMIT 3`
+        , {
+          replacements: { tagIds, mainCourseId:mainCourse.id,type1Ids },
+          type: QueryTypes.SELECT
+        });
+        relatedType2 = [...results]
+      }
+
+      const type2Ids = relatedType2.map(course=>course.id)
 
       if(relatedType1.length + relatedType2.length < 5){
         relatedType3 = await Course.findAll({
+          where:{id:{[Op.notIn]:[mainCourse.id,...type2Ids,...type1Ids]}},
           attributes:['id','name','slug','cover'],
           order: [['id','DESC']],
           limit: (5 - (relatedType1.length + relatedType2.length))
@@ -547,6 +553,62 @@ const getRelatedCourse = async (req, res, next) => {
       }
     }
     return successResponse(res,200,'',{courses:[...relatedType1,...relatedType2,...relatedType3]})
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getRelatedCourseToArticle = async (req, res, next) => {
+  try {
+    const { slug } = req.params
+
+    const mainArticle = await Article.findOne({
+      where:{slug},
+      include:[{model:Tag , attributes:['id']}]
+    })
+    
+    let relatedType1 = [];
+    let relatedType2 = [];
+
+    
+      const tagIds = mainArticle.tags.map(tag=>tag.id)
+
+      if(tagIds.length){
+        const results = await db.query(
+          `SELECT 
+            c.id,
+            c.name,
+            c.slug,
+            c.cover,
+            COUNT(t.id) AS matchCount
+          FROM courses c
+          JOIN tags_courses tc ON c.id = tc.course_id
+          JOIN tags t ON t.id = tc.tag_id
+          WHERE t.id IN (:tagIds)
+          GROUP BY c.id
+          ORDER BY matchCount DESC
+          LIMIT 3`
+        , {
+          replacements: { tagIds },
+          type: QueryTypes.SELECT
+        });
+        relatedType1 = [...results]
+      }
+
+      const type1Ids = relatedType1.map(course=>course.id)
+
+
+      if(relatedType1.length < 5){
+        relatedType2 = await Course.findAll({
+          where:{id:{[Op.notIn]:type1Ids}},
+          attributes:['id','name','slug','cover'],
+          order: [['id','DESC']],
+          limit: (5 - (relatedType1.length))
+        })
+      }
+    
+    return successResponse(res,200,'',{courses:[...relatedType1,...relatedType2]})
 
   } catch (error) {
     next(error)
@@ -568,5 +630,6 @@ module.exports = {
   getShortCourseData,
   getLastCourses,
   getUserSideCourse,
-  getRelatedCourse
+  getRelatedCourse,
+  getRelatedCourseToArticle
 }

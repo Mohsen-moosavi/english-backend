@@ -42,6 +42,11 @@ const Books = (sequelize) =>
         type : DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      forChildren: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        default : false
       }
     },
     {

@@ -11,7 +11,6 @@ const { getOtpDetails, generateOtp, generateVerifiedPhone, getOtpRedisPattern, g
 const { sendSMSOtp } = require("../../services/otp");
 const { Op, where } = require("sequelize");
 const { generateAccessToken, generateRefreshToken, verifyAccessToken, refreshTokenHandler } = require("../../utils/auth.utils");
-const { path } = require("../../app");
 
 const sendOtp = async (req, res, next) => {
   try {

@@ -58,7 +58,7 @@ const createBook = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { name, shortDescription, longDescription, slug, links, tags, ageGrate, grate } = req.body;
+    const { name, shortDescription, longDescription, slug, links, tags, ageGrate, grate,isForChildren } = req.body;
 
     const slugifyedSlug = slugify(slug, {
       trim: true
@@ -69,7 +69,7 @@ const createBook = async (req, res, next) => {
 
     const [newBook, isNewBook] = await Book.findOrCreate({
       where: { [Op.or]: [{ name }, { slug: slugifyedSlug }] },
-      defaults: { name, slug: slugifyedSlug, shortDescription, longDescription, links, ageGrate, grate, cover: `${configs.domain}/public/images/${cover.filename}` },
+      defaults: { name, slug: slugifyedSlug, shortDescription, longDescription, links, ageGrate, grate, cover: `${configs.domain}/public/images/${cover.filename}`,forChildren:Boolean(isForChildren) },
       raw: true
     })
 
@@ -255,7 +255,7 @@ const updateBook = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { name, shortDescription, longDescription, slug, links, tags, ageGrate, grate } = req.body;
+    const { name, shortDescription, longDescription, slug, links, tags, ageGrate, grate,isForChildren } = req.body;
     const { id } = req.params;
 
     const slugifyedSlug = slugify(slug, {
@@ -292,6 +292,7 @@ const updateBook = async (req, res, next) => {
     updatedBook.links = links
     updatedBook.ageGrate = ageGrate
     updatedBook.grate = grate
+    updatedBook.forChildren = isForChildren
     cover && (updatedBook.cover = `${configs.domain}/public/images/${cover.filename}`)
     await updatedBook.save()
 

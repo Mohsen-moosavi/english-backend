@@ -46,6 +46,7 @@ router.get('/short-date',controller.getShortCourseData);
 router.get('/last-course',controller.getLastCourses);
 router.get('/user-side/:slug',controller.getUserSideCourse);
 router.get('/user-side/related/:slug',controller.getRelatedCourse);
+router.get('/user-side/related-to-article/:slug',controller.getRelatedCourseToArticle);
 router.get('/:id',controller.getCourse);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getCoursesValidator() ,controller.deleteCourse);
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
