@@ -69,7 +69,7 @@ const createBook = async (req, res, next) => {
 
     const [newBook, isNewBook] = await Book.findOrCreate({
       where: { [Op.or]: [{ name }, { slug: slugifyedSlug }] },
-      defaults: { name, slug: slugifyedSlug, shortDescription, longDescription, links, ageGrate, grate, cover: `${configs.domain}/public/images/${cover.filename}`,forChildren:Boolean(isForChildren) },
+      defaults: { name, slug: slugifyedSlug, shortDescription, longDescription, links, ageGrate, grate, cover: `${configs.domain}/public/images/${cover.filename}`,forChildren: isForChildren },
       raw: true
     })
 
