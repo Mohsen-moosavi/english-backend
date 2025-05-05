@@ -1,5 +1,5 @@
-const { Op, Sequelize, QueryTypes, where } = require("sequelize");
-const { Course, Book, db, Level, User, Off, Article } = require("../../db");
+const { Op, Sequelize, QueryTypes, where, literal } = require("sequelize");
+const { Course, Book, db, Level, User, Off, Article, Tag } = require("../../db");
 const { validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../../utils/responses");
 const moment = require('moment-jalaali');
@@ -25,63 +25,70 @@ const searchAllCourses = async (req, res, next) => {
     // کوئری دریافت لیست دوره‌ها
     const sqlDataQuery =
       `SELECT 
-    c.id,
-    c.name,
-    c.cover,
-    c.price,
-    c.score,
-    c.slug,
-    u.id AS teacherId,
-    u.name AS teacherName,
-    l.id AS levelId,
-    l.name AS levelName,
-    MAX(o.percent) AS offPercent
-  FROM courses c
-  LEFT JOIN users u ON u.id = c.teacher
-  LEFT JOIN levels l ON l.id = c.level_id
-  LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
-  LEFT JOIN books b ON b.id = c.book_collection_id
-  WHERE
-    c.name LIKE CONCAT('%', :searchWord, '%')
-    AND (
-      (:category = 'free' AND c.price = 0) OR
-      (:category = 'notFree' AND c.price != 0) OR
-      (:category = 'ease' AND l.name IN ('A1', 'A2')) OR
-      (:category = 'medum' AND l.name IN ('B1', 'B2')) OR
-      (:category = 'high' AND l.name IN ('C1', 'C2')) OR
-      (:category = 'children' AND b.forChildren = 1) OR
-      (LENGTH(:category) > 0 AND :category NOT IN ('free','notFree','ease','medum','high','children') AND l.name = :category) OR
-      (:category IS NULL OR LENGTH(:category) = 0)
-    )
-  GROUP BY c.id
-  ORDER BY c.id DESC
-  LIMIT :limit OFFSET :offset`
+        c.id,
+        c.name,
+        c.cover,
+        c.price,
+        c.score,
+        c.slug,
+        u.id AS teacherId,
+        u.name AS teacherName,
+        l.id AS levelId,
+        l.name AS levelName,
+        MAX(o.percent) AS offPercent
+        FROM courses c
+        LEFT JOIN users u ON u.id = c.teacher
+        LEFT JOIN levels l ON l.id = c.level_id
+        LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
+        LEFT JOIN books b ON b.id = c.book_collection_id
+        LEFT JOIN tags_courses ct ON ct.course_id = c.id
+        LEFT JOIN tags t ON t.id = ct.tag_id
+        WHERE
+        (
+          c.name LIKE CONCAT('%', :searchWord, '%')
+          OR t.name LIKE CONCAT('%', :searchWord, '%')
+        )
+        AND (
+          (:category = 'free' AND c.price = 0) OR
+          (:category = 'notFree' AND c.price != 0) OR
+          (:category = 'ease' AND l.name IN ('A1', 'A2')) OR
+          (:category = 'medum' AND l.name IN ('B1', 'B2')) OR
+          (:category = 'high' AND l.name IN ('C1', 'C2')) OR
+          (:category = 'children' AND b.forChildren = 1) OR
+          (LENGTH(:category) > 0 AND :category NOT IN ('free','notFree','ease','medum','high','children') AND l.name = :category) OR
+          (:category IS NULL OR LENGTH(:category) = 0)
+          )
+        GROUP BY c.id
+        ORDER BY c.id DESC
+  LIMIT :limit OFFSET :offset;`
       ;
+
 
     // کوئری شمارش کل نتایج
     const sqlCountQuery =
-      `SELECT COUNT(*) AS totalCount
-  FROM (
-    SELECT c.id
-    FROM courses c
-    LEFT JOIN users u ON u.id = c.teacher
-    LEFT JOIN levels l ON l.id = c.level_id
-    LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
-    LEFT JOIN books b ON b.id = c.book_collection_id
-    WHERE
-      c.name LIKE CONCAT('%', :searchWord, '%')
-      AND (
-        (:category = 'free' AND c.price = 0) OR
-        (:category = 'notFree' AND c.price != 0) OR
-        (:category = 'ease' AND l.name IN ('A1', 'A2')) OR
-        (:category = 'medum' AND l.name IN ('B1', 'B2')) OR
-        (:category = 'high' AND l.name IN ('C1', 'C2')) OR
-        (:category = 'children' AND b.forChildren = 1) OR
-        (LENGTH(:category) > 0 AND :category NOT IN ('free','notFree','ease','medum','high','children') AND l.name = :category) OR
-        (:category IS NULL OR LENGTH(:category) = 0)
-      )
-    GROUP BY c.id
-  ) AS subquery`
+      `SELECT COUNT(DISTINCT c.id) AS totalCount
+FROM courses c
+LEFT JOIN users u ON u.id = c.teacher
+LEFT JOIN levels l ON l.id = c.level_id
+LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
+LEFT JOIN books b ON b.id = c.book_collection_id
+LEFT JOIN tags_courses ct ON ct.course_id = c.id
+LEFT JOIN tags t ON t.id = ct.tag_id
+WHERE
+  (
+    c.name LIKE CONCAT('%', :searchWord, '%')
+    OR t.name LIKE CONCAT('%', :searchWord, '%')
+  )
+  AND (
+    (:category = 'free' AND c.price = 0) OR
+    (:category = 'notFree' AND c.price != 0) OR
+    (:category = 'ease' AND l.name IN ('A1', 'A2')) OR
+    (:category = 'medum' AND l.name IN ('B1', 'B2')) OR
+    (:category = 'high' AND l.name IN ('C1', 'C2')) OR
+    (:category = 'children' AND b.forChildren = 1) OR
+    (LENGTH(:category) > 0 AND :category NOT IN ('free','notFree','ease','medum','high','children') AND l.name = :category) OR
+    (:category IS NULL OR LENGTH(:category) = 0)
+  );`
       ;
 
     // اجرای همزمان دو کوئری
@@ -105,18 +112,16 @@ const searchAllBooks = async (req, res, next) => {
     if (validationError?.errors && validationError?.errors[0]) {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
-
     const { limit, offset, searchWord = '', category } = req.query;
-
-    console.log("search=========================>", category)
 
     const whereConditions = [];
     const replacements = {
-      searchWord: searchWord,
-      limit: limit,
-      offset: offset
+      searchWord,
+      limit:Number(limit),
+      offset: Number(offset),
     };
 
+    console.log("category=======================>" , category)
     if (category) {
       if (category === 'forChildren') {
         whereConditions.push(`b.forChildren = true`);
@@ -125,51 +130,53 @@ const searchAllBooks = async (req, res, next) => {
         replacements.category = category;
       }
     }
-    whereConditions.push(`b.name LIKE CONCAT('%', :searchWord, '%')`);
+
+    // جستجو هم در book.name و هم در tag.name
+    whereConditions.push((
+      ` (b.name LIKE CONCAT('%', :searchWord, '%') OR
+  t.name LIKE CONCAT('%', :searchWord, '%'))`
+    ));
 
     const whereClause = whereConditions.length ? `WHERE ${whereConditions.join(' AND ')}` : '';
 
-
-    // کوئری گرفتن داده‌ها با شمارش course ها
+    // کوئری گرفتن داده‌ها
     const sqlDataQuery =
       `SELECT 
-            b.id,
-            b.name,
-            b.slug,
-            b.cover,
-            COALESCE(COUNT(DISTINCT c.id), 0) AS courseCount
-          FROM books b
-          LEFT JOIN courses c ON c.book_collection_id = b.id
-          ${whereClause}
-          GROUP BY b.id
-          ORDER BY b.id DESC
-          LIMIT ${limit} OFFSET ${offset}`
+    b.id,
+    b.name,
+    b.slug,
+    b.cover,
+    COALESCE(COUNT(DISTINCT c.id), 0) AS courseCount
+  FROM books b
+  LEFT JOIN courses c ON c.book_collection_id = b.id
+  LEFT JOIN tags_books bt ON bt.book_id = b.id
+  LEFT JOIN tags t ON t.id = bt.tag_id
+  ${whereClause}
+  GROUP BY b.id
+  ORDER BY b.id DESC
+  LIMIT :limit OFFSET :offset`
       ;
 
-    // کوئری شمارش کل نتایج (بدون limit و offset)
+    // کوئری شمارش کل نتایج
     const sqlCountQuery =
       `SELECT COUNT(*) AS totalCount FROM (
-            SELECT b.id
-            FROM books b
-            LEFT JOIN courses c ON c.book_collection_id = b.id
-            ${whereClause}
-            GROUP BY b.id
-          ) AS subquery`
+    SELECT b.id
+    FROM books b
+    LEFT JOIN courses c ON c.book_collection_id = b.id
+    LEFT JOIN tags_books bt ON bt.book_id = b.id
+    LEFT JOIN tags t ON t.id = bt.tag_id
+    ${whereClause}
+    GROUP BY b.id
+  ) AS subquery`
       ;
 
-    // اجرا
     const [books, totalResult] = await Promise.all([
-      db.query(sqlDataQuery, {
-        replacements,
-        type: QueryTypes.SELECT
-      }),
-      db.query(sqlCountQuery, {
-        replacements,
-        type: QueryTypes.SELECT
-      })
+      db.query(sqlDataQuery, { replacements, type: QueryTypes.SELECT }),
+      db.query(sqlCountQuery, { replacements, type: QueryTypes.SELECT }),
     ]);
 
     const totalCount = totalResult[0].totalCount;
+
 
     return successResponse(res, 200, '', { books, totalCount })
   } catch (error) {
@@ -185,30 +192,50 @@ const searchAllArticle = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { limit, offset, searchWord = ''} = req.query;
+    const { limit, offset, searchWord = '' } = req.query;
 
-    const {rows : articles , count} = await Article.findAndCountAll({
-      limit:Number(limit),
-      offset:Number(offset),
-      where : {title : {[Op.like] : `%${searchWord}%`}},
-      attributes : ['id','title','cover','shortDescription','slug','created_at'],
-      include:[
-        {model:User , attributes:['id' , 'name']}
-      ]
-    })
+    const { rows: articles, count } = await Article.findAndCountAll({
+      limit: Number(limit),
+      offset: Number(offset),
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${searchWord}%` } },
+          literal(`EXISTS (
+            SELECT 1 FROM tags_articles AS ta
+            JOIN tags AS t ON t.id = ta.tag_id
+            WHERE ta.article_id = Article.id AND t.name LIKE '%${searchWord}%'
+)`)
+        ]
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name']
+        },
+        {
+          model: Tag,
+          attributes: [],
+          through: { attributes: [] },
+          required: false
+        }
+      ],
+      attributes: ['id', 'title', 'cover', 'shortDescription', 'slug', 'created_at'],
+      distinct: true
+    });
 
-    const lastArticles = articles.map(item =>({
+    const lastArticles = articles.map(item => ({
       id: item.id,
       title: item.title,
       cover: item.cover,
-      shortDescription: item.shortDescription.slice(0,150),
+      shortDescription: item.shortDescription.slice(0, 150),
       slug: item.slug,
       author: item.user?.name,
-      created_at : moment(item.created_at).format('jYYYY-jMM-jDD'),
-      authorId: item.user?.id
-  }))
+      created_at: moment(item.created_at).format('jYYYY-jMM-jDD'),
+      authorId: item.user?.id,
+      tags: item.tags
+    }))
 
-    return successResponse(res, 200, '', { articles:lastArticles, totalCount : count })
+    return successResponse(res, 200, '', { articles: lastArticles, totalCount: count })
   } catch (error) {
     next(error)
   }

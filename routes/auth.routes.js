@@ -17,6 +17,7 @@ router.post("/get-captcha",getCaptchaValidator(),controller.getCaptcha)
 router.post("/resend-forgetpass-otp" , resendOtpValidator() , controller.resendForgetpassOtp)
 router.post("/login-admins" , loginValidator() , controller.loginAdmins)
 router.get("/get-me",authMiddleware , controller.getMe)
+router.get("/get-me/user-side",authMiddleware , controller.userSideGetMe)
 router.post("/refresh-token", controller.refreshToken)
 router.post("/logout", controller.logout)
 

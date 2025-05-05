@@ -306,8 +306,15 @@ const getRelatedArticlesToCourse = async (req, res, next) => {
             attributes:{exclude:['author']},
             include:[
                 {model: User, attributes:['id','name'],params:false},
+                {model: Tag, attributes:['name'], through: { attributes: [] }},
             ]
         })
+
+        if(!article){
+          return errorResponse(res,404,'مقاله یافت نشد!')
+        }
+
+
 
         return successResponse(res,200,'',{article})
     } catch (error) {
@@ -367,6 +374,21 @@ const getRelatedArticlesToCourse = async (req, res, next) => {
     }
   }
 
+  const getRelatedArticlesToBook = async (req, res, next) => {
+    try {
+
+      const articles = await Article.findAll({
+        limit:5,
+        order:[['id','DESC']],
+        attributes:['id','title','slug','cover']
+      })
+
+        return successResponse(res,200,'',{articles})
+    } catch (error) {
+      next(error)
+    }
+  }
+
 
 module.exports = {
     createArticle,
@@ -377,5 +399,6 @@ module.exports = {
     getLastArticles,
     getRelatedArticlesToCourse,
     getArticleInfo,
-    getRelatedArticlesToArticle
+    getRelatedArticlesToArticle,
+    getRelatedArticlesToBook
 }

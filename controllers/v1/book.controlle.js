@@ -352,6 +352,27 @@ const getLastBook = async (req,res,next)=>{
   }
 }
 
+const getUserSideBook = async (req,res,next)=>{
+  try {
+    const {slug} = req.params
+    const book = await Book.findOne({
+      where:{slug},
+      include:[
+        { model: Course, required: false },
+        { model: Tag, attributes: ['name'],through: { attributes: [] }},
+      ],
+    })
+
+    if(!book){
+      return errorResponse(res,404,"دوره یافت نشد!")
+    }
+
+    successResponse(res,200,'',{book})
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 module.exports = {
@@ -364,5 +385,6 @@ module.exports = {
   getBook,
   updateBook,
   getBooksGroup,
-  getLastBook
+  getLastBook,
+  getUserSideBook
 }

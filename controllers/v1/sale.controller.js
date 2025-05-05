@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator")
 const { errorResponse, successResponse } = require("../../utils/responses")
 const { findSalesByQuery } = require("../../utils/finder.util")
 const { Course, User, Sale, UserCourses } = require("../../db")
+const moment = require("moment-jalaali")
 
 const createSaleByAdmin = async (req, res, next) => {
     try {
@@ -43,6 +44,7 @@ const createSaleByAdmin = async (req, res, next) => {
             off: ((mainPrice - price) > 0) ? (mainPrice - price) : 0,
             offPercent: (((mainPrice - price) > 0) && (mainPrice > 0)) ? (Math.round(((mainPrice - price) / mainPrice) * 100)) : 0,
             course_id: course.id,
+            shamsi_month : moment(Date.now()).format('jYYYY-jMM'),
             user_id: user.id,
             adminSaler: req.user.id
         })

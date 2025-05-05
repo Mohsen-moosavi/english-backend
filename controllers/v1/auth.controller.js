@@ -1,4 +1,4 @@
-const { User, Ban, db, Role, Level } = require("./../../db");
+const { User, Ban, db, Role, Level, Course, UserCourses } = require("./../../db");
 const svgCpatcha = require("svg-captcha");
 const uuidv4 = require("uuid").v4;
 const bcrypt = require("bcryptjs");
@@ -260,8 +260,9 @@ const register = async (req, res, next) => {
       name: newUser.name,
       phone: newUser.phone,
       score:newUser.score,
-      level:newUser.level || null,
-      role:newUser.role?.name || userRole[0].name
+      level:newUser.level?.name || null,
+      role:newUser.role?.name || userRole[0].name,
+      courses : []
     }
 
     successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.',{user : userData})
@@ -315,6 +316,13 @@ const login = async (req, res, next) => {
     user.refreshToken = refreshToken;
     await user.save()
 
+    const userCourses = await UserCourses.findAll({
+      where:{user_id:user.id},
+      attributes:['course_id'],
+    })
+
+    const courseIdArray = userCourses.map(course=>course.course_id)
+
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
@@ -343,7 +351,8 @@ const login = async (req, res, next) => {
       avatar:user.avatar,
       score:user.score,
       level:user.level || null,
-      role:user.role?.name || null
+      role:user.role?.name || null,
+      courses:courseIdArray
     }
 
     successResponse(res, 200, 'شما با موفقیت وارد شدید.',{user : userData})
@@ -662,6 +671,35 @@ const getMe = async (req, res, next) => {
   }
 }
 
+const userSideGetMe = async (req, res, next) => {
+  try {
+
+    const user = req.user;
+
+
+    const userCourses = await UserCourses.findAll({
+      where:{user_id:user.id},
+      attributes:['course_id'],
+    })
+
+    const courseIdArray = userCourses.map(course=>course.course_id)
+
+    const userData =  {
+      name: user.name,
+      phone: user.phone,
+      avatar:user.avatar,
+      score:user.score,
+      level:user['level.name'] || null,
+      role:user['role.name'] || null,
+      courses:courseIdArray
+    }
+    
+    successResponse(res,200,"", {user:userData})
+  } catch (error) {
+    next(error)
+  }
+}
+
 const refreshToken = async (req, res, next) => {
   try {
     const isAdmin = req.query.admin
@@ -808,5 +846,6 @@ module.exports = {
   resendForgetpassOtp,
   getMe,
   refreshToken,
-  logout
+  logout,
+  userSideGetMe
 }

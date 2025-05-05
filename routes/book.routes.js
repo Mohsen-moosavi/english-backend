@@ -40,6 +40,7 @@ router.post('/delete-file' ,authMiddleware , roleGardMiddleware([configs.roles.a
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),deleteBookWhitoutGettingAllValidator(),controller.deleteBookWhitoutGettingAll);
 router.delete('/:id/get-all' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),getAllBooksValidator(),controller.deleteBookWithGettingAll);
 router.get('/' ,getAllBooksValidator() , controller.getAllBooks);
+router.get('/user-side/:slug' ,controller.getUserSideBook );
 router.get('/get-group/:id' , controller.getBooksGroup);
 router.get('/last-book' , controller.getLastBook);
 router.get('/:id' , controller.getBook);
