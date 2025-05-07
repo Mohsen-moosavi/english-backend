@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const { mergeChunks } = require("../../services/uploadFile");
-const { Session, Course } = require("../../db");
+const { Session, Course, UserCourses } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { validationResult } = require("express-validator");
 const { findSessionsByQuery } = require("../../utils/finder.util");
@@ -349,7 +349,7 @@ const deleteSession = async (req,res,next)=>{
 const getSessionsForUserSide = async (req,res,next)=>{
     try {
         const {id} = req.params;
-        const sessions= await Session.findAll({
+        const sessions = await Session.findAll({
             where:{
                 course_id : id
             },
@@ -365,6 +365,47 @@ const getSessionsForUserSide = async (req,res,next)=>{
     }
 }
 
+const getSingleSessionForUser = async (req,res,next)=>{
+    try {
+        const {sessionId} = req.params;
+        const userId = req.user.id
+
+        const session = await Session.findOne({
+            where:{
+                id : sessionId
+            },
+            attributes:['id','name','isFree','video','file','course_id']
+        })
+
+        if(!session){
+            return errorResponse(res,404,'جلسه مورد نظر یافت نشد!')
+        }
+
+
+        if(!session.isFree){
+            const count = await UserCourses.count({
+                where : {user_id: userId , course_id : session.course_id}
+            })
+
+            if(count<1){
+                return errorResponse(res,403,'شما به جلسات این دوره دسترسی ندارید!')
+            }
+        }
+
+        const sessions = await Session.findAll({
+            where:{
+                course_id : session.course_id
+            },
+            attributes:['id','name','time','isFree'],
+            order: [['id']],
+        })
+
+        return successResponse(res,200,'',{session , allSessions:sessions})
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     uploadVideo,
     uploadSessionDetails,
@@ -373,5 +414,6 @@ module.exports = {
     getSingleSessionforAdmin,
     updateVideo,
     deleteSession,
-    getSessionsForUserSide
+    getSessionsForUserSide,
+    getSingleSessionForUser
 }
