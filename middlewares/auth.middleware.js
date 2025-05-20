@@ -103,7 +103,7 @@ async function authMiddleware(req, res, next) {
     const username = decoded.username;
     const user = await User.findOne({
       where: { username },
-      attributes: ["id", "name", "phone", "avatar", "score"],
+      attributes: ["id", "name", "phone", "avatar", "score", 'created_at' , 'username'],
       include: [
         { model: Role, attributes: ["name"], as: "role" },
         { model: Level, attributes: ["name"], as: "level", required: false },

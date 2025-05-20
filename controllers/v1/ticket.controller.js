@@ -12,7 +12,7 @@ const createTicket = async (req, res, next) => {
             return errorResponse(res, 400, validationError.errors[0].msg)
         }
 
-        const { subject, message } = req.body;
+        const { subject, message,title } = req.body;
         const { user } = req;
 
         const count = await Ticket.count({ where: { user_id: user.id, status: 'open' } })
@@ -23,6 +23,7 @@ const createTicket = async (req, res, next) => {
 
         const ticket = await Ticket.create({
             user_id: user.id,
+            title,
             subject,
         })
 
@@ -186,7 +187,7 @@ const getTicketDetails = async (req, res, next) => {
         );
 
         if (!ticket) {
-            return errorResponse('تیکت مورد نظر یافت نشد!')
+            return errorResponse(res,404,'تیکت مورد نظر یافت نشد!')
         }
 
         return successResponse(res, 200, '', { ticket })
@@ -254,7 +255,7 @@ const changeStatusOfTicket = async (req, res, next) => {
         );
 
         if (!ticket) {
-            return errorResponse('تیکت مورد نظر یافت نشد!')
+            return errorResponse(res,400,'تیکت مورد نظر یافت نشد!')
         }
 
         if (ticket.status === 'answered') {
@@ -274,6 +275,123 @@ const changeStatusOfTicket = async (req, res, next) => {
     }
 }
 
+const getUsersideickets = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+        const tickets = await Ticket.findAll({where : {user_id:userId} , attributes:{exclude:['created_at','user_id']}})
+
+        if (!tickets) {
+            return errorResponse(res,404,'مشکل در جستجوی تیکت ها!')
+        }
+
+        return successResponse(res, 200, '', { tickets })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getUsersideTicketDetails = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const userId = req.user.id;
+        const ticket = await Ticket.findOne(
+            {
+                where: { 
+                    id,
+                    user_id:userId
+                },
+                include: [
+                    {
+                        model: TicketMessage, as: 'messages', include: [
+                            { model: User, as: 'sender', attributes: ['id', 'name', 'avatar'] }
+                        ]
+                    },
+                ],
+            }
+        );
+
+        if (!ticket) {
+            return errorResponse(res,404,'تیکت مورد نظر یافت نشد!')
+        }
+
+        return successResponse(res, 200, '', { ticket })
+    } catch (error) {
+        next(error)
+    }
+}
+
+const usersideCloseTicket = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const ticket = await Ticket.findOne(
+            {
+                where: { id },
+                include: [
+                    {
+                        model: TicketMessage, as: 'messages', include: [
+                            { model: User, as: 'sender', attributes: ['id', 'name', 'avatar'] }
+                        ]
+                    },
+                ],
+            }
+        );
+
+        ticket.status = 'closed'
+        await ticket.save()
+        return successResponse(res, 200, 'تیکت با موفقیت بسته شد.', { ticket })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const usersideAnswerTicket = async (req, res, next) => {
+    try {
+        const validationError = validationResult(req)
+
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
+
+        const { message } = req.body;
+        const { id } = req.params;
+        const  userId  = req.user.id;
+
+        const ticket = await Ticket.findOne({ where: { id } })
+
+        if (!ticket) {
+            return errorResponse(res, 400, 'ثبت پیغام، با خطا مواجه شد. لطفا بعدا تلاش کنید.')
+        }
+
+        await TicketMessage.create({
+            ticket_id: ticket.id,
+            sender_id: userId,
+            message,
+        })
+
+        ticket.status = 'pending'
+        await ticket.save()
+
+        const updatedTicket = await Ticket.findOne(
+            {
+                where: { id },
+                include: [
+                    {
+                        model: TicketMessage, as: 'messages', include: [
+                            { model: User, as: 'sender', attributes: ['id', 'name', 'avatar'] }
+                        ]
+                    },
+                ],
+            }
+        );
+
+        return successResponse(res, 201, "تیکت شما با موفقیت ارسال شد و پس از بررسی، به آن پاسخ داده خواهد شد.", { ticket: updatedTicket })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createTicket,
     getTickets,
@@ -282,5 +400,9 @@ module.exports = {
     deleteTicket,
     getTicketDetails,
     deleteMessage,
-    changeStatusOfTicket
+    changeStatusOfTicket,
+    getUsersideickets,
+    getUsersideTicketDetails,
+    usersideCloseTicket,
+    usersideAnswerTicket
 }

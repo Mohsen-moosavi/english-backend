@@ -615,6 +615,36 @@ const getRelatedCourseToArticle = async (req, res, next) => {
   }
 }
 
+const getUserBagCourses = async (req,res,next)=>{
+  try {
+      const validationError = validationResult(req)
+
+      if (validationError?.errors && validationError?.errors[0]) {
+          return errorResponse(res, 400, validationError.errors[0].msg)
+      }
+
+      const {coursesId} = req.body;
+
+      const courses = await Course.findAll({
+        where : {id: {[Op.in] : [...coursesId]}},
+        attributes : ['id','name','cover','price','score','slug'],
+        include:[
+          {model: User , attributes:['id','name'], paranoid:false},
+          {model: Level , attributes:['id','name'], as:'level'},
+          {model: Off , attributes:['percent'] ,where:{public : 1}, required:false},
+        ]
+      })
+      
+      if(!courses){
+        return errorResponse(res,400,'موردی یافت نشد!')
+      }
+      
+      return successResponse(res,200,'',{courses})
+  } catch (error) {
+      next(error)
+  }
+}
+
 
 module.exports = {
   getCreatingData,
@@ -631,5 +661,6 @@ module.exports = {
   getLastCourses,
   getUserSideCourse,
   getRelatedCourse,
-  getRelatedCourseToArticle
+  getRelatedCourseToArticle,
+  getUserBagCourses
 }

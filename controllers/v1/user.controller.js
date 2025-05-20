@@ -1,5 +1,6 @@
-const { Op, Sequelize, QueryTypes } = require("sequelize");
-const { User, Role, Level, Course, Sale, Ticket, Comment, Article, UserCourses, db } = require("../../db");
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
+const { User, Role, Level, Course, UserCourses } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { validationResult } = require("express-validator");
 const fs = require('fs')
@@ -214,6 +215,140 @@ const updateProfileAvatar = async (req,res,next)=>{
     }
 }
 
+const updateProfileAvatarUserside = async (req,res,next)=>{
+    try {
+        const avatar = req.file;
+        const userId = req.user.id;
+
+        const selectedUser = await User.findOne({where : {id : userId}})
+
+        if(!selectedUser){
+            return errorResponse(res,400,'مشکل در شناسایی کاربر!')
+        }
+
+        const oldAvatar = selectedUser.avatar
+        if(oldAvatar && fs.existsSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))){
+            fs.unlinkSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))
+        }
+
+        selectedUser.avatar = `${configs.domain}/public/avatars/${avatar.filename}`;
+        await selectedUser.save()
+
+        return successResponse(res,200,`تصویر پروفایل با موفقیت تغییر پیدا کرد.`,{userAvatar : selectedUser.avatar})
+    } catch (error) {
+        next(error)
+    }
+}
+
+const deleteUserProfileImageUserside = async (req,res,next)=>{
+    try {
+        const userId = req.user.id;
+
+        const selectedUser = await User.findOne({where : {id : userId}})
+
+        if(!selectedUser){
+            return errorResponse(res,400,'مشکل در شناسایی کاربر! fdddfd')
+        }
+
+        if(!selectedUser.avatar){
+            return errorResponse(res,400,'تصویری جهت حذف برای کاربر، یافت نشد.')
+        }
+
+        const oldAvatar = selectedUser.avatar;
+
+        selectedUser.avatar = null;
+        await selectedUser.save()
+
+        if(fs.existsSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))){
+            fs.unlinkSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))
+        }
+
+        return successResponse(res,200,`تصویر پروفایل کاربر، با موفقیت حذف شد.`,{userAvatar : selectedUser.avatar})
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getUsersideCourses = async (req,res,next)=>{
+    try {        
+        const userId = req.user.id;
+
+        const user = await User.findOne({
+            where:{id:userId},
+            attributes : [],
+            include:[{
+                model: Course, 
+                as:'userCourses',
+                attributes:['id','name','cover','price','score','slug'],
+                order : [['id', 'DESC']],
+                include:[
+                    {model: User , attributes:['id','name'], paranoid:false},
+                    {model: Level , attributes:['id','name'], as:'level'},
+                ]
+            }]
+        })
+
+        const coursesIdArray = user.userCourses.map(course=>course.id)
+
+        const formedCourses = user.userCourses.map(item =>({
+            id: item.id,
+            name: item.name,
+            cover: item.cover,
+            price: item.price,
+            score: item.score,
+            slug: item.slug,
+            teacherName: item.user?.name,
+            teacherId: item.user?.id,
+            levelName: item.level?.name,
+            levelId: item.level?.id,
+            offPercent: item.offs?.length ? item.offs[0].percent : null,
+          }))
+
+        return successResponse(res,200,'',{courses:formedCourses , coursesId:coursesIdArray})
+    } catch (error) {
+        next(error)
+    }
+}
+
+const editInfoFromUserside = async(req,res,next)=>{
+    try {
+        const validationError = validationResult(req)
+
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
+
+        const userId = req.user.id;
+        const {name,username , password} = req.body;
+
+        
+        const user = await User.findOne({where:{id:userId}})
+        
+        if(!user){
+            return errorResponse(res,400,'کاربر یافت نشد!')
+        }
+        
+        const isDoublicateUsername = await User.findOne({where:{username , id:{[Op.ne] : userId}}})
+        
+        if(isDoublicateUsername){
+            return errorResponse(res,400,'این نام کاربری از قبل موجود است.')
+        }
+        user.name = name;
+        user.username = username;
+        
+        if(!!password){
+            const hashedPassword = bcrypt.hashSync(password, 12)   
+            user.password = hashedPassword;
+        }
+        
+        user.save()
+
+        return successResponse(res,200,'اطلاعات کاربر با موفقیت ویرایش شد.', {user : {name:user.name,username:user.username}})
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getUsers,
     getAdmins,
@@ -222,5 +357,9 @@ module.exports = {
     deleteCourseOfUser,
     changeRole,
     deleteUserProfileImage,
-    updateProfileAvatar
+    updateProfileAvatar,
+    updateProfileAvatarUserside,
+    deleteUserProfileImageUserside,
+    getUsersideCourses,
+    editInfoFromUserside
 }

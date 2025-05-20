@@ -2,8 +2,9 @@ const { body, query } = require("express-validator")
 
 function createTicketValidator(){
     return [
-        body('subject').isString().withMessage("موضوع وارد شده معتبر نمی باشد.").isLength({min : 3 ,max:30}).withMessage("موضوع وارد شده باید بین 3 تا 50 کاراکتر باشد."),
-        body('message').isString().withMessage("پیغام وارد شده معتبر نمی باشد.").isLength({max : 2000}).withMessage("طول پیام وارد شده نباید بیشتر از 2000 کاراکتر باشد."),
+        body('subject').isString().withMessage("موضوع وارد شده معتبر نمی باشد.").isIn(["fiscal",'scholastic', "counseling","offer", "support",'other']).withMessage("وضعیت وارد شده خارج از چارچوب است."),
+        body('message').isString().withMessage("پیغام وارد شده معتبر نمی باشد.").isLength({max : 2000, min:3}).withMessage("طول پیام وارد شده نباید بیشتر از 2000 و کمتراز 4 کاراکتر باشد."),
+        body('title').isString().withMessage("عنوان وارد شده معتبر نمی باشد.").isLength({max : 50,min:3}).withMessage("طول عنوان وارد شده نباید بیشتر از 50 و کمتر از 4 کاراکتر باشد."),
     ]
 }
 

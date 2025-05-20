@@ -262,7 +262,9 @@ const register = async (req, res, next) => {
       score:newUser.score,
       level:newUser.level?.name || null,
       role:newUser.role?.name || userRole[0].name,
-      courses : []
+      courses : [],
+      username: newUser.username,
+      created_at:newUser.created_at
     }
 
     successResponse(res, 201, 'شما با موفقیت ثبت نام شدید.',{user : userData})
@@ -347,13 +349,17 @@ const login = async (req, res, next) => {
 
     const userData =  {
       name: user.name,
+      username: user.username,
       phone: user.phone,
       avatar:user.avatar,
       score:user.score,
-      level:user.level || null,
+      level:user.level.name || null,
       role:user.role?.name || null,
-      courses:courseIdArray
+      courses:courseIdArray,
+      created_at:user.created_at
     }
+
+    console.log("data=============================================>" , userData)
 
     successResponse(res, 200, 'شما با موفقیت وارد شدید.',{user : userData})
 
@@ -467,7 +473,14 @@ const resetPassword = async (req, res, next) => {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
 
-    const user = await User.findOne({ where: { phone } })
+    const user = await User.findOne({
+      where: { phone },
+      include: [
+        { model: Role, attributes: ["name"], as: "role" },
+        { model: Level, attributes: ["name"], as: "level", required: false },
+      ],
+    })
+
     if (!user) {
       return errorResponse(res, 400, "مشکل در تشخیص شماره تلفن!")
     }
@@ -480,6 +493,13 @@ const resetPassword = async (req, res, next) => {
     user.password = hashedPassword;
     user.refreshToken = refreshToken;
     user.save()
+
+    const userCourses = await UserCourses.findAll({
+      where:{user_id:user.id},
+      attributes:['course_id'],
+    })
+
+    const courseIdArray = userCourses.map(course=>course.course_id)
 
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontUserDomain,
@@ -503,7 +523,19 @@ const resetPassword = async (req, res, next) => {
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
-    successResponse(res, 200, 'رمز عبور شما، با موفقیت ویرایش شد.')
+    const userData =  {
+      name: user.name,
+      username: user.username,
+      phone: user.phone,
+      avatar:user.avatar,
+      score:user.score,
+      level:user.level.name || null,
+      role:user.role?.name || null,
+      courses:courseIdArray,
+      created_at:user.created_at
+    }
+
+    successResponse(res, 200, 'رمز عبور شما، با موفقیت ویرایش شد.',{user : userData})
   } catch (error) {
     next(error)
   }
@@ -686,12 +718,14 @@ const userSideGetMe = async (req, res, next) => {
 
     const userData =  {
       name: user.name,
+      username: user.username,
       phone: user.phone,
       avatar:user.avatar,
       score:user.score,
       level:user['level.name'] || null,
       role:user['role.name'] || null,
-      courses:courseIdArray
+      courses:courseIdArray,
+      created_at:user.created_at
     }
     
     successResponse(res,200,"", {user:userData})

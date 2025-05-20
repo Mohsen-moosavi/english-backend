@@ -38,8 +38,21 @@ function getCoursesValidator(){
     ]
 }
 
+function getBagCoursesValidator(){
+    return [
+        body('coursesId').custom((value)=>{
+            if(!Array.isArray(value)){
+                throw new Error('فرمت آی دی های وارد شده، معتبر نمی باشد.')
+            }
+            if(!value.every(i=>typeof i === 'number')) throw new Error('آی دی نامعتبر است!');
+            return true;
+        })
+    ]
+}
+
 
 module.exports = {
     createCourseValidator,
-    getCoursesValidator
+    getCoursesValidator,
+    getBagCoursesValidator
 }

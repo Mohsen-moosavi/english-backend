@@ -25,6 +25,10 @@ const Ticket =
             type: DataTypes.STRING,
             allowNull: false,
           },
+          title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+          },
           status: {
             type: DataTypes.ENUM("open", "pending","answered", "closed"),
             defaultValue: "open",
@@ -34,6 +38,8 @@ const Ticket =
         tableName: "tickets",
         timestamps: true,
         underscored: true,
+        createdAt: "created_at",
+        updatedAt: "updated_at",
       }
     );
 

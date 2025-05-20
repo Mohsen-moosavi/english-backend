@@ -17,7 +17,7 @@ function resendOtpValidator(){
 function verifyOtpValidator(){
     return [
         body('phone').isMobilePhone("fa-IR" , {strictMode : true}).withMessage("شماره وارد شده معتبر نمی باشد."),
-        body('code').isLength({max:5 , min:5}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
+        body('code').isLength({max:5}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
             /^[0-9]+$/).withMessage("کد فرستاده شده، معتبر نیست")
     ]
 }
@@ -58,7 +58,7 @@ function resetPasswordValidator(){
                 return true
             }
         }),
-        body('verifiedPhoneCode').isString().isLength({max:4 , min:4}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
+        body('verifiedPhoneCode').isString().isLength({max:4}).withMessage("تعداد ارقام کد، صحیح نیست.").matches(
             /^[0-9]+$/).withMessage("کد فرستاده شده، معتبر نیست")
     ]
 }

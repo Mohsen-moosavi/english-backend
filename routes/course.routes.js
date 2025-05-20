@@ -5,7 +5,7 @@ const controller = require("../controllers/v1/course.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const configs = require("../configs");
 const multer = require("multer");
-const { createCourseValidator, getCoursesValidator } = require("../validators/course.validator");
+const { createCourseValidator, getCoursesValidator, getBagCoursesValidator } = require("../validators/course.validator");
 
 const router = Router();
 
@@ -52,6 +52,8 @@ router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
 router.post('/update-video/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadVideo.single('video'),controller.updateVideo);
 router.post('/change-status/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),getCoursesValidator(),controller.updateStatus);
+router.post('/user-side/bag-courses',authMiddleware,getBagCoursesValidator(), controller.getUserBagCourses)
+
 
 
 
