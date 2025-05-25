@@ -5,7 +5,7 @@ const controller = require("../controllers/v1/course.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const configs = require("../configs");
 const multer = require("multer");
-const { createCourseValidator, getCoursesValidator, getBagCoursesValidator } = require("../validators/course.validator");
+const { createCourseValidator, getCoursesValidator } = require("../validators/course.validator");
 
 const router = Router();
 
@@ -48,11 +48,12 @@ router.get('/user-side/:slug',controller.getUserSideCourse);
 router.get('/user-side/related/:slug',controller.getRelatedCourse);
 router.get('/user-side/related-to-article/:slug',controller.getRelatedCourseToArticle);
 router.get('/:id',controller.getCourse);
-router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getCoursesValidator() ,controller.deleteCourse);
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
 router.post('/update-video/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadVideo.single('video'),controller.updateVideo);
 router.post('/change-status/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),getCoursesValidator(),controller.updateStatus);
-router.post('/user-side/bag-courses',authMiddleware,getBagCoursesValidator(), controller.getUserBagCourses)
+router.post('/user-side/bag-courses',authMiddleware, controller.getUserBagCourses)
+router.delete('/user-side/bag-courses/:courseId',authMiddleware, controller.deleteCourseFromUserBag)
+router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getCoursesValidator() ,controller.deleteCourse);
 
 
 

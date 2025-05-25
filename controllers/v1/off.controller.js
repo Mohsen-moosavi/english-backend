@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator")
 const { errorResponse, successResponse } = require("../../utils/responses")
-const { Off, Course } = require("../../db")
+const { Off, Course, UserBag } = require("../../db")
 const { NUMBER, Op } = require("sequelize")
 const { findOffsByQuery } = require("../../utils/finder.util")
 
@@ -106,8 +106,73 @@ const deleteOff = async (req,res,next)=>{
     }
 }
 
+const applyOffForUserBag = async (req,res,next)=>{
+    try {
+        const validationError = validationResult(req)
+    
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
+
+        const code = req.body.code;
+        const userId = req.user.id;
+
+        const userBagOff = await UserBag.findOne({
+            where : {user_id: userId},
+            attributes : ['course_id'],
+            include:[
+              {model:Course,attributes:['price'],include:[
+                {model: Off , attributes:['id','percent','remainingTimes','expire'] ,where:{public : 0,code}, required:true},
+              ]}
+            ],
+        })
+        if(!userBagOff){
+            return errorResponse(res,400,"کد تخفیف معتبر نمی باشد!")
+        }
+        if(userBagOff.course.offs[0].expire < new Date().toISOString().split('T')[0]){
+            return errorResponse(res,400,'کد تخفیف، منقضی شده است.')
+        }
+        if(userBagOff.course.offs[0].remainingTimes < 1){
+            return errorResponse(res,400,'تعداد دفعات مجاز برای استفاده از این کد، به پایان رسیده است.')
+        }
+
+        const userBag = await UserBag.findAll({
+            where : {user_id: userId , course_id : {[Op.ne] : userBagOff.course_id}},
+            attributes : [],
+            include:[
+              {model:Course,attributes:['id','price'],include:[
+                {model: Off , attributes:['id','percent'] ,where:{public : 1}, required:false},
+              ]}
+            ],
+        })
+
+        let totalMainPrice = 0;
+        let totalPrice = 0;
+        let totalOff = 0;
+        userBag.forEach(item=>{
+          totalMainPrice += Number(item.course.price)
+          if(item.course.offs.length && item.course.offs[0].percent){
+            totalPrice += (Number(item.course.price) - Math.round((Number(item.course.price) * Number(item.course.offs[0].percent)) / 100));
+            totalOff += Math.round((Number(item.course.price) * Number(item.course.offs[0].percent)) / 100)
+          }else{
+            totalPrice += Number(item.course.price)
+          }
+        })
+
+        totalMainPrice += Number(userBagOff.course.price);
+        totalPrice += (Number(userBagOff.course.price) - Math.round((Number(userBagOff.course.price) * Number(userBagOff.course.offs[0].percent)) / 100));
+        totalOff += Math.round((Number(userBagOff.course.price) * Number(userBagOff.course.offs[0].percent)) / 100)
+      
+        return successResponse(res, 200, '', {totalMainPrice,totalPrice,totalOff});
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     createOff,
     getOffs,
-    deleteOff
+    deleteOff,
+    applyOffForUserBag
 }

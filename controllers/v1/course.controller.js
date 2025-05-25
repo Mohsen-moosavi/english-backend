@@ -1,7 +1,7 @@
 const { Op, QueryTypes, Sequelize } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment, Article } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment, Article, UserBag } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -617,34 +617,110 @@ const getRelatedCourseToArticle = async (req, res, next) => {
 
 const getUserBagCourses = async (req,res,next)=>{
   try {
-      const validationError = validationResult(req)
+      const userId = req.user.id;
 
-      if (validationError?.errors && validationError?.errors[0]) {
-          return errorResponse(res, 400, validationError.errors[0].msg)
-      }
-
-      const {coursesId} = req.body;
-
-      const courses = await Course.findAll({
-        where : {id: {[Op.in] : [...coursesId]}},
-        attributes : ['id','name','cover','price','score','slug'],
+      const userBag = await UserBag.findAll({
+        where : {user_id: userId},
+        attributes : [],
         include:[
-          {model: User , attributes:['id','name'], paranoid:false},
-          {model: Level , attributes:['id','name'], as:'level'},
-          {model: Off , attributes:['percent'] ,where:{public : 1}, required:false},
-        ]
+          {model:Course,attributes:['id','name','cover','price','slug'],include:[
+            {model: Off , attributes:['id','percent'] ,where:{public : 1}, required:false},
+          ]}
+        ],
       })
       
-      if(!courses){
+      if(!userBag){
         return errorResponse(res,400,'موردی یافت نشد!')
       }
+
+      const reformationCourses = userBag.map(item =>({
+      id: item.course.id,
+      name: item.course.name,
+      cover: item.course.cover,
+      price: item.course.price,
+      slug: item.course.slug,
+      // offPercent: item.offs.length ? item.offs[0].percent : null,
+      offPrice: (item.course.offs.length && item.course.offs[0].percent) ? (Number(item.course.price) - Math.round((Number(item.course.price) * Number(item.course.offs[0].percent)) / 100)) : null,
+    }))
+
+    let totalMainPrice = 0;
+    let totalPrice = 0;
+    let totalOff = 0;
+    reformationCourses.forEach(course=>{
+      totalMainPrice += Number(course.price)
+      if(course.offPrice){
+        totalPrice += course.offPrice;
+        totalOff += course.offPrice
+      }else{
+        totalPrice += Number(course.price)
+      }
+    })
       
-      return successResponse(res,200,'',{courses})
+      return successResponse(res,200,'',{courses:reformationCourses, totalPrice,totalOff, totalMainPrice})
   } catch (error) {
       next(error)
   }
 }
 
+const deleteCourseFromUserBag = async (req,res,next)=>{
+  try {
+      const userId = req.user.id;
+      const courseId = req.params.courseId;
+
+      const course = await UserBag.findOne({
+        where : {
+          user_id: userId,
+          course_id: courseId
+        }
+      });
+
+      if(!course){
+        return errorResponse(res,400,'موردی جهت حذف یافت نشد!')
+      }
+
+      await course.destroy()
+
+      const userBag = await UserBag.findAll({
+        where : {user_id: userId},
+        attributes : [],
+        include:[
+          {model:Course,attributes:['id','name','cover','price','slug'],include:[
+            {model: Off , attributes:['id','percent'] ,where:{public : 1}, required:false},
+          ]}
+        ],
+      })
+      
+      if(!userBag){
+        return successResponse(res,200,'موردی یافت نشد!',{courses:[], totalPrice:0,totalOff:0, totalMainPrice:0})
+      }
+
+      const reformationCourses = userBag.map(item =>({
+      id: item.course.id,
+      name: item.course.name,
+      cover: item.course.cover,
+      price: item.course.price,
+      slug: item.course.slug,
+      offPrice: (item.course.offs.length && item.course.offs[0].percent) ? (Number(item.course.price) - Math.round((Number(item.course.price) * Number(item.course.offs[0].percent)) / 100)) : null,
+    }))
+
+    let totalMainPrice = 0;
+    let totalPrice = 0;
+    let totalOff = 0;
+    reformationCourses.forEach(course=>{
+      totalMainPrice += Number(course.price)
+      if(course.offPrice){
+        totalPrice += course.offPrice;
+        totalOff += course.offPrice
+      }else{
+        totalPrice += Number(course.price)
+      }
+    })
+      
+      return successResponse(res,200,'',{courses:reformationCourses, totalPrice,totalOff, totalMainPrice})
+  } catch (error) {
+      next(error)
+  }
+}
 
 module.exports = {
   getCreatingData,
@@ -662,5 +738,6 @@ module.exports = {
   getUserSideCourse,
   getRelatedCourse,
   getRelatedCourseToArticle,
-  getUserBagCourses
+  getUserBagCourses,
+  deleteCourseFromUserBag
 }

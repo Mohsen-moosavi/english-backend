@@ -2,7 +2,7 @@ const {Router} = require("express");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const { roleGardMiddleware } = require("../middlewares/roleGard.middleware");
 const controller = require("../controllers/v1/user.controller");
-const { getUsersValidator, changeRoleValidator, editInfoFromUsersideValidator } = require("../validators/user.validator");
+const { getUsersValidator, changeRoleValidator, editInfoFromUsersideValidator, userBagValidator } = require("../validators/user.validator");
 const { getCoursesValidator } = require("../validators/course.validator");
 const multer = require("multer");
 const path = require('path');
@@ -44,6 +44,7 @@ router.put('/:userId/update-profile',authMiddleware , roleGardMiddleware([]),upl
 router.delete('/user-side/delete-profile',authMiddleware,controller.deleteUserProfileImageUserside)
 router.delete('/:userId/delete-course/:courseId',authMiddleware , roleGardMiddleware([]), getCoursesValidator(),controller.deleteCourseOfUser)
 router.delete('/:userId/delete-profile',authMiddleware , roleGardMiddleware([]),controller.deleteUserProfileImage)
+router.post('/add-bag',authMiddleware,userBagValidator(), controller.addToBag)
 
 
 module.exports = router;

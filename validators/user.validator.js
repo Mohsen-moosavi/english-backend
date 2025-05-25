@@ -42,8 +42,16 @@ function editInfoFromUsersideValidator(){
     ]
 }
 
+function userBagValidator(){
+    return [
+        body("courseId").isNumeric().withMessage('آی دی دوره معتبر نمی باشد.'),
+    ]
+}
+
+
 module.exports = {
     getUsersValidator,
     changeRoleValidator,
-    editInfoFromUsersideValidator
+    editInfoFromUsersideValidator,
+    userBagValidator
 }

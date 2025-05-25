@@ -70,6 +70,8 @@ const Comment = require("./models/comment")(db);
 const Ticket = require("./models/ticket")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const TicketMessage = require("./models/ticketMessage")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const UserBag = require("./models/userBag")(db);
 
 
 Book.hasMany(Course, {
@@ -251,6 +253,20 @@ User.hasMany(Ticket,{
 Ticket.belongsTo(User, {foreignKey:'user_id'})
 
 
+User.hasMany(UserBag,{
+  foreignKey : 'user_id'
+})
+
+UserBag.belongsTo(User, {foreignKey:'user_id'})
+
+
+Course.hasMany(UserBag,{
+  foreignKey : 'course_id'
+})
+
+UserBag.belongsTo(Course, {foreignKey:'course_id'})
+
+
 Ticket.hasMany(TicketMessage,{
   foreignKey : 'ticket_id',
   as : 'messages'
@@ -396,5 +412,6 @@ module.exports = {
   Comment,
   Ticket,
   TicketMessage,
-  UserCourses
+  UserCourses,
+  UserBag
 };

@@ -39,6 +39,8 @@ const TicketMessage =(sequelize) =>
         tableName: "ticket_messages",
         timestamps: true,    
         underscored: true,
+        createdAt: "created_at",
+        updatedAt: "updated_at",
       }
     );
 

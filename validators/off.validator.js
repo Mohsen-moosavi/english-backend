@@ -27,6 +27,9 @@ function createOffValidator(){
                 if(value=''){
                     throw new Error("وادر کردن کد تخفیف، الزامی است.")
                 }
+                if(value.length < 8){
+                    throw new Error("کد تخفیف، حداقل باید 8 کاراکتر باشد.")
+                }
                 return true
             }
         }).optional(),
@@ -44,7 +47,13 @@ function getOffValidator(){
     ]
 }
 
+function applyCodeValidator(){
+    return [
+        body('code').isString().withMessage("تعداد وارد شده معتبر نمی باشد.").isLength({min:8}).withMessage("کد تخفیف، حداقل باید 8 کاراکتر باشد.")]
+}
+
 module.exports={
     createOffValidator,
-    getOffValidator
+    getOffValidator,
+    applyCodeValidator
 }

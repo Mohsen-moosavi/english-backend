@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const bcrypt = require("bcryptjs");
-const { User, Role, Level, Course, UserCourses } = require("../../db");
+const { User, Role, Level, Course, UserCourses, UserBag } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { validationResult } = require("express-validator");
 const fs = require('fs')
@@ -349,6 +349,51 @@ const editInfoFromUserside = async(req,res,next)=>{
     }
 }
 
+const addToBag = async(req,res,next)=>{
+    try {
+        const validationError = validationResult(req)
+
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
+
+        const courseId = req.body.courseId;
+        const userId = req.user.id;
+
+        const userCourse = await UserCourses.findOne({
+            where:{
+                user_id:userId,
+                course_id : courseId,
+            }
+        })
+
+
+        if(userCourse){
+            return errorResponse(res,400,"شما دانشجوی این دوره هستید.")
+        }
+
+        const userbagCourse = await UserBag.findOne({
+            where :{
+                user_id:userId,
+                course_id : courseId
+            }
+        })
+
+        if(userbagCourse){
+            return errorResponse(res,400,"این دوره از قبل به سبد خرید شما اضافه شده است.")
+        }
+
+        await UserBag.create({
+            user_id:userId,
+            course_id:courseId
+        })
+
+        return successResponse(res,200,'دوره با موفقیت به سبد خرید شما اضافه شد.')
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     getUsers,
     getAdmins,
@@ -361,5 +406,6 @@ module.exports = {
     updateProfileAvatarUserside,
     deleteUserProfileImageUserside,
     getUsersideCourses,
-    editInfoFromUserside
+    editInfoFromUserside,
+    addToBag
 }
