@@ -53,7 +53,15 @@ function createSaleByAdminValidator(){
     ]
 }
 
+function createSaleByUserValidator(){
+    return [
+        body('price').isNumeric().withMessage("مبلغ وارد شده معتبر نمی باشد."),
+        body('offCode').isNumeric().withMessage("کد تخفیف شده معتبر نمی باشد.").optional()
+    ]
+}
+
 module.exports = {
     getSalesValidator,
-    createSaleByAdminValidator
+    createSaleByAdminValidator,
+    createSaleByUserValidator
 }

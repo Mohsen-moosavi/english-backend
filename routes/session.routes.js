@@ -5,7 +5,7 @@ const controller = require("../controllers/v1/session.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const configs = require("../configs");
 const multer = require("multer");
-const { updateDetailsWithoutFileValidator, getSessionValidator, updateVideoValidator, uploadVideoValidator } = require("../validators/sessionValidator");
+const { updateDetailsWithoutFileValidator, getSessionValidator, updateVideoValidator, uploadVideoValidator, getSessionOffCourseValidator } = require("../validators/sessionValidator");
 
 const router = Router();
 
@@ -16,8 +16,8 @@ router.post('/upload-video' ,authMiddleware , roleGardMiddleware([configs.roles.
 router.post('/update-video' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),uploadVideo.single('video'),updateVideoValidator(),controller.updateVideo);
 router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),uploadFile.single('file'),controller.uploadSessionDetails);
 router.post('/without-file' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),updateDetailsWithoutFileValidator(),controller.uploadSessionDetailsWithoutFile);
+router.get('/user-side/get-single/:courseId',authMiddleware,getSessionOffCourseValidator() , controller.getSingleSessionForUser);
 router.get('/user-side/:id' , controller.getSessionsForUserSide);
-router.get('/user-side/get-single/:sessionId',authMiddleware , controller.getSingleSessionForUser);
 router.get('/:courseId' ,getSessionValidator() , controller.getSessions);
 router.get('/single/:id' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),controller.getSingleSessionforAdmin);
 // router.get('/:id' , controller.getArticle);

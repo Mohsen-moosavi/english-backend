@@ -367,15 +367,29 @@ const getSessionsForUserSide = async (req,res,next)=>{
 
 const getSingleSessionForUser = async (req,res,next)=>{
     try {
-        const {sessionId} = req.params;
+        const {courseId} = req.params;
+        const {sessionId} = req.query;
         const userId = req.user.id
 
-        const session = await Session.findOne({
-            where:{
-                id : sessionId
-            },
-            attributes:['id','name','isFree','video','file','course_id']
-        })
+        let session;
+
+        
+        if(Number(sessionId)){
+            session = await Session.findOne({
+                where:{
+                    id : sessionId,
+                    course_id:courseId
+                },
+                attributes:['id','name','isFree','video','file','course_id']
+            })
+        }else{
+            session = await Session.findOne({
+                where:{
+                    course_id:courseId
+                },
+                attributes:['id','name','isFree','video','file','course_id']
+            })
+        }
 
         if(!session){
             return errorResponse(res,404,'جلسه مورد نظر یافت نشد!')

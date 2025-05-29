@@ -35,9 +35,17 @@ function updateVideoValidator(){
     ]
 }
 
+function getSessionOffCourseValidator(){
+    return [
+        query('sessionId').isNumeric().withMessage("آی دی جلسه وارد شده معتبر نمی باشد.").optional(),
+        param('courseId').isNumeric().withMessage('آی دی دوره وارد شده معتبر نمی باشد.'),
+    ]
+}
+
 module.exports = {
     updateDetailsWithoutFileValidator,
     getSessionValidator,
     updateVideoValidator,
-    uploadVideoValidator
+    uploadVideoValidator,
+    getSessionOffCourseValidator
 }
