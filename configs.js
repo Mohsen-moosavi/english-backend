@@ -26,6 +26,11 @@ module.exports = {
   
     domain: process.env.DOMAIN,
 
+    email : {
+      name: process.env.EMAIL,
+      password : process.env.EMAIL_PASS
+    },
+
     originDomain : {
       frontUserDomain : process.env.FRONT_USER_DOMAIN,
       frontAdminDomain : process.env.FRONT_ADMIN_DOMAIN,

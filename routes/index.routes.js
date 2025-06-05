@@ -14,6 +14,7 @@ const ticketRoutes = require("./ticket.routes")
 const roleRoutes = require("./role.routes")
 const consoleRoutes = require("./Console.routes")
 const searchRoutes = require("./userSearch.routes")
+const contactRoutes = require("./contact.routes")
 
 const router = Router()
 
@@ -32,5 +33,6 @@ router.use("/ticket" , ticketRoutes)
 router.use("/role" , roleRoutes)
 router.use("/console" , consoleRoutes)
 router.use("/search" , searchRoutes)
+router.use("/contact" , contactRoutes)
 
 module.exports = router

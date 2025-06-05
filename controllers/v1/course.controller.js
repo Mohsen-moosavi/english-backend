@@ -716,7 +716,7 @@ const deleteCourseFromUserBag = async (req,res,next)=>{
       }
     })
       
-      return successResponse(res,200,'',{courses:reformationCourses, totalPrice,totalOff, totalMainPrice})
+      return successResponse(res,200,'',{courses:reformationCourses, totalPrice,totalOff, totalMainPrice,bagCount:userBag.length})
   } catch (error) {
       next(error)
   }

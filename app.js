@@ -8,6 +8,7 @@ const {errorResponse} = require('./utils/responses')
 const cookieParser = require("cookie-parser");
 const configs = require("./configs");
 const { uploadCanceled } = require("./utils/fs.utils");
+require('./services/email')
 
 // const captchaController = require("./controllers/captcha");
 

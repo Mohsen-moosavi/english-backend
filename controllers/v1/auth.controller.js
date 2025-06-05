@@ -1,4 +1,4 @@
-const { User, Ban, db, Role, Level, Course, UserCourses } = require("./../../db");
+const { User, Ban, db, Role, Level, Course, UserCourses, UserBag } = require("./../../db");
 const svgCpatcha = require("svg-captcha");
 const uuidv4 = require("uuid").v4;
 const bcrypt = require("bcryptjs");
@@ -263,6 +263,7 @@ const register = async (req, res, next) => {
       level:newUser.level?.name || null,
       role:newUser.role?.name || userRole[0].name,
       courses : [],
+      bagCount:0,
       username: newUser.username,
       created_at:newUser.created_at
     }
@@ -323,6 +324,10 @@ const login = async (req, res, next) => {
       attributes:['course_id'],
     })
 
+    const bagCount = await UserBag.count({
+      where:{user_id:user.id},
+    })
+
     const courseIdArray = userCourses.map(course=>course.course_id)
 
     res.cookie('accessToken', accessToken, {
@@ -353,13 +358,13 @@ const login = async (req, res, next) => {
       phone: user.phone,
       avatar:user.avatar,
       score:user.score,
-      level:user.level.name || null,
+      level:user.level?.name || null,
       role:user.role?.name || null,
+      bagCount:bagCount,
       courses:courseIdArray,
       created_at:user.created_at
     }
 
-    console.log("data=============================================>" , userData)
 
     successResponse(res, 200, 'شما با موفقیت وارد شدید.',{user : userData})
 
@@ -499,6 +504,10 @@ const resetPassword = async (req, res, next) => {
       attributes:['course_id'],
     })
 
+    const bagCount = await UserBag.count({
+      where:{user_id:user.id},
+    })
+
     const courseIdArray = userCourses.map(course=>course.course_id)
 
     res.cookie('accessToken', accessToken, {
@@ -529,8 +538,9 @@ const resetPassword = async (req, res, next) => {
       phone: user.phone,
       avatar:user.avatar,
       score:user.score,
-      level:user.level.name || null,
+      level:user.level?.name || null,
       role:user.role?.name || null,
+      bagCount:bagCount,
       courses:courseIdArray,
       created_at:user.created_at
     }
@@ -714,6 +724,10 @@ const userSideGetMe = async (req, res, next) => {
       attributes:['course_id'],
     })
 
+    const bagCount = await UserBag.count({
+      where:{user_id:user.id},
+    })
+
     const courseIdArray = userCourses.map(course=>course.course_id)
 
     const userData =  {
@@ -724,6 +738,7 @@ const userSideGetMe = async (req, res, next) => {
       score:user.score,
       level:user['level.name'] || null,
       role:user['role.name'] || null,
+      bagCount:bagCount,
       courses:courseIdArray,
       created_at:user.created_at
     }

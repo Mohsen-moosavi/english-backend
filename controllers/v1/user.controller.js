@@ -388,7 +388,11 @@ const addToBag = async(req,res,next)=>{
             course_id:courseId
         })
 
-        return successResponse(res,200,'دوره با موفقیت به سبد خرید شما اضافه شد.')
+        const bagCount = await UserBag.count({
+            where :{user_id:userId}
+        })
+
+        return successResponse(res,200,'دوره با موفقیت به سبد خرید شما اضافه شد.',{bagCount})
     } catch (error) {
         next(error)
     }
