@@ -297,7 +297,12 @@ const login = async (req, res, next) => {
           attributes: ['name'],
           as: 'level',
           required : false
-        }
+        },
+        {
+          model: Ban,
+          attributes: ['description'],
+          required : false
+        },
       ],
     })
 
@@ -311,7 +316,12 @@ const login = async (req, res, next) => {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
-    console.log("cookies===>", req.cookies)
+
+    console.log("user=============================>++++++", user.ban)
+
+    if(user.ban){
+      return errorResponse(res,403,`حساب شما مسدود شده است:\n${user.ban.description}`)
+    }
 
     const accessToken = generateAccessToken(user.username)
     const refreshToken = generateRefreshToken(user.username)
@@ -389,11 +399,19 @@ const forgetPassword = async (req, res, next) => {
       return errorResponse(res, 422, "کد امنیتی اشتباه است.")
     }
 
-    const user = await User.findOne({ where: { phone } })
+    const user = await User.findOne({
+      where: { phone },
+      include : {model:Ban,attributes:['description'],required:false}
+    })
 
     if (!user) {
       await redis.del(`captcha:${uuid}`)
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
+    }
+
+    if(user.ban){
+      await redis.del(`captcha:${uuid}`)
+      return errorResponse(res, 403, `حساب شما مسدود شده است:\n${user.ban.description}`)  
     }
 
     const banPhoneForVerified = await redis.get(getBannedPhonePattern(phone))
@@ -648,7 +666,8 @@ const loginAdmins = async (req, res, next) => {
           model: Role,
           attributes: ['name'],
           as: 'role'
-        }
+        },
+        {model:Ban,attributes:['description'],required:false}
       ],
     })
 
@@ -664,6 +683,10 @@ const loginAdmins = async (req, res, next) => {
 
     if (!isValidPassword) {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
+    }
+
+    if (user.ban) {
+      return errorResponse(res, 403, `حساب شما مسدود شده است:\n${user.ban.description}`)
     }
 
     const accessToken = generateAccessToken(user.username)
@@ -855,7 +878,12 @@ const logout = async (req, res, next) => {
         // Is refreshToken in db?
         const foundUser = await User.findOne({where : { refreshToken }});
         if (!foundUser) {
-            res.clearCookie('refreshToken');
+          res.cookie('refreshToken', refreshToken, {
+          secure: true,
+          httpOnly: true,
+          path: '/api/v1/auth/',
+          maxAge: 0
+        })
             res.clearCookie('accessToken');
             res.clearCookie('expireTime');
             return successResponse(res,204,'کاربری یافت نشد.');
@@ -896,5 +924,5 @@ module.exports = {
   getMe,
   refreshToken,
   logout,
-  userSideGetMe
+  userSideGetMe,
 }

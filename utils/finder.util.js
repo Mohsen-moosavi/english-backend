@@ -431,7 +431,7 @@ async function findTicketsByQuery(req) {
 
 async function findUsersByQuery(req) {
   try {
-    const { searchName = '', searchPhone = '', roleStatus, scoreStatus, levelStatus, deletedUser = 0,purchaseStatus, scorePriority, limit, offset } = req.query;
+    const { searchName = '', searchPhone = '', roleStatus, scoreStatus, levelStatus, deletedUser = 0,purchaseStatus, scorePriority,banStatus, limit, offset } = req.query;
 
     const finderObject = [];
     if (Number(deletedUser)){
@@ -442,6 +442,9 @@ async function findUsersByQuery(req) {
     
     if (searchName) finderObject.push(`u.name LIKE '%${searchName}%'`);
     if (searchPhone) finderObject.push(`u.phone LIKE '%${searchPhone}%'`);
+
+    if (banStatus === 'ban') finderObject.push(`b.created_at IS NOT NULL`);
+    if (banStatus === 'notBan') finderObject.push(`b.created_at IS NULL`);
     
     // فیلتر بر اساس role و level اگر لازم باشد
     if (roleStatus) finderObject.push(`r.id = ${roleStatus}`);
@@ -482,9 +485,26 @@ async function findUsersByQuery(req) {
     // console.log("order=======================>" , !!Number(scorePriority))
     
     // ساخت کوئری SQL برای دریافت داده‌ها و تعداد کل رکوردها
-    const sqlQuery = `
+    // const sqlQuery = `
+    //   SELECT 
+    //     u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, 
+    //     COALESCE(l.name, 'No Level') AS levelName, 
+    //     COALESCE(SUM(s.price), 0) AS totalSpent,
+    //     COUNT(*) OVER() AS totalCount
+    //   FROM users u
+    //   LEFT JOIN sales s ON u.id = s.user_id
+    //   LEFT JOIN levels l ON u.level_id = l.id
+    //   LEFT JOIN roles r ON u.role_id = r.id  
+    //   ${finderObject.length > 0 ? `WHERE ${finderObject.join(' AND ')}` : ''}
+    //   GROUP BY u.id, l.name
+    //   ORDER BY ${orderClause}
+    //   LIMIT ${limit} OFFSET ${offset};`
+    // ;
+
+
+      const sqlQuery = `
       SELECT 
-        u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, 
+        u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, b.created_at AS banDate,    
         COALESCE(l.name, 'No Level') AS levelName, 
         COALESCE(SUM(s.price), 0) AS totalSpent,
         COUNT(*) OVER() AS totalCount
@@ -492,8 +512,9 @@ async function findUsersByQuery(req) {
       LEFT JOIN sales s ON u.id = s.user_id
       LEFT JOIN levels l ON u.level_id = l.id
       LEFT JOIN roles r ON u.role_id = r.id  
+      LEFT JOIN bans b ON u.id = b.user_id  
       ${finderObject.length > 0 ? `WHERE ${finderObject.join(' AND ')}` : ''}
-      GROUP BY u.id, l.name
+      GROUP BY u.id, l.name 
       ORDER BY ${orderClause}
       LIMIT ${limit} OFFSET ${offset};`
     ;
@@ -524,6 +545,8 @@ async function findUserDetailsByUserId(userId) {
       u.score,
       u.created_at,
       u.updated_at,
+      b.created_at AS banDate,
+      b.description AS banData, 
       COALESCE(COUNT(DISTINCT c.id), 0) AS commentCount,
       COALESCE(COUNT(DISTINCT uc.course_id), 0) AS courseCount,
       COALESCE(COUNT(DISTINCT l.id), 0) AS lessonCount,
@@ -544,6 +567,7 @@ async function findUserDetailsByUserId(userId) {
     LEFT JOIN articles a ON u.id = a.author
     LEFT JOIN roles r ON u.role_id = r.id
     LEFT JOIN levels lvl ON u.level_id = lvl.id
+    LEFT JOIN bans b ON u.id = b.user_id
     WHERE 
       u.id = :id
     GROUP BY 

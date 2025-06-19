@@ -1,6 +1,6 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const bcrypt = require("bcryptjs");
-const { User, Role, Level, Course, UserCourses, UserBag } = require("../../db");
+const { User, Role, Level, Course, UserCourses, UserBag, Ban } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { validationResult } = require("express-validator");
 const fs = require('fs')
@@ -143,6 +143,53 @@ const changeRole = async (req,res,next)=>{
         }
 
         return successResponse(res,200,`نقش کاربر با موفقیت به ${selectedRole.name} تغییر پیدا کرد.`,{user})
+    } catch (error) {
+        next(error)
+    }
+}
+
+const banUser = async (req,res,next)=>{
+    try {
+        const validationError = validationResult(req)
+
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
+
+        const {userId} = req.params;
+        const {isBan,description} = req.body;
+
+        if(isBan){
+            const user = await User.findOne({where:{id:userId} , attributes:['id' ,'phone', 'refreshToken']})
+            if(!user){
+                return errorResponse(res,400,'کاربر یافت نشد!')
+            }
+
+            const [,isNew] = await Ban.findOrCreate({
+                where :{user_id:user.id},
+                defaults : { phone :user.phone, description}
+            })
+
+            user.refreshToken = '';
+            await user.save()
+
+            if(!isNew){
+                return errorResponse(res,400,'کاربر از قبلا بن شده است.')
+            }
+        }
+
+        if(!isBan){
+            await Ban.destroy({where : {user_id : userId}})
+        }
+        
+        const {user , error} = await findUserDetailsByUserId(userId);
+
+        
+        if(error){
+            return next(error)
+        }
+        
+        return successResponse(res,200,`کاربر با موفقیت ${isBan ? 'بن شد.' : 'از حالت بن خارج شد.'}`,{user})
     } catch (error) {
         next(error)
     }
@@ -411,5 +458,6 @@ module.exports = {
     deleteUserProfileImageUserside,
     getUsersideCourses,
     editInfoFromUserside,
-    addToBag
+    addToBag,
+    banUser
 }

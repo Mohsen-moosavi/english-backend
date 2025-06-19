@@ -84,6 +84,12 @@ Book.hasMany(Course, {
 Course.belongsTo(Book, { foreignKey: "book_collection_id", as: "book_collection" });
 
 
+User.hasOne(Ban, {
+    foreignKey: "user_id",
+  });
+  
+Ban.belongsTo(User, { foreignKey: "user_id" });
+
 User.hasMany(Course, {
     foreignKey: "teacher",
     as:'lessons'

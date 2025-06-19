@@ -722,6 +722,20 @@ const deleteCourseFromUserBag = async (req,res,next)=>{
   }
 }
 
+const getPopularCourses = async (req,res,next)=>{
+  try {
+      const courses = await Course.findAll({
+        order: [[Sequelize.literal('CAST(score AS DECIMAL(10,2))'),'DESC']],
+        attributes:['name','slug'],
+        limit:6
+      })
+      
+      return successResponse(res,200,'',{courses})
+  } catch (error) {
+      next(error)
+  }
+}
+
 module.exports = {
   getCreatingData,
   uploadVideo,
@@ -739,5 +753,6 @@ module.exports = {
   getRelatedCourse,
   getRelatedCourseToArticle,
   getUserBagCourses,
-  deleteCourseFromUserBag
+  deleteCourseFromUserBag,
+  getPopularCourses
 }

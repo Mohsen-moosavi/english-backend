@@ -43,10 +43,11 @@ router.get('/creating-data' ,authMiddleware , roleGardMiddleware([configs.roles.
 router.post('/delete-video',authMiddleware,roleGardMiddleware([configs.roles.admin]),controller.deleteFile)
 router.get('/',authMiddleware,roleGardMiddleware([configs.roles.admin]),getCoursesValidator(),controller.getCourses);
 router.get('/short-date',controller.getShortCourseData);
+router.get('/user-side/footer/popular-courses',controller.getPopularCourses);
 router.get('/last-course',controller.getLastCourses);
-router.get('/user-side/:slug',controller.getUserSideCourse);
 router.get('/user-side/related/:slug',controller.getRelatedCourse);
 router.get('/user-side/related-to-article/:slug',controller.getRelatedCourseToArticle);
+router.get('/user-side/:slug',controller.getUserSideCourse);
 router.get('/:id',controller.getCourse);
 router.post('/update/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadCover.single('cover'), createCourseValidator() , controller.updateCourse);
 router.post('/update-video/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),uploadVideo.single('video'),controller.updateVideo);

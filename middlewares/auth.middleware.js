@@ -3,6 +3,7 @@ const { Ban, User, Role, Level } =require("../db");
 const { verifyAccessToken } =require("../utils/auth.utils");
 const { errorResponse } =require("../utils/responses");
 const configs = require("../configs");
+const { where } = require("sequelize");
 
 // async function authMiddleware(req,res,next){
 //     try {
@@ -112,7 +113,7 @@ async function authMiddleware(req, res, next) {
     });
 
     if (!user) return errorResponse(res, 404, "کاربر یافت نشد!");
-    const isBanned = await Ban.findOne({ phone: user.phone });
+    const isBanned = await Ban.findOne({where :{ phone: user.phone }});
     if (isBanned) return errorResponse(res, 403, "کاربر مسدود شده است!");
 
     req.user = user;

@@ -1,4 +1,4 @@
-const { query, body } = require("express-validator")
+const { query, body, param } = require("express-validator")
 
 function getUsersValidator(){
     return [
@@ -12,6 +12,7 @@ function getUsersValidator(){
         query("levelStatus").isNumeric().withMessage('پارامتر level معتبر نمی باشد.').optional(),
         query("deletedUser").isNumeric().withMessage('پارامتر deletedUser معتبر نمی باشد.').optional(),
         query("scorePriority").isNumeric().withMessage('پارامتر scorePriority معتبر نمی باشد.').optional(),
+        query("banStatus").isString().withMessage('پارامتر banStatus معتبر نمی باشد.').isIn(['ban','notBan']).optional(),
     ]
 }
 
@@ -20,6 +21,14 @@ function changeRoleValidator(){
     return [
         body("userId").isNumeric().withMessage('آی دی کاربر معتبر نمی باشد.'),
         body("roleId").isNumeric().withMessage('نقش انتخاب شده معتبر نمی باشد.'),
+    ]
+}
+
+function banUserValidator(){
+    return [
+        param("userId").isNumeric().withMessage('آی دی کاربر معتبر نمی باشد.'),
+        body("isBan").isBoolean().withMessage('حالت وارد شده معتبر نمی باشد.'),
+        body("description").isString().withMessage('توضیحات وارد شده معتبر نمی باشد.').optional(),
     ]
 }
 
@@ -53,5 +62,6 @@ module.exports = {
     getUsersValidator,
     changeRoleValidator,
     editInfoFromUsersideValidator,
-    userBagValidator
+    userBagValidator,
+    banUserValidator
 }
