@@ -19,7 +19,6 @@ function getBannedPhonePattern(phone) {
 
 async function generateVerifiedPhone(phone){
     const randomCode = Math.floor(Math.random() * 10000)
-    console.log('randomCode===>',randomCode)
     await redis.set(getVerifiedPhonePattern(phone , randomCode), "0" + phone.slice(3), "EX", 10 * 60);
     return randomCode
 } 

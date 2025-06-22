@@ -82,7 +82,6 @@ const deleteTag = async (req,res,next)=>{
             return errorResponse(res,400 ,'موردی جهت حذف یافت نشد!')
         }
 
-        console.log("tags==========================================>" , deletedTag.dataValues.bookCount, deletedTag.dataValues.articleCount, deletedTag.dataValues.courseCount)
 
         if(deletedTag.dataValues.bookCount > 0){
             return errorResponse(res,400,'این تگ، برای چند مجموعه کتاب به کار رفته و امکان حذف آن وجود ندارد!')

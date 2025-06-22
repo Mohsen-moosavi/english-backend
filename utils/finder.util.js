@@ -5,7 +5,6 @@ async function findCoursesByQuery(req) {
   try {
     const { limit, offset, search, status, teacherId, bookId, levelId, priceStatus, scoreStatus,userId, tagId } = req.query
 
-    console.log("userId=========================================================>" , userId)
 
     const finderObject = { name: { [Op.like]: `%${search}%` } };
     Number(teacherId) && (finderObject.teacher = teacherId);
@@ -92,7 +91,6 @@ async function findOffsByQuery(req) {
   try {
     const { limit, offset, search, orderStatus, publicStatus } = req.query
 
-    console.log('values=============>', limit, offset, search, orderStatus, publicStatus)
 
 
     const finderObject = {};
@@ -275,7 +273,7 @@ async function setCourseAverageScore(courseId) {
 
   const mainCourse = await Course.findOne({ where: { id: courseId } })
 
-  console.log()
+  ()
 
   mainCourse.score = Number(scoreAverage.averageScore) ? String(scoreAverage.averageScore) : '5';
   await mainCourse.save()
@@ -482,26 +480,6 @@ async function findUsersByQuery(req) {
 
     orderClause += 'u.id DESC'
 
-    // console.log("order=======================>" , !!Number(scorePriority))
-    
-    // ساخت کوئری SQL برای دریافت داده‌ها و تعداد کل رکوردها
-    // const sqlQuery = `
-    //   SELECT 
-    //     u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, 
-    //     COALESCE(l.name, 'No Level') AS levelName, 
-    //     COALESCE(SUM(s.price), 0) AS totalSpent,
-    //     COUNT(*) OVER() AS totalCount
-    //   FROM users u
-    //   LEFT JOIN sales s ON u.id = s.user_id
-    //   LEFT JOIN levels l ON u.level_id = l.id
-    //   LEFT JOIN roles r ON u.role_id = r.id  
-    //   ${finderObject.length > 0 ? `WHERE ${finderObject.join(' AND ')}` : ''}
-    //   GROUP BY u.id, l.name
-    //   ORDER BY ${orderClause}
-    //   LIMIT ${limit} OFFSET ${offset};`
-    // ;
-
-
       const sqlQuery = `
       SELECT 
         u.id, u.name, u.username, u.phone, u.score ,r.id as roleId , r.name as roleName, u.created_at, u.updated_at, b.created_at AS banDate,    
@@ -629,7 +607,6 @@ async function findBooksByQuery(req) {
     if(Number(tagId)){
       includeArray.push({ model: Tag, through :{ attributes : []}, attributes: [] , where : {id : tagId} })
     }
-    console.log("here===========================================>", tagId, req.query)
 
     const { rows: books, count } = await Book.findAndCountAll(
       {

@@ -184,7 +184,6 @@ const register = async (req, res, next) => {
       raw: true
     })
 
-    console.log('oldUser===>', olduser)
 
     if (olduser) {
       if (olduser.username === username) {
@@ -195,7 +194,6 @@ const register = async (req, res, next) => {
 
     const userCount = await User.count()
 
-    console.log('user===>', userCount)
 
     let userRole;
 
@@ -215,7 +213,6 @@ const register = async (req, res, next) => {
       })
     }
 
-    console.log('userRole===>', userRole[0])
 
     const hashedPassword = bcrypt.hashSync(password, 12)
 
@@ -317,7 +314,6 @@ const login = async (req, res, next) => {
     }
 
 
-    console.log("user=============================>++++++", user.ban)
 
     if(user.ban){
       return errorResponse(res,403,`حساب شما مسدود شده است:\n${user.ban.description}`)
@@ -451,7 +447,6 @@ const verifyForgetPasswordOtp = async (req, res, next) => {
 
 
     const redisOtp = await redis.get(getRefreshPasswordOtpRedisPattern(phone));
-    console.log("redisOtp====>", await redis.keys("*"))
     const [savedOtp, attempts] = redisOtp?.split(',') || []
 
     if (!savedOtp) {
@@ -573,13 +568,11 @@ const getCaptcha = async (req, res, next) => {
   try {
 
     const { uuid } = req.body;
-    console.log("uuid==============================>" , uuid)
 
     if (uuid) {
       await redis.del(`captcha:${uuid}`);
     }
 
-    console.log("keys===>", await redis.keys("*"))
 
     const captcha = svgCpatcha.create({
       size: 5,
@@ -784,7 +777,6 @@ const refreshToken = async (req, res, next) => {
     if(isAdmin){
       const userRole = await Role.findOne({ where: { name : 'USER' }});
       foundUser = await User.findOne({ where: { refreshToken , role_id : {[Op.notLike] : `${userRole?._id ? userRole?._id : ''}`}}});
-      console.log('user refrshToken==============================================>' ,refreshToken )
     }else{
       foundUser = await User.findOne({ where: { refreshToken }});
     }
@@ -822,7 +814,6 @@ const refreshToken = async (req, res, next) => {
       configs.auth.refreshTokenSecretKey,
       async (err, decoded) => {
         if (err) {
-          console.log('expired refresh token')
           foundUser.refreshToken = '';
           await foundUser.save();
         }
@@ -924,7 +915,6 @@ const resetPassByAdmin = async (req,res,next)=>{
       return errorResponse(res,404,'کاربر مورد نظر یافت نشد.')
     }
     
-    console.log("password===============================>" , configs.auth.defaultPassword, typeof configs.auth.defaultPassword)
     const hashedPassword = bcrypt.hashSync(configs.auth.defaultPassword, 12)
 
     user.password = hashedPassword;

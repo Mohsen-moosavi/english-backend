@@ -121,7 +121,6 @@ const searchAllBooks = async (req, res, next) => {
       offset: Number(offset),
     };
 
-    console.log("category=======================>" , category)
     if (category) {
       if (category === 'forChildren') {
         whereConditions.push(`b.forChildren = true`);

@@ -218,7 +218,6 @@ const deleteUserProfileImage = async (req,res,next)=>{
         selectedUser.avatar = null;
         await selectedUser.save()
 
-        // console.log('exist==================================================>',fs.existsSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop())))
         if(fs.existsSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))){
             fs.unlinkSync(path.join(__dirname,'..','..','public','avatars',oldAvatar.split('/').pop()))
         }

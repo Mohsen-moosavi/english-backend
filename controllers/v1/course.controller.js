@@ -54,7 +54,6 @@ const uploadVideo = async (req, res, next) => {
 
   const chunkFilePath = path.join(chunkDir, `${fileName}.part_${chunkNumber}`)
 
-  console.log('canceling===>', canceling)
   if (canceling) {
     fs.rmdirSync(path.join(__dirname, '..', '..', 'public', 'introductionVideo', 'chunks'), { recursive: true, force: true })
     return errorResponse(res, 400, 'عملیات لغو شد.')

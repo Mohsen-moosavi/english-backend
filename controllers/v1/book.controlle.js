@@ -11,7 +11,6 @@ const configs = require("../../configs");
 const { findBooksByQuery } = require("../../utils/finder.util");
 
 const uploadFile = async (req, res, next) => {
-  console.log("Hit");
   const chunk = req.file.buffer;
   const chunkNumber = Number(req.body.chunkNumber); // Sent from the client
   const totalChunks = Number(req.body.totalChunks); // Sent from the client
@@ -89,7 +88,6 @@ const createBook = async (req, res, next) => {
 
 
     await newBook.addTags(createdTags.map((tag) => tag[0]));
-    console.log('tags =====>', createdTags)
 
     return successResponse(res, 201, 'مجموعه با موفقیت ایجاد شد.', { bookId: newBook.id })
 
@@ -193,7 +191,6 @@ const deleteBookWithGettingAll = async (req, res, next) => {
       const dirPath = path.join(__dirname, '..', '..', 'public', 'files')
       const filePath = file.link?.split('/')?.reverse()[0]
       if (fs.existsSync(path.join(dirPath, filePath))) {
-        console.log('deleted================================================>', filePath)
         fs.unlinkSync(path.join(dirPath, filePath));
       }
     })

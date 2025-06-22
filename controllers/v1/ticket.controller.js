@@ -210,7 +210,6 @@ const deleteMessage = async (req, res, next) => {
 
         const count = await TicketMessage.count({ where: { ticket_id: ticketId } })
 
-        console.log('count============>', count)
 
         if (Number(count) > 0) {
             const ticket = await Ticket.findOne(

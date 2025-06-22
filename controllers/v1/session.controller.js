@@ -153,7 +153,6 @@ const uploadSessionDetails = async (req, res, next) => {
         const totalChunks = Number(req.body.totalChunks); // Sent from the client
         const { fileName, sessionId, name, isFree } = req.body;
 
-        console.log('isFree======================>', isFree, typeof isFree)
 
         if (chunkNumber === 0) {
             const session = await Session.findOne({ where: { id: sessionId } })
@@ -321,7 +320,6 @@ const deleteSession = async (req,res,next)=>{
             return errorResponse(res,400,'جلسه مورد نظر یافت نشد.')
         }
 
-        console.log("session======================================>" , session)
 
         const videoFileName = session.video.split('/').pop();
         const fileName = session.file?.split('/').pop();

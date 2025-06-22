@@ -66,7 +66,6 @@ async function refreshTokenHandler(req,res,User){
     configs.auth.refreshTokenSecretKey,
     async (err, decoded) => {
       if (err) {
-        console.log('expired refresh token')
         foundUser.refreshToken = '';
         await foundUser.save();
       }
@@ -82,7 +81,6 @@ async function refreshTokenHandler(req,res,User){
 
       const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000;
 
-      console.log('here=======================================')
       return accessToken
     }
   );
