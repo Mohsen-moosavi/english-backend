@@ -907,6 +907,36 @@ const logout = async (req, res, next) => {
   }
 }
 
+const resetPassByAdmin = async (req,res,next)=>{
+  try {
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
+    const { phone } = req.body;
+
+    
+    const user = await User.findOne({where:{phone}})
+    
+    if(!user){
+      return errorResponse(res,404,'کاربر مورد نظر یافت نشد.')
+    }
+    
+    console.log("password===============================>" , configs.auth.defaultPassword, typeof configs.auth.defaultPassword)
+    const hashedPassword = bcrypt.hashSync(configs.auth.defaultPassword, 12)
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return successResponse(res,200,`رمز کاربر با موفقیت به حالت پیشفرض \n${configs.auth.defaultPassword}\nتغییر پیدا کرد.`)
+
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 module.exports = {
@@ -925,4 +955,5 @@ module.exports = {
   refreshToken,
   logout,
   userSideGetMe,
+  resetPassByAdmin
 }

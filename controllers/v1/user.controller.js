@@ -71,6 +71,10 @@ const getUserDetails = async (req,res,next)=>{
             return next(error)
         }
 
+        if(!Object.keys(user).length){
+            return errorResponse(res,404,'کاربر یافت نشد.')
+        }
+
         return successResponse(res,200,'',{user})
     } catch (error) {
         next(error)

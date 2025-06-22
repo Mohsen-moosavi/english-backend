@@ -16,6 +16,8 @@ module.exports = {
       refreshTokenSecretKey: process.env.REFRESH_TOKEN_SECRET_KEY,
       accessTokenExpiresInSeconds: process.env.ACCESS_TOKEN_EXPIRES_IN_SECONDS,
       refreshTokenExpiresInSeconds: process.env.REFRESH_TOKEN_EXPIRES_IN_SECONDS,
+
+      defaultPassword: process.env.DEFAULT_PASSWORD,
   
       google: {},
     },

@@ -2,6 +2,7 @@ const {Router} = require("express")
 const controller = require("../controllers/v1/auth.controller")
 const { sendOtpValidator, registerValidator, loginValidator, verifyOtpValidator, resetPasswordValidator, getCaptchaValidator, resendOtpValidator } = require("../validators/auth.validator")
 const { authMiddleware } = require("../middlewares/auth.middleware")
+const { roleGardMiddleware } = require("../middlewares/roleGard.middleware");
 
 const router = Router()
 
@@ -20,5 +21,6 @@ router.get("/get-me",authMiddleware , controller.getMe)
 router.get("/get-me/user-side",authMiddleware , controller.userSideGetMe)
 router.post("/refresh-token", controller.refreshToken)
 router.post("/logout", controller.logout)
+router.put("/reset-pass",resendOtpValidator(), authMiddleware ,roleGardMiddleware([]), controller.resetPassByAdmin)
 
 module.exports = router
