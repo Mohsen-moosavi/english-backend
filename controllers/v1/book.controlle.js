@@ -9,12 +9,17 @@ const { Book, Tag, File, TagBooks, Course } = require("../../db");
 const { Op, Sequelize } = require("sequelize");
 const configs = require("../../configs");
 const { findBooksByQuery } = require("../../utils/finder.util");
+const { useExtraFileHandler, removeExtraFileHandler } = require("../../utils/extrafiles.utils");
 
 const uploadFile = async (req, res, next) => {
   const chunk = req.file.buffer;
   const chunkNumber = Number(req.body.chunkNumber); // Sent from the client
   const totalChunks = Number(req.body.totalChunks); // Sent from the client
   const { group, type, name, fileName, bookId, canceling } = req.body
+
+    if (!fs.existsSync(path.join(__dirname, '..', '..', 'public', 'files'))) {
+    fs.mkdirSync(path.join(__dirname, '..', '..', 'public', 'files'));
+  }
 
   const chunkDir = path.join(__dirname, '..', '..', 'public', 'files', 'chunks') // Directory to save chunks
 
@@ -89,6 +94,8 @@ const createBook = async (req, res, next) => {
 
     await newBook.addTags(createdTags.map((tag) => tag[0]));
 
+    await useExtraFileHandler(longDescription,'books')
+
     return successResponse(res, 201, 'مجموعه با موفقیت ایجاد شد.', { bookId: newBook.id })
 
   } catch (error) {
@@ -111,6 +118,7 @@ const deleteBookWhitoutGettingAll = async (req, res, next) => {
 
     if (deletedBook) {
       removeImage(deletedBook.cover?.split('/')?.reverse()[0])
+      await removeExtraFileHandler(deletedBook.longDescription,'books')
       await deletedBook.destroy()
     }
 
@@ -200,6 +208,7 @@ const deleteBookWithGettingAll = async (req, res, next) => {
     })
 
     removeImage(deletedBook.cover?.split('/')?.reverse()[0])
+    await removeExtraFileHandler(deletedBook.longDescription,'books')
     await deletedBook.destroy()
 
     const { items, count, error } = await findBooksByQuery(req)
@@ -281,6 +290,8 @@ const updateBook = async (req, res, next) => {
 
     cover && removeImage(updatedBook.cover?.split('/')?.reverse()[0])
 
+    await removeExtraFileHandler(updatedBook.longDescription,'books')
+    await useExtraFileHandler(longDescription,'books')
 
     updatedBook.name = name
     updatedBook.slug = slugifyedSlug

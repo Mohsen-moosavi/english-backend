@@ -10,6 +10,7 @@ const { removeImage, removeIntroductionVideo } = require("../../utils/fs.utils")
 const { default: slugify } = require("slugify");
 const { isNumber } = require("util");
 const { findCoursesByQuery } = require("../../utils/finder.util");
+const { removeExtraFileHandler, useExtraFileHandler } = require("../../utils/extrafiles.utils");
 
 const getCreatingData = async (req, res, next) => {
   try {
@@ -45,6 +46,10 @@ const uploadVideo = async (req, res, next) => {
   const chunkNumber = Number(req.body.chunkNumber); // Sent from the client
   const totalChunks = Number(req.body.totalChunks); // Sent from the client
   const { fileName, canceling } = req.body;
+
+  if (!fs.existsSync(path.join(__dirname, '..', '..', 'public', 'introductionVideo'))) {
+    fs.mkdirSync(path.join(__dirname, '..', '..', 'public', 'introductionVideo'));
+  }
 
   const chunkDir = path.join(__dirname, '..', '..', 'public', 'introductionVideo', 'chunks') // Directory to save chunks
 
@@ -119,6 +124,8 @@ const createCourse = async (req, res, next) => {
 
 
     await newCourse.addTags(createdTags.map((tag) => tag[0]));
+
+    await useExtraFileHandler(longDescription,'courses')
 
     return successResponse(res, 201, 'دوره با موفقیت ایجاد شد.')
 
@@ -272,6 +279,9 @@ const updateCourse = async (req, res, next) => {
     }
 
     cover && removeImage(course.cover?.split('/')?.reverse()[0])
+
+    await removeExtraFileHandler(course.longDescription,'courses')
+    await useExtraFileHandler(longDescription,'courses')
 
 
     course.name = name

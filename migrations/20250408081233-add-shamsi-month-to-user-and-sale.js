@@ -3,12 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('Users', 'shamsi_month', {
+    await queryInterface.addColumn('users', 'shamsi_month', {
       type: Sequelize.STRING,
       allowNull: true, // بعداً مقداردهی می‌کنیم
     });
 
-    await queryInterface.addColumn('Sales', 'shamsi_month', {
+    await queryInterface.addColumn('sales', 'shamsi_month', {
       type: Sequelize.STRING,
       allowNull: true,
     });
@@ -21,8 +21,8 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Users', 'shamsi_month');
-    await queryInterface.removeColumn('Sales', 'shamsi_month');
+    await queryInterface.removeColumn('users', 'shamsi_month');
+    await queryInterface.removeColumn('sales', 'shamsi_month');
     /**
      * Add reverting commands here.
      *

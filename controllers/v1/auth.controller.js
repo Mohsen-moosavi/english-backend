@@ -233,6 +233,7 @@ const register = async (req, res, next) => {
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
       maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
     })
@@ -240,6 +241,7 @@ const register = async (req, res, next) => {
     const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
     res.cookie('expireTime', accessTokenExpireTime, {
       origin: configs.originDomain.frontUserDomain,
+      sameSite : 'none',
       secure: true,
       path: '/',
     })
@@ -248,6 +250,7 @@ const register = async (req, res, next) => {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
       httpOnly: true,
+      sameSite : 'none',
       path: '/api/v1/auth/',
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
@@ -339,6 +342,7 @@ const login = async (req, res, next) => {
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
       maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
     })
@@ -347,6 +351,7 @@ const login = async (req, res, next) => {
     res.cookie('expireTime', accessTokenExpireTime, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
     })
 
@@ -355,6 +360,7 @@ const login = async (req, res, next) => {
       secure: true,
       httpOnly: true,
       path: '/api/v1/auth/',
+      sameSite : 'none',
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
@@ -526,6 +532,7 @@ const resetPassword = async (req, res, next) => {
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
       maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
     })
@@ -534,6 +541,7 @@ const resetPassword = async (req, res, next) => {
     res.cookie('expireTime', accessTokenExpireTime, {
       origin: configs.originDomain.frontUserDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
     })
 
@@ -542,6 +550,7 @@ const resetPassword = async (req, res, next) => {
       secure: true,
       httpOnly: true,
       path: '/api/v1/auth/',
+      sameSite : 'none',
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
 
@@ -668,7 +677,7 @@ const loginAdmins = async (req, res, next) => {
       return errorResponse(res, 401, 'کاربری با این اطلاعات یافت نشد.')
     }
 
-    if (user['role.name'] === 'USER') {
+    if (user.role?.name === 'USER') {
       return errorResponse(res, 401, 'شما مجاز به ورود نیستید!')
     }
 
@@ -692,6 +701,7 @@ const loginAdmins = async (req, res, next) => {
     res.cookie('accessToken', accessToken, {
       origin: configs.originDomain.frontAdminDomain,
       secure: true,
+      sameSite : 'none',
       path: '/',
       expired: configs.auth.accessTokenExpiresInSeconds * 1000
     })
@@ -699,6 +709,7 @@ const loginAdmins = async (req, res, next) => {
     const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
     res.cookie('expireTime', accessTokenExpireTime, {
       origin: configs.originDomain.frontAdminDomain,
+      sameSite : 'none',
       secure: true,
       path: '/',
     })
@@ -707,6 +718,7 @@ const loginAdmins = async (req, res, next) => {
       origin: configs.originDomain.frontAdminDomain,
       secure: true,
       httpOnly: true,
+      sameSite : 'none',
       path: '/api/v1/auth/',
       maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
     })
@@ -771,7 +783,7 @@ const refreshToken = async (req, res, next) => {
     const cookies = req.cookies;
     if (!cookies?.refreshToken) return errorResponse(res, 401, "مشکل در احراز کاربر");
     const refreshToken = cookies.refreshToken;
-    res.clearCookie('refreshToken');
+    // res.clearCookie('refreshToken');
     
     let foundUser;
     if(isAdmin){
@@ -831,6 +843,7 @@ const refreshToken = async (req, res, next) => {
         res.cookie('accessToken', accessToken, {
           origin: isAdmin ? configs.originDomain.frontAdminDomain : configs.originDomain.frontUserDomain,
           secure: true,
+          sameSite : 'none',
           path: '/',
           maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
         })
@@ -839,6 +852,7 @@ const refreshToken = async (req, res, next) => {
           origin: isAdmin ? configs.originDomain.frontAdminDomain : configs.originDomain.frontUserDomain,
           secure: true,
           path: '/',
+      sameSite : 'none',
         })
     
         res.cookie('refreshToken', newRefreshToken, {
@@ -846,6 +860,7 @@ const refreshToken = async (req, res, next) => {
           secure: true,
           httpOnly: true,
           path: '/api/v1/auth/',
+      sameSite : 'none',
           maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
         })
     
@@ -872,6 +887,7 @@ const logout = async (req, res, next) => {
           res.cookie('refreshToken', refreshToken, {
           secure: true,
           httpOnly: true,
+      sameSite : 'none',
           path: '/api/v1/auth/',
           maxAge: 0
         })
@@ -887,6 +903,7 @@ const logout = async (req, res, next) => {
         res.cookie('refreshToken', refreshToken, {
           secure: true,
           httpOnly: true,
+      sameSite : 'none',
           path: '/api/v1/auth/',
           maxAge: 0
         })

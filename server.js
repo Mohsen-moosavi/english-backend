@@ -1,7 +1,7 @@
+const dotenv = require("dotenv").config()
 const { db, Role, Level } = require("./db");
 const app = require("./app");
 const configs = require("./configs");
-const dotenv = require("dotenv")
 const redis = require("./redis");
 const { where } = require("sequelize");
 
@@ -9,9 +9,9 @@ async function startServer() {
 
   try {
 
-    if(!configs.isProduction){
-        dotenv.config()
-    }
+    // if(!configs.isProduction){
+    //     dotenv.config()
+    // }
 
     await db.authenticate();
     await redis.ping();

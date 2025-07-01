@@ -8,6 +8,7 @@ const moment = require('moment-jalaali');
 const { default: slugify } = require("slugify");
 const { removeImage } = require("../../utils/fs.utils");
 const { findArticlesByQuery } = require("../../utils/finder.util");
+const { useExtraFileHandler, removeExtraFileHandler } = require("../../utils/extrafiles.utils");
 
 const createArticle = async(req,res,next)=>{
     try {
@@ -53,6 +54,7 @@ const createArticle = async(req,res,next)=>{
         createdTags = await Promise.all(createdTags);
 
         await newArticle.addTags(createdTags.map((tag) => tag[0]));
+        await useExtraFileHandler(longDescription,'articles')
 
         return successResponse(res,200,'مقاله با موفقیت ایجاد شد.')
     } catch (error) {
@@ -156,6 +158,7 @@ const updateArticle = async(req,res,next)=>{
         }
 
         cover && removeImage(article.cover?.split('/')?.reverse()[0])
+        await removeExtraFileHandler(article.longDescription,'articles')
 
         article.title = title
         article.slug = slugifyedSlug
@@ -165,6 +168,8 @@ const updateArticle = async(req,res,next)=>{
         article.links = links
         cover && (article.cover = `${configs.domain}/public/images/${cover.filename}`)
         await article.save()
+
+        await useExtraFileHandler(longDescription,'articles')
 
         // const article = await Article.findOne({
         //     where:{[Op.or ] : [{title} , {slug : slugifyedSlug}]},
@@ -205,6 +210,7 @@ const deleteArticle = async (req,res,next)=>{
         }
 
         removeImage(deletedArticle.cover?.split('/')?.reverse()[0])
+        await removeExtraFileHandler(deletedArticle.longDescription,'articles')
 
         await deletedArticle.destroy()
 

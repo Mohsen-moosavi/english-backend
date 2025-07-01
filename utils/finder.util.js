@@ -586,7 +586,7 @@ async function findTagsByQuery(req) {
           { model: Article, attributes: [], through: { attributes: [] }, required: false },
           { model: Course, attributes: [], through: { attributes: [] }, required: false },
         ],
-        group: ['Tag.id'],
+        group: ['tag.id'],
         subQuery: false
       });
 

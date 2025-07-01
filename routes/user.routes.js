@@ -6,11 +6,15 @@ const { getUsersValidator, changeRoleValidator, editInfoFromUsersideValidator, u
 const { getCoursesValidator } = require("../validators/course.validator");
 const multer = require("multer");
 const path = require('path');
+const fs = require('fs');
 
 const router = Router()
 
 const storage = multer.diskStorage({
     destination : function (req,file,cb){
+        if (!fs.existsSync(path.join(__dirname, '..', 'public', 'avatars'))) {
+            fs.mkdirSync(path.join(__dirname, '..', 'public', 'avatars'))
+        }        
         cb(null ,  path.join(__dirname, '..', 'public', 'avatars'))
     },
     filename  : function(req,file,cb){

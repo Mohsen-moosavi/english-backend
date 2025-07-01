@@ -74,6 +74,8 @@ const TicketMessage = require("./models/ticketMessage")(db);
 const UserBag = require("./models/userBag")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Contact = require("./models/contact")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Extrafile = require("./models/extraFiles")(db);
 
 
 Book.hasMany(Course, {
@@ -429,5 +431,6 @@ module.exports = {
   TicketMessage,
   UserCourses,
   UserBag,
-  Contact
+  Contact,
+  Extrafile
 };

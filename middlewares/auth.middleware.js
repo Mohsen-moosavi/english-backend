@@ -8,19 +8,19 @@ const { where } = require("sequelize");
 
 async function authMiddleware(req, res, next) {
   try {
-    let token;
+    // let token;
 
     // 1. تلاش برای دریافت از Authorization header
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.split(" ")[1];
-    }
-
-    // 2. اگر در هدر نبود، تلاش برای دریافت از کوکی‌ها
-    if (!token && req.cookies?.accessToken) {
-      token = req.cookies.accessToken;
-    }
-
+    // const authHeader = req.headers.authorization;
+    // if (authHeader && authHeader.startsWith("Bearer ")) {
+      // token = authHeader.split(" ")[1];
+      // }
+      
+      // 2. اگر در هدر نبود، تلاش برای دریافت از کوکی‌ها
+      // if (!token && req.cookies?.accessToken) {
+        const token = req.cookies.accessToken;
+        // }
+        
     if (!token) {
       return errorResponse(res, 401, "توکن یافت نشد!");
     }

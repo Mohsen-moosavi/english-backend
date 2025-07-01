@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const path = require("path");
+const fs = require("fs");
 const { roleGardMiddleware } = require("../middlewares/roleGard.middleware");
 const controller = require("../controllers/v1/article.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
@@ -11,6 +12,9 @@ const router = Router();
 
 const storage = multer.diskStorage({
     destination : function (req,file,cb){
+        if (!fs.existsSync(path.join(__dirname, '..', 'public', 'images'))) {
+            fs.mkdirSync(path.join(__dirname, '..', 'public', 'images'))
+        }
         cb(null ,  path.join(__dirname, '..', 'public', 'images'))
     },
     filename  : function(req,file,cb){

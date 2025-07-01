@@ -31,6 +31,10 @@ const uploadVideo = async (req, res, next) => {
             }
         }
 
+        if (!fs.existsSync(path.join(__dirname, '..', '..', 'public', 'videos'))) {
+            fs.mkdirSync(path.join(__dirname, '..', '..', 'public', 'videos'));
+        }
+
         const chunkDir = path.join(__dirname, '..', '..', 'public', 'videos', 'chunks') // Directory to save chunks
 
         if (!fs.existsSync(chunkDir)) {
@@ -169,6 +173,11 @@ const uploadSessionDetails = async (req, res, next) => {
             if (Number(isFree) !== 1 && Number(isFree) !== 0) {
                 return errorResponse(res, 400, "وضعیت مشخص شده، معتبر نمی باشد.")
             }
+        }
+
+        
+        if (!fs.existsSync(path.join(__dirname, '..', '..', 'public', 'files'))) {
+            fs.mkdirSync(path.join(__dirname, '..', '..', 'public', 'files'));
         }
 
         const chunkDir = path.join(__dirname, '..', '..', 'public', 'files', 'chunks') // Directory to save chunks
