@@ -351,7 +351,7 @@ const getLastBook = async (req,res,next)=>{
       include:[
         { model: Course, attributes: [], required: false },
       ],
-      group:['Book.id']
+      group:['book.id']
     })
 
     successResponse(res,200,'',{books})
@@ -368,6 +368,7 @@ const getUserSideBook = async (req,res,next)=>{
       include:[
         { model: Course, required: false },
         { model: Tag, attributes: ['name'],through: { attributes: [] }},
+        { model: File , attributes:['group','id','name','link','type']},
       ],
     })
 

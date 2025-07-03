@@ -1,7 +1,7 @@
 const { Op, QueryTypes, Sequelize } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
-const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment, Article, UserBag } = require("../../db");
+const { Book, User, Role, Level, Course, Tag, TagCourses, UserCourses, Session, Off, db, Comment, Article, UserBag, File } = require("../../db");
 const configs = require("../../configs");
 const { successResponse, errorResponse } = require("../../utils/responses");
 const { mergeChunks } = require("../../services/uploadFile");
@@ -499,8 +499,13 @@ const getUserSideCourse = async (req, res, next) => {
 
     const courseTime = (result.total_minutes === null) ? 'منتشر نشده' : `${result.total_minutes}:${result.remaining_seconds}`
 
+    const files = await File.findAll({
+      where:{group : course.book_file_group},
+      attributes:['id','name','link','type','group']
+    })
 
-    return successResponse(res, 200, '', { course , sessionCount:result.total_sessions, commentCount:result.total_comments , time:courseTime })
+
+    return successResponse(res, 200, '', { course, bookFiles:files , sessionCount:result.total_sessions, commentCount:result.total_comments , time:courseTime })
   } catch (error) {
     next(error)
   }

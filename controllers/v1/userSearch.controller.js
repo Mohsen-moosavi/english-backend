@@ -202,7 +202,7 @@ const searchAllArticle = async (req, res, next) => {
           literal(`EXISTS (
             SELECT 1 FROM tags_articles AS ta
             JOIN tags AS t ON t.id = ta.tag_id
-            WHERE ta.article_id = Article.id AND t.name LIKE '%${searchWord}%'
+            WHERE ta.article_id = article.id AND t.name LIKE '%${searchWord}%'
 )`)
         ]
       },
