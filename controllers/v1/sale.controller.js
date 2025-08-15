@@ -3,7 +3,7 @@ const { errorResponse, successResponse } = require("../../utils/responses")
 const { findSalesByQuery } = require("../../utils/finder.util")
 const { Course, User, Sale, UserCourses,UserBag, Off } = require("../../db")
 const moment = require("moment-jalaali")
-const { Op } = require("sequelize")
+const { Op, literal } = require("sequelize")
 
 const createSaleByAdmin = async (req, res, next) => {
     try {
@@ -122,7 +122,7 @@ const createSale = async (req, res, next) => {
                 attributes : ['course_id'],
                 include:[
                     {model:Course,attributes:['price'],include:[
-                        {model: Off , attributes:['id','percent'] ,where:{public : 0,code:offCode}, required:true},
+                        {model: Off , attributes:['id','percent'] ,where:{public : 0,remainingTimes : {[Op.gt] : 0},code:offCode}, required:true},
                     ]}
                 ],
             })
@@ -130,7 +130,7 @@ const createSale = async (req, res, next) => {
                 return errorResponse(res,400,"کد تخفیف معتبر نمی باشد!")
             }
         }
-        
+
         const userBagWhereCondition = {user_id: userId }
         if(userBagOff){
             userBagWhereCondition.course_id = {[Op.ne] : userBagOff.course_id}
@@ -140,7 +140,7 @@ const createSale = async (req, res, next) => {
             attributes : [],
             include:[
               {model:Course,attributes:['id','price'],include:[
-                {model: Off , attributes:['id','percent'] ,where:{public : 1}, required:false},
+                {model: Off , attributes:['id','percent','public'] ,where:{public : 1,remainingTimes : {[Op.gt] : 0}}, required:false},
               ]}
             ],
         })
@@ -170,12 +170,14 @@ const createSale = async (req, res, next) => {
         })
         });
 
+        
         if(userBagOff){
             await UserCourses.create({
-                course_id : userBagOff.course.id,
+                course_id : userBagOff.course_id,
                 user_id : userId
             })
         }
+
 
         createdUserCourses = await Promise.all(createdUserCourses);
 
@@ -206,7 +208,7 @@ const createSale = async (req, res, next) => {
                 mainPrice: mainSaleOffPrice,
                 off: ((mainSaleOffPrice - saleOffprice) > 0) ? (mainSaleOffPrice - saleOffprice) : 0,
                 offPercent: (((mainSaleOffPrice - saleOffprice) > 0) && (mainSaleOffPrice > 0)) ? (Math.round(((mainSaleOffPrice - saleOffprice) / mainSaleOffPrice) * 100)) : 0,
-                course_id: userBagOff.course.id,
+                course_id: userBagOff.course_id,
                 shamsi_month : moment(Date.now()).format('jYYYY-jMM'),
                 user_id: userId
             })
@@ -226,6 +228,18 @@ const createSale = async (req, res, next) => {
             })
             off.remainingTimes = off.remainingTimes - 1;
             await off.save()
+        }
+
+        
+        const coursesWithPublicOff = []
+        userBag.forEach(item=>{
+            if(item.course?.offs?.length && item.course?.offs[0]?.public){
+                coursesWithPublicOff.push(item.course.offs[0].id)
+            }
+        })
+
+        if(coursesWithPublicOff.length){
+            await Off.update({remainingTimes:literal('remainingTimes - 1')},{where:{id:{[Op.in] : coursesWithPublicOff}}})
         }
 
 

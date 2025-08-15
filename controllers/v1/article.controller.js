@@ -27,7 +27,7 @@ const createArticle = async(req,res,next)=>{
             trim: true
           })
 
-        const copyOfTags = tags[0].split(',')
+        const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
 
         const [newArticle,isNewArticle] = await Article.findOrCreate({
@@ -134,7 +134,7 @@ const updateArticle = async(req,res,next)=>{
             trim: true
           })
 
-        const copyOfTags = tags[0].split(',')
+        const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
 
         const article = await Article.findOne({
@@ -261,6 +261,9 @@ const getRelatedArticlesToCourse = async (req, res, next) => {
           where:{slug},
           include:[{model:Tag , attributes:['id']}]
         })
+        if(!mainCourse){
+          return errorResponse(res,404,"دوره مورد نظر یافت نشد!")
+        }
         const tagIds = mainCourse.tags.map(tag=>tag.id)
 
         const results = await db.query(

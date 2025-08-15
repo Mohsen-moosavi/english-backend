@@ -7,6 +7,7 @@ const fs = require('fs')
 const { findUsersByQuery, findCoursesByQuery, findUserDetailsByUserId } = require("../../utils/finder.util");
 const path = require("path");
 const configs = require("../../configs");
+const { generateAccessToken, generateRefreshToken } = require("../../utils/auth.utils");
 
 const getUsers = async (req,res,next)=>{
     try {
@@ -239,6 +240,9 @@ const updateProfileAvatar = async (req,res,next)=>{
         const {userId} = req.params;
         const avatar = req.file;
 
+        if(!avatar){
+            return errorResponse(res,400,"عکسی آپلود نشده است!")
+        }
         const selectedUser = await User.findOne({where : {id : userId}})
 
         if(!selectedUser){
@@ -269,6 +273,10 @@ const updateProfileAvatarUserside = async (req,res,next)=>{
     try {
         const avatar = req.file;
         const userId = req.user.id;
+
+        if(!avatar){
+            return errorResponse(res,400,'عکسی آپلود نشده است!')
+        }
 
         const selectedUser = await User.findOne({where : {id : userId}})
 
@@ -390,8 +398,37 @@ const editInfoFromUserside = async(req,res,next)=>{
             const hashedPassword = bcrypt.hashSync(password, 12)   
             user.password = hashedPassword;
         }
+
+        const accessToken = generateAccessToken(user.username)
+        const refreshToken = generateRefreshToken(user.username)
+
+        user.refreshToken = refreshToken;
+        await user.save()
+
+        res.cookie('accessToken', accessToken, {
+          origin: configs.originDomain.frontUserDomain,
+          secure: true,
+          sameSite : 'none',
+          path: '/',
+          maxAge: configs.auth.accessTokenExpiresInSeconds * 1000
+        })
         
-        user.save()
+        const accessTokenExpireTime = Date.now() + configs.auth.accessTokenExpiresInSeconds * 1000
+        res.cookie('expireTime', accessTokenExpireTime, {
+          origin: configs.originDomain.frontUserDomain,
+          secure: true,
+          sameSite : 'none',
+          path: '/',
+        })
+        
+        res.cookie('refreshToken', refreshToken, {
+            origin: configs.originDomain.frontUserDomain,
+            secure: true,
+            httpOnly: true,
+            path: '/api/v1/auth/',
+            sameSite : 'none',
+            maxAge: configs.auth.refreshTokenExpiresInSeconds * 1000
+        })
 
         return successResponse(res,200,'اطلاعات کاربر با موفقیت ویرایش شد.', {user : {name:user.name,username:user.username}})
     } catch (error) {

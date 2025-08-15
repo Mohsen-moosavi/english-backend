@@ -27,7 +27,7 @@ function deleteBookWhitoutGettingAllValidator(){
 
 function deleteFileValidator(){
     return [
-        param('fileNames').isArray().withMessage("فرمت نام های وارد شده جهت حذف فایل، معتبر نیست.")
+        body('fileNames').isArray().withMessage("فرمت نام های وارد شده جهت حذف فایل، معتبر نیست.")
     ]
 }
 

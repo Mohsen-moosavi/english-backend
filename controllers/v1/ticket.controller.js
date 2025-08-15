@@ -336,9 +336,13 @@ const usersideCloseTicket = async (req, res, next) => {
             }
         );
 
+        if(!ticket){
+            return errorResponse(res, 400, 'تیکت یافت نشد!.')
+        }
         ticket.status = 'closed'
         await ticket.save()
         return successResponse(res, 200, 'تیکت با موفقیت بسته شد.', { ticket })
+        
 
     } catch (error) {
         next(error)

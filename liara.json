@@ -2,11 +2,5 @@
   "platform": "node",
   "app": "english-backend",
   "port": 3000,
-  "startCommand": "node server.js",
-  "disks" : [
-    {
-      "name" : "english-data",
-      "mountTo" : "public"
-    }
-  ]
+  "startCommand": "node server.js"
 }

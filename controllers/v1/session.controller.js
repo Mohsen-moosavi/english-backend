@@ -133,6 +133,7 @@ const updateVideo = async (req, res, next) => {
             const prevVideoLink = session.video;
 
             session.video = fileLink;
+            session.time = time;
             await session.save();
 
             if (fs.existsSync(path.join(__dirname, '..', '..', 'public', 'videos', prevVideoLink.split('/').reverse()[0]))) {
@@ -156,6 +157,7 @@ const uploadSessionDetails = async (req, res, next) => {
         const chunkNumber = Number(req.body.chunkNumber); // Sent from the client
         const totalChunks = Number(req.body.totalChunks); // Sent from the client
         const { fileName, sessionId, name, isFree } = req.body;
+
 
 
         if (chunkNumber === 0) {

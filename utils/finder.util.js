@@ -273,8 +273,6 @@ async function setCourseAverageScore(courseId) {
 
   const mainCourse = await Course.findOne({ where: { id: courseId } })
 
-  ()
-
   mainCourse.score = Number(scoreAverage.averageScore) ? String(scoreAverage.averageScore) : '5';
   await mainCourse.save()
 }
@@ -296,7 +294,7 @@ async function findSessionsByQuery(req) {
         limit: Number(limit),
         offset: Number(offset),
         attributes: { exclude: ['video','q4game_id', 'mediagame_id','phrasegame_id']},
-        order: [['id', 'DESC']],
+        order: [['id']],
         raw: true
       });
 

@@ -39,7 +39,7 @@ const searchAllCourses = async (req, res, next) => {
         FROM courses c
         LEFT JOIN users u ON u.id = c.teacher
         LEFT JOIN levels l ON l.id = c.level_id
-        LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
+        LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1 AND o.remainingTimes > 0
         LEFT JOIN books b ON b.id = c.book_collection_id
         LEFT JOIN tags_courses ct ON ct.course_id = c.id
         LEFT JOIN tags t ON t.id = ct.tag_id
@@ -70,7 +70,7 @@ const searchAllCourses = async (req, res, next) => {
 FROM courses c
 LEFT JOIN users u ON u.id = c.teacher
 LEFT JOIN levels l ON l.id = c.level_id
-LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1
+LEFT JOIN offs o ON o.course_id = c.id AND o.public = 1 AND o.remainingTimes > 0
 LEFT JOIN books b ON b.id = c.book_collection_id
 LEFT JOIN tags_courses ct ON ct.course_id = c.id
 LEFT JOIN tags t ON t.id = ct.tag_id

@@ -8,10 +8,10 @@ const { createContactValidator, getContactValidator, changeStatusOfContactValida
 const router = Router();
 
 router.post('/' ,authMiddleware, createContactValidator() ,controller.createContact);
-router.get('/' ,authMiddleware,roleGardMiddleware(), getContactValidator() ,controller.getContacts);
-router.put('/:id' ,authMiddleware,roleGardMiddleware(), [...getContactValidator(),...changeStatusOfContactValidator()] ,controller.changeStatusOfContact);
-router.post('/answer/:id' ,authMiddleware,roleGardMiddleware(), [...getContactValidator(),...answerToContactValidator()] ,controller.answerToContact);
-router.delete('/:id' ,authMiddleware,roleGardMiddleware(), [...getContactValidator(),...deleteContactValidator()] ,controller.deleteContact);
+router.get('/' ,authMiddleware,roleGardMiddleware([]), getContactValidator() ,controller.getContacts);
+router.put('/:id' ,authMiddleware,roleGardMiddleware([]), [...getContactValidator(),...changeStatusOfContactValidator()] ,controller.changeStatusOfContact);
+router.post('/answer/:id' ,authMiddleware,roleGardMiddleware([]), [...getContactValidator(),...answerToContactValidator()] ,controller.answerToContact);
+router.delete('/:id' ,authMiddleware,roleGardMiddleware([]), [...getContactValidator(),...deleteContactValidator()] ,controller.deleteContact);
 
 
 module.exports = router;

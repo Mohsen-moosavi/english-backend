@@ -1,0 +1,6359 @@
+{
+	"info": {
+		"_postman_id": "4f272307-7c20-48ec-b2db-4998dab620cf",
+		"name": "english",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29691140"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "{{baseUrl}}/auth/send-otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989382646989\",\r\n    \"captcha\": \"ekqcq\",\r\n    \"uuid\" : \"fe8f45d0-1c4e-47e2-a6e2-15825bc5f60d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/send-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/verify-code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989192528022\",\r\n    \"code\" : \"11111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify-code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"verify-code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989382646982\",\r\n    \"name\" : \"mohsen2\",\r\n    \"username\" : \"mohsenwsx2\",\r\n    \"password\":\"12345678aA\",\r\n    \"confirmPassword\" : \"12345678aA\",\r\n    \"verifiedPhoneCode\" : \"9559\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989395376021\",\r\n    \"password\" : \"12345678aA@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/get-captcha",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/get-captcha",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"get-captcha"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/login-admins",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989382646981\",\r\n    \"password\" : \"12345678aA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login-admins",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login-admins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/refresh-token?admin=true",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh-token?admin=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							],
+							"query": [
+								{
+									"key": "admin",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/forget-password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989382646989\",\r\n    \"captcha\": \"ekqcq\",\r\n    \"uuid\" : \"fe8f45d0-1c4e-47e2-a6e2-15825bc5f60d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/forget-password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"forget-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/resend-otp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989382646981\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/resend-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"resend-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/get-me",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/get-me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"get-me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/verify-code/verify-forget-code",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989192528022\",\r\n    \"code\" : \"11111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify-code/verify-forget-code",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"verify-code",
+								"verify-forget-code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/reset-Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"+989382646981\",\r\n    \"password\":\"12345678aA\",\r\n    \"confirmPassword\":\"12345678aA\",\r\n    \"verifiedPhoneCode\":\"4332\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-Password",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"reset-Password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/resend-forgetpass-otp",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989192528022\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/resend-forgetpass-otp",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"resend-forgetpass-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/get-me/user-side",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/get-me/user-side",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"get-me",
+								"user-side"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/auth/reset-pass",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\" : \"+989104474937\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-pass",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"reset-pass"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "article",
+			"item": [
+				{
+					"name": "{{baseUrl}}/article",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "\"تست postman\"",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "معرفی فیلم انگلیسی برای تقویت زبان مبتدی قدری دشوارتر از سطوح بالاتر است؛ زیرا به‌ندرت ممکن است فیلمی متناسب با سطح مبتدی و صرفاً برای زبان‌آموزی ساخته شود. از طرفی بسیاری از زبان‌آموزان تصور می‌کنند با هر فیلمی می‌توانند زبان انگلیسی خود را تقویت کنند که این تصور چندان منطقی نیست. در این مقاله از زبانشناس چند فیلم برای تقویت زبان انگلیسی مبتدی تا متوسط را در ژانرهای مختلف معرفی می‌کنیم تا راهنمای مناسبی برای زبان‌آموزان این سطوح باشد.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "<h2 id=\"h2_1\">مزایای یادگیری زبان انگلیسی با فیلم چیست؟</h2>\n    <p>مهم‌ترین جذابیت یادگیری زبان با فیلم، بعد سرگرم‌کننده بودن آن است. علاوه بر این تماشای فیلم‌ برای یادگیری انگلیسی\n        مزیت‌های بسیاری دارد؛ مثلا به شما امکان می‌دهد آموزش گرامر انگلیسی و واژگان را فراتر از کتاب‌های آموزشی و در\n        دنیای واقعی یاد بگیرید. بهبود تلفظ و کاربرد کلمات در موقعیت‌های مختلف از دیگر فواید این روش یادگیری است. همچنین\n        با تماشای فیلم‌های زبان اصلی با فرهنگ‌ها و لهجه‌های گوناگون آشنا می‌شوید و به مرور زمان مهارت شنیداری شما به‌طرز\n        محسوسی بهبود میابد.</p>\n    <h2 id=\"h2_2\">بهترین فیلم برای تقویت زبان انگلیسی مبتدی</h2>\n    <p>پیش از معرفی فیلم‌ها بهتر است بگوییم ارتباط برقرار کردن با داستان و حتی بازیگران فیلم می‌تواند در یادگیری شما\n        تاثیر مهمی بگذارد؛ بنابراین سعی کنید در انتخاب فیلم، بازیگران، ژانر مورد علاقه و سایر موارد را در نظر بگیرید. در\n        این بخش تنوع فیلم‌های معرفی شده به‌قدری هست که بالاخره بتوانید بهترین فیلم انگلیسی برای تقویت زبان مبتدی را پیدا\n        کنید.</p>\n\n    <p>در معرفی هر یک از فیلم‌های معرفی‌شده، تا حد ممکن آیتم‌هایی مثل شمرده صحبت کردن، شفاف بودن تلفظ واژگان، تنوع\n        لهجه‌ها، کاربردی بودن عبارت به‌کاررفته در نظر گرفته شده است.</p>\n\n    <h3 id=\"h3_1\">1. هوگو ( Hugo )</h3>\n    <p>هوگو یکی از بهترین انواع فیلم برای تقویت زبان انگلیسی مبتدی به‌حساب می‌آید. شخصیت اول داستان که پسرکی ماجراجوست\n        که واژگان و ساختار گرامری ساده‌ای را در دیالوگ‌های خود به کار می‌برد. علاوه بر این سرعت تلفظ دیالوگ‌ها آهسته\n        بوده و بازیگران بسیار شمرده صحبت می‌کنند؛ بنابراین فیلم هوگو، از این جهات برای درک زبان‌آموز مبتدی مناسب به نظر\n        می‌رسد.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022794265.jpg\" alt=\"hogo\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2011</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> فانتزی، درام، ماجراجویی</li>\n        <li><strong>لحجه:</strong> بریتیش</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>فیلم سینمایی هوگو بر اساس داستان مشهور «اختراع هوگو کابرت» ساخته شده، هوگو نام پسر یتیمی است که در ایستگاه قطار\n        زندگی می‌کند. در خلال اتفاقاتی، هوگو پی به سرنخ‌هایی می‌برد که به گذشته و پدرش مربوط است.</p>\n    <h3 id=\"h3_2\">2. هری پاتر ( Harry Potter )</h3>\n    <p>هری پاتر یکی از بهترین گزینه‌های فیلم انگلیسی برای تقویت زبان مبتدی محسوب می‌شود؛ زیرا در مجموعه فیلم‌های هری\n        پاتر از ساده‌ترین واژگان تا کلمات مربوط به عالم سِحر و جادو شکل می‌گیرد. این تنوعِ به‌کارگیری واژگان از\n        عامیانه‌ترین تا خاص‌ترین کلمات، از برجسته‌ترین نکات مثبت این فیلم برای یادگیری زبان است.</p>\n    <p>از طرف دیگر ازآنجایی‌که عمده مخاطب این مجموعه را نوجوانان تشکیل می‌دهند، دیالوگ‌های به‌دور از تکلفِ بازیگران\n        نوجوان می‌تواند به تقویت زبان افراد مبتدی‌تر کمک کند. همچنین دنبال کردن 8 قسمتِ مختلف از مجموعه فیلم‌های هری\n        پاتر، زبان‌آموز را با شخصیت‌ها همراه می‌کند که این نیز در فهم بهتر دیالوگ‌ها نیز موثر است.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022818088.jpg\" alt=\"Harry Potter\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2001 تا 2010</li>\n        <li><strong>محصول:</strong> بریتانیا</li>\n        <li><strong>ژانر:</strong> فانتزی، ماجراجویی</li>\n        <li><strong>لحجه:</strong> بریتیش</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>فیلم‌های هری پاتر حول زندگی پسر نوجوانی می‌چرخد که راه‌ورسم جادوگری را در پیش گرفته است. در هر یک از قسمت‌های این\n        فیلم اتفاقات پرهیجانی رخ می‌دهد که برای مخاطب بسیار جذاب محسوب می‌شود.</p>\n    <h3 id=\"h3_3\">3. گرگ‌ومیش ( Twilight )</h3>\n    <p>فیلم گرگ‌ومیش به دلیل اینکه مخاطبان اصلی‌اش جوانان و نوجوانان محسوب می‌شوند، سرشار از اصطلاحات عامیانه و رایج\n        آمریکایی است. علاوه بر این واژگان و عبارت‌هایی که توسط بازیگران ادا می‌شود بسیار شمرده و قابل‌فهم است.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022840208.jpg\" alt=\"Twilight\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2008</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> عاشقانه، درام</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>دختر نوجوانی با بازی کریستین استوارت عاشق یک خون‌آشام می‌شود و حاضر است تمامی خطرات احتمالی را به‌خاطر او به جان\n        بخرد.</p>\n    <h3 id=\"h3_4\">4. دزدان دریایی کارائیب ( Pirates of the Caribbean )</h3>\n    <p>اگر بخواهیم انواع فیلم برای تقویت زبان مبتدی را فهرست کنیم، خیلی زود به این عنوان جذاب می‌رسیم. لذت یادگیری زبان\n        با هیجان بالا، از مجموعه فیلم‌های دزدان دریایی کارائیب برمی‌آید. تلفظ شمرده کلمات، استفاده از واژگان بسیار و\n        وضوح جملات بخشی از دلایلی هستند که یادگیری زبان انگلیسی با این مجموعه فیلم را برای زبان‌آموز مبتدی ممکن می‌کند.\n    </p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022862082.jpg\" alt=\"Pirates of the Caribbean\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2003</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> اکشن، ماجراجویی</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>جذابیت بی‌چون‌وچرای فیلم دزدان دریایی کارائیب مدیون ماجراجویی‌های کاپیتان جک اسپارو با بازی جانی دپ است. در هر یک\n        از قسمت‌های این مجموعه فیلم، جک اسپارو ماجرایی و تماشایی را خلق می‌کند.</p>\n    <h3 id=\"h3_5\">5. تنها در خانه ( Home Alone )</h3>\n    <p>تنها در خانه عنوان یک فیلم سینمایی نوستالژیک است که بسیاری از زبان‌آموزان در کودکی به تماشای آن نشسته‌اند. به\n        دلیل فضای کودکانه داستان گفتار ساده و واضحی بین شخصیت‌های داستان شکل می‌گیرد که علاوه بر سرگرم‌کننده بودن، ساده\n        و جذاب است. تنها در خانه را از جهت سادگی مکالمات می‌توان یک فیلم انگلیسی برای تقویت زبان مبتدی دانست.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022891149.jpg\" alt=\"Home Alone\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 1990</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> کمدی، ماجراجویی</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>داستان این فیلم مربوط به کش‌وقوس‌هایی است که بین یک کودک باهوشِ تنها مانده در خانه و دو دزد شکل می‌گیرد.</p>\n    <br>\n    <br>\n    <p><strong>سخن آخر</strong></p>\n    <br>\n    <p>حالا که می‌توانید بهترین فیلم انگلیسی برای تقویت زبان را متناسب با علاقه خود انتخاب کنید، برای ما از تجربه زبان‌آموزی با این روش بگویید. همچنین می‌توانید فیلم‌های دیگری را که برای یادگیری زبان در سطح مبتدی می‌شناسید، به سایر زبان‌آموزان معرفی کنید.</p>",
+									"description": "توضیحات باید به فرم html باشد",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "نام کوتاه دوره",
+									"type": "text"
+								},
+								{
+									"key": "isPublished",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "links",
+									"value": "[\"<a href=\"#h2_1\">لینک اول</a>\",\"<a href=\"#h2_2\">لینک دوم</a>\"]",
+									"description": "یک آرایه ساخته شود و سپس به وسیله JSON.stringify باید به string تبدیل شود. هر عضو آرایه باید شامل یک تگ a باشد. href مریوط به تگ a باید، آیدی یک تگ خاص در html فرستاده شده در پارامتر longDescription باشد. متن تگ a به عنوان متن لینک در سایت نشان داده خواهد شد.",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/1746185255742.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/article",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article?limit=10&offset=0&search=",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article?limit=10&offset=0&search=",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "status",
+									"value": "published",
+									"description": "draft | published",
+									"disabled": true
+								},
+								{
+									"key": "writerId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/user-side/get-info/{slug}",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/user-side/get-info/:slug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								"user-side",
+								"get-info",
+								":slug"
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "dhrwrt-aamwzsh-zban-bh-kwdkan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/user-side/related-to-course/{courseSlug}",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/user-side/related-to-course/:courseSlug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								"user-side",
+								"related-to-course",
+								":courseSlug"
+							],
+							"variable": [
+								{
+									"key": "courseSlug",
+									"value": "top-notch-fundamentals-A"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/user-side/related-to-article/{articleSlug}",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/user-side/related-to-article/:articleSlug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								"user-side",
+								"related-to-article",
+								":articleSlug"
+							],
+							"variable": [
+								{
+									"key": "articleSlug",
+									"value": "dhrwrt-aamwzsh-zban-bh-kwdkan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/user-side/related-to-book",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/user-side/related-to-book",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								"user-side",
+								"related-to-book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/last-artilce",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/last-artilce",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								"last-artilce"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/article/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "published",
+									"description": "draft | published",
+									"disabled": true
+								},
+								{
+									"key": "writerId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/article/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "\"تست postman\"",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "معرفی فیلم انگلیسی برای تقویت زبان مبتدی قدری دشوارتر از سطوح بالاتر است؛ زیرا به‌ندرت ممکن است فیلمی متناسب با سطح مبتدی و صرفاً برای زبان‌آموزی ساخته شود. از طرفی بسیاری از زبان‌آموزان تصور می‌کنند با هر فیلمی می‌توانند زبان انگلیسی خود را تقویت کنند که این تصور چندان منطقی نیست. در این مقاله از زبانشناس چند فیلم برای تقویت زبان انگلیسی مبتدی تا متوسط را در ژانرهای مختلف معرفی می‌کنیم تا راهنمای مناسبی برای زبان‌آموزان این سطوح باشد.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "<h2 id=\"h2_1\">مزایای یادگیری زبان انگلیسی با فیلم چیست؟</h2>\n    <p>مهم‌ترین جذابیت یادگیری زبان با فیلم، بعد سرگرم‌کننده بودن آن است. علاوه بر این تماشای فیلم‌ برای یادگیری انگلیسی\n        مزیت‌های بسیاری دارد؛ مثلا به شما امکان می‌دهد آموزش گرامر انگلیسی و واژگان را فراتر از کتاب‌های آموزشی و در\n        دنیای واقعی یاد بگیرید. بهبود تلفظ و کاربرد کلمات در موقعیت‌های مختلف از دیگر فواید این روش یادگیری است. همچنین\n        با تماشای فیلم‌های زبان اصلی با فرهنگ‌ها و لهجه‌های گوناگون آشنا می‌شوید و به مرور زمان مهارت شنیداری شما به‌طرز\n        محسوسی بهبود میابد.</p>\n    <h2 id=\"h2_2\">بهترین فیلم برای تقویت زبان انگلیسی مبتدی</h2>\n    <p>پیش از معرفی فیلم‌ها بهتر است بگوییم ارتباط برقرار کردن با داستان و حتی بازیگران فیلم می‌تواند در یادگیری شما\n        تاثیر مهمی بگذارد؛ بنابراین سعی کنید در انتخاب فیلم، بازیگران، ژانر مورد علاقه و سایر موارد را در نظر بگیرید. در\n        این بخش تنوع فیلم‌های معرفی شده به‌قدری هست که بالاخره بتوانید بهترین فیلم انگلیسی برای تقویت زبان مبتدی را پیدا\n        کنید.</p>\n    <p>در معرفی هر یک از فیلم‌های معرفی‌شده، تا حد ممکن آیتم‌هایی مثل شمرده صحبت کردن، شفاف بودن تلفظ واژگان، تنوع\n        لهجه‌ها، کاربردی بودن عبارت به‌کاررفته در نظر گرفته شده است.</p>\n    <h3 id=\"h3_1\">1. هوگو ( Hugo )</h3>\n    <p>هوگو یکی از بهترین انواع فیلم برای تقویت زبان انگلیسی مبتدی به‌حساب می‌آید. شخصیت اول داستان که پسرکی ماجراجوست\n        که واژگان و ساختار گرامری ساده‌ای را در دیالوگ‌های خود به کار می‌برد. علاوه بر این سرعت تلفظ دیالوگ‌ها آهسته\n        بوده و بازیگران بسیار شمرده صحبت می‌کنند؛ بنابراین فیلم هوگو، از این جهات برای درک زبان‌آموز مبتدی مناسب به نظر\n        می‌رسد.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022794265.jpg\" alt=\"hogo\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2011</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> فانتزی، درام، ماجراجویی</li>\n        <li><strong>لحجه:</strong> بریتیش</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>فیلم سینمایی هوگو بر اساس داستان مشهور «اختراع هوگو کابرت» ساخته شده، هوگو نام پسر یتیمی است که در ایستگاه قطار\n        زندگی می‌کند. در خلال اتفاقاتی، هوگو پی به سرنخ‌هایی می‌برد که به گذشته و پدرش مربوط است.</p>\n    <h3 id=\"h3_2\">2. هری پاتر ( Harry Potter )</h3>\n    <p>هری پاتر یکی از بهترین گزینه‌های فیلم انگلیسی برای تقویت زبان مبتدی محسوب می‌شود؛ زیرا در مجموعه فیلم‌های هری\n        پاتر از ساده‌ترین واژگان تا کلمات مربوط به عالم سِحر و جادو شکل می‌گیرد. این تنوعِ به‌کارگیری واژگان از\n        عامیانه‌ترین تا خاص‌ترین کلمات، از برجسته‌ترین نکات مثبت این فیلم برای یادگیری زبان است.</p>\n    <p>از طرف دیگر ازآنجایی‌که عمده مخاطب این مجموعه را نوجوانان تشکیل می‌دهند، دیالوگ‌های به‌دور از تکلفِ بازیگران\n        نوجوان می‌تواند به تقویت زبان افراد مبتدی‌تر کمک کند. همچنین دنبال کردن 8 قسمتِ مختلف از مجموعه فیلم‌های هری\n        پاتر، زبان‌آموز را با شخصیت‌ها همراه می‌کند که این نیز در فهم بهتر دیالوگ‌ها نیز موثر است.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022818088.jpg\" alt=\"Harry Potter\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2001 تا 2010</li>\n        <li><strong>محصول:</strong> بریتانیا</li>\n        <li><strong>ژانر:</strong> فانتزی، ماجراجویی</li>\n        <li><strong>لحجه:</strong> بریتیش</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>فیلم‌های هری پاتر حول زندگی پسر نوجوانی می‌چرخد که راه‌ورسم جادوگری را در پیش گرفته است. در هر یک از قسمت‌های این\n        فیلم اتفاقات پرهیجانی رخ می‌دهد که برای مخاطب بسیار جذاب محسوب می‌شود.</p>\n    <h3 id=\"h3_3\">3. گرگ‌ومیش ( Twilight )</h3>\n    <p>فیلم گرگ‌ومیش به دلیل اینکه مخاطبان اصلی‌اش جوانان و نوجوانان محسوب می‌شوند، سرشار از اصطلاحات عامیانه و رایج\n        آمریکایی است. علاوه بر این واژگان و عبارت‌هایی که توسط بازیگران ادا می‌شود بسیار شمرده و قابل‌فهم است.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022840208.jpg\" alt=\"Twilight\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2008</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> عاشقانه، درام</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>دختر نوجوانی با بازی کریستین استوارت عاشق یک خون‌آشام می‌شود و حاضر است تمامی خطرات احتمالی را به‌خاطر او به جان\n        بخرد.</p>\n    <h3 id=\"h3_4\">4. دزدان دریایی کارائیب ( Pirates of the Caribbean )</h3>\n    <p>اگر بخواهیم انواع فیلم برای تقویت زبان مبتدی را فهرست کنیم، خیلی زود به این عنوان جذاب می‌رسیم. لذت یادگیری زبان\n        با هیجان بالا، از مجموعه فیلم‌های دزدان دریایی کارائیب برمی‌آید. تلفظ شمرده کلمات، استفاده از واژگان بسیار و\n        وضوح جملات بخشی از دلایلی هستند که یادگیری زبان انگلیسی با این مجموعه فیلم را برای زبان‌آموز مبتدی ممکن می‌کند.\n    </p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022862082.jpg\" alt=\"Pirates of the Caribbean\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 2003</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> اکشن، ماجراجویی</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>جذابیت بی‌چون‌وچرای فیلم دزدان دریایی کارائیب مدیون ماجراجویی‌های کاپیتان جک اسپارو با بازی جانی دپ است. در هر یک\n        از قسمت‌های این مجموعه فیلم، جک اسپارو ماجرایی و تماشایی را خلق می‌کند.</p>\n    <h3 id=\"h3_5\">5. تنها در خانه ( Home Alone )</h3>\n    <p>تنها در خانه عنوان یک فیلم سینمایی نوستالژیک است که بسیاری از زبان‌آموزان در کودکی به تماشای آن نشسته‌اند. به\n        دلیل فضای کودکانه داستان گفتار ساده و واضحی بین شخصیت‌های داستان شکل می‌گیرد که علاوه بر سرگرم‌کننده بودن، ساده\n        و جذاب است. تنها در خانه را از جهت سادگی مکالمات می‌توان یک فیلم انگلیسی برای تقویت زبان مبتدی دانست.</p>\n    <img src=\"http://localhost:4000/public/extraFiles/1753022891149.jpg\" alt=\"Home Alone\">\n    <ul>\n        <li><strong>سال ساخت:</strong> 1990</li>\n        <li><strong>محصول:</strong> آمریکا</li>\n        <li><strong>ژانر:</strong> کمدی، ماجراجویی</li>\n        <li><strong>لحجه:</strong> امریکن</li>\n        <li><strong>خلاصه داستان:</strong></li>\n    </ul>\n    <p>داستان این فیلم مربوط به کش‌وقوس‌هایی است که بین یک کودک باهوشِ تنها مانده در خانه و دو دزد شکل می‌گیرد.</p>\n    <br>\n    <br>\n    <p><strong>سخن آخر</strong></p>\n    <br>\n    <p>حالا که می‌توانید بهترین فیلم انگلیسی برای تقویت زبان را متناسب با علاقه خود انتخاب کنید، برای ما از تجربه زبان‌آموزی با این روش بگویید. همچنین می‌توانید فیلم‌های دیگری را که برای یادگیری زبان در سطح مبتدی می‌شناسید، به سایر زبان‌آموزان معرفی کنید.</p>",
+									"description": "یک آرایه ساخته شود و سپس به وسیله JSON.stringify باید به string تبدیل شود. هر عضو آرایه باید شامل یک تگ a باشد. href مریوط به تگ a باید، آیدی یک تگ خاص در html فرستاده شده در پارامتر longDescription باشد. متن تگ a به عنوان متن لینک در سایت نشان داده خواهد شد.",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "نام کوتاه دوره",
+									"type": "text"
+								},
+								{
+									"key": "isPublished",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "links",
+									"value": "[\"<a href=\"#h2_1\">لینک اول</a>\",\"<a href=\"#h2_2\">لینک دوم</a>\"]",
+									"description": "یک آرایه ساخته شود و سپس به وسیله JSON.stringify باید به string تبدیل شود. هر عضو آرایه باید شامل یک تگ a باشد. href مریوط به تگ a باید، آیدی یک تگ خاص در html فرستاده شده در پارامتر longDescription باشد. متن تگ a به عنوان متن لینک در سایت نشان داده خواهد شد.",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/1746185858721.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/article/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"article",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "role",
+			"item": [
+				{
+					"name": "{{baseUrl}}/role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/role",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "book",
+			"item": [
+				{
+					"name": "{{baseUrl}}/book",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "american english file",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "مجموعه American English File  که توسط انتشارات Oxford به چاپ رسیده است، دارای 6 سطح است (American English File Starter, level 1, level 2, level 3, level 4,level 5). از بهترین مجموعه هایی که برای آموزش زبان انگلیسی به بزرگسالان تاکنون به چاپ رسیده است، مجموعه American English File  می‌باشد. هر کتاب از مجموعه American English File، شامل 10 الی 12 درس است. که در این کتاب، تمرکز روی سه بخش Grammar، Vocabulary و pronunciation است. از نقاط قوت این مجموعه، به تقویت مهارت Speaking  می‌پردازد، که البته مجموعه American English File  به سه مهارت دیگر (Listening، Writing و Reading) نیز می پردازد. از لحاظ دشواری، سطح Starter American English File پایین ترین سطح و 5American English File  بالاترین سطح می باشند. تمامی کتاب‌های این مجموعه شامل کتاب دانش آموز (به همراه فابل های صوتی)، کتاب کار (به همراه فابل های صوتی)، کتاب معلم و چند نوع ویدئوی آموزشی می باشد.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "<h2 id=\"h2_1\">ویژگی&zwnj;های مجموعه کتاب&zwnj;های امریکن انگلیش فایل</h2>\n    <h3 id=\"h3_1\">کتاب American English file starter&nbsp;</h3>\n    <p>این کتاب از مجموعه&zwnj;&zwnj;ی American English File&nbsp; یک کتاب مکالمه محور است که بیشترین تمرکز بر روی تقویت\n        مهارت Speaking می&zwnj;پردازد. هرچند که کتاب 1American English File&nbsp; به آموزش هر چهار مهارت\n        زبان&zwnj;انگلیسی می&zwnj;پردازد. لازم به ذکر است که کتاب در سطح مبتدی نیست. حال به بررسی محتوای درس به درس این\n        کتاب می&zwnj;پردازیم:</p>\n    <ul>\n        <li>درس اول به ضمایر فاعلی، افعالی To be (مثبت ، منفی و سوالی) و صفات ملکی می&zwnj;پردازد.</li>\n        <li>درس دوم در مورد اسامی مفرد و جمع، صفات و جملات امری بحث و گفتگو می&zwnj;شود.</li>\n        <li>در درس سوم به زمان حال ساده (مثبت، منفی و سوالی) و همچنین در مورد ساختار جمله خبری و سوالی می&zwnj;پردازد.\n        </li>\n        <li>درس چهارم سوالات مربوط به مالکیت، حروف اضافه مربوط به بیان زمان، و نقش قیود در جملات، این درس آموزش داده\n            میشوند.</li>\n        <li>درس پنجم هم به آموزش و کاربرد فعل can و زمان حال استمراری پرداخته می&zwnj;شود، از طرفی به تفاوت بین زمان حال\n            ساده و حال استمراری در این درس توجه می&zwnj;شود.</li>\n        <li>درس ششم به آموزش ضمایر مفعولی، و همچنین کاربرد فعل like&nbsp; می&zwnj;پردازد، از طرفی این درس مروری به افعال\n            be و do دارد.</li>\n        <li>درس هفتم به نکات و گرامرهای جدیدتری می&zwnj;پردازد. چرا که تا درس ششم، مطالب گذشته در کتاب کلا درس هفتم به\n            آموزش زمان گذشته ساده می&zwnj;پردازد.</li>\n        <li>درس هشتم در ادامه درس هفتم آموزش زمان گذشته است از طرفی به آموزش Some و any هم می&zwnj;پردازد.</li>\n        <li>درس نهم، مربوط به اسامی قابل شمارش و غیرقابل شمارش میباشند. همچنین صفات مقایسه ای نیز در این درس گفته\n            میشوند.</li>\n        <li>درس دهم ، صفات Superlative&nbsp; گفته میشوند. که به آموزش زمان آینده نیز میپردازد.</li>\n        <li>در درس یازدهم درمورد قیود و افعال Infinitive و همچنین حروف تعریف صحبت می&zwnj;شود.</li>\n        <li>در آخر درس دوازدهم، به بررسی، زمان حال کامل و تفاوت این زمان با زمان گذشته ساده پرداخته می&zwnj;شود.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284656717.png\"\n        alt=\"american english file starter\" />\n    <h3 id=\"h3_2\">کتاب American English file 1&nbsp;</h3>\n    <p>پاین کتاب از مجموعه&zwnj;&zwnj;ی American English File&nbsp; یک کتاب مکالمه محور است که بیشترین تمرکز بر روی\n        تقویت مهارت Speaking می&zwnj;پردازد. هرچند که کتاب 1American English File&nbsp; به آموزش هر چهار مهارت\n        زبان&zwnj;انگلیسی می&zwnj;پردازد. لازم به ذکر است که کتاب در سطح مبتدی نیست. حال به بررسی محتوای درس به درس این\n        کتاب می&zwnj;پردازیم:</p>\n    <ul>\n        <li>درس اول به ضمایر فاعلی، افعالی To be (مثبت ، منفی و سوالی) و صفات ملکی می&zwnj;پردازد.</li>\n        <li>درس دوم در مورد اسامی مفرد و جمع، صفات و جملات امری بحث و گفتگو می&zwnj;شود.</li>\n        <li>در درس سوم به زمان حال ساده (مثبت، منفی و سوالی) و همچنین در مورد ساختار جمله خبری و سوالی می&zwnj;پردازد.\n        </li>\n        <li>درس چهارم سوالات مربوط به مالکیت، حروف اضافه مربوط به بیان زمان، و نقش قیود در جملات، این درس آموزش داده\n            میشوند.</li>\n        <li>درس پنجم هم به آموزش و کاربرد فعل can و زمان حال استمراری پرداخته می&zwnj;شود، از طرفی به تفاوت بین زمان حال\n            ساده و حال استمراری در این درس توجه می&zwnj;شود.</li>\n        <li>درس ششم به آموزش ضمایر مفعولی، و همچنین کاربرد فعل like&nbsp; می&zwnj;پردازد، از طرفی این درس مروری به افعال\n            be و do دارد.</li>\n        <li>درس هفتم به نکات و گرامرهای جدیدتری می&zwnj;پردازد. چرا که تا درس ششم، مطالب گذشته در کتاب کلا درس هفتم به\n            آموزش زمان گذشته ساده می&zwnj;پردازد.</li>\n        <li>درس هشتم در ادامه درس هفتم آموزش زمان گذشته است از طرفی به آموزش Some و any هم می&zwnj;پردازد.</li>\n        <li>درس نهم، مربوط به اسامی قابل شمارش و غیرقابل شمارش میباشند. همچنین صفات مقایسه ای نیز در این درس گفته\n            میشوند.</li>\n        <li>درس دهم ، صفات Superlative&nbsp; گفته میشوند. که به آموزش زمان آینده نیز میپردازد.</li>\n        <li>در درس یازدهم درمورد قیود و افعال Infinitive و همچنین حروف تعریف صحبت می&zwnj;شود.</li>\n        <li>در آخر درس دوازدهم، به بررسی، زمان حال کامل و تفاوت این زمان با زمان گذشته ساده پرداخته می&zwnj;شود.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284662702.png\"\n        alt=\"american english file 1\" />\n    <h3 id=\"h3_3\">کتاب American English file 2</h3>\n    <p>جلد دوم مجموعه&zwnj;&zwnj;ی American English File&nbsp; دارای سطح متوسط در زبان انگلیسی میباشد. کتاب American\n        English file 2&nbsp; در دروس ابتدایی خود مطالب مربوط به سطح A2 و در ادامه به تدریس سطح B1 می&zwnj;پردازد.&nbsp;\n        مطالب این کتاب در دوازده درس ارائه شده اند.</p>\n    <ul>\n        <li>در درس اول از جلد دوم این مجموعه گرامر جملات سوالی، زمان حال ساده و زمان حال استمراری را مرور می&zwnj;کنیم.\n        </li>\n        <li>درس دوم به گرامر های زمان گذشته ساده (افعال با قاعده و بی قاعده) و زمان گذشته استمراری اختصاص دارد.</li>\n        <li>در درس سوم با گرامر های زمان آینده و کاربرد Be going to&nbsp; برای بیان برنامه های آتی و زمان حال استمراری\n            (رویکرد آینده) آشنا می&zwnj;شویم.</li>\n        <li>در درس چهارم ، زمان حال کامل ، کاربرد عبارات yet و already و همچنین تفاوت آن با زمان گذشته ساده مطالبی هستند\n            که تدریس خواهند شد.</li>\n        <li>در درس پنجم، صفات و قیود مقایسه ای (as&hellip;as) ، صفات عالی (+ever+present perfect)&nbsp; را\n            می&zwnj;آموزید و در ادامه نیز کمیت سنج هایی مثل too و not enough&nbsp; نیز در این درس آموزش داده میشوند.\n        </li>\n        <li>درس ششم در ابتدا به آموزش will و won&rsquo;t برای بیان پیشبینی ها، تصمیم گیری، پیشنهاد دادن و یا قول دادن\n            می&zwnj;پردازد و در انتها نیز مروری کلی بر زمانهای حال ، گذشته و آینده نیز خواهد داشت.</li>\n        <li>در بخش اول از درس هفتم ، استفاده از infinitive ها ، و بکارگیری gerund&nbsp; ها&nbsp; تدریس می&zwnj;شود. و در\n            بخش دوم نیز کاربرد کمکی های have to ، don&rsquo;t have to ، must ،must not ، can&rsquo;t&nbsp; آموزش داده\n            می&zwnj;شود.</li>\n        <li>درس هشتم به کاربرد should و همچنین آموزش شرطی نوع اول و همچنین ضمایر ملکی می&zwnj;پردازد.</li>\n        <li>در درس نهم گرامر جملات شرطی نوع دوم آموزش داده می&zwnj;شود همچنین در ادامه این درس مروری بر زمان حال کامل و\n            کاربرد for و since در این زمان و تفاوت زمان حال کامل و زمان گذشته ساده خواهیم داشت.</li>\n        <li>درس دهم در ابتدا آموزش جملات مجهول را تدریس می&zwnj;کند و در ادامه نیز کاربرد used to و همچنین آموزش might\n            را شاهد خواهیم بود.</li>\n        <li>در بخش ابتدایی درس یازدهم، مروری بر آموزش Expressing movement و ترتیب قرار گیری کلمات در عبارات ارائه شده\n            است و در ادامه این درس نیز به so, neither + auxiliaries نیز اشاره میشود.</li>\n        <li>درس دوازدهم که درس انتهایی این کتاب است به آموزش ماضی بعید اختصاص دارد و همچنین آموزش نقل قول نیز در این درس\n            آورده شده است.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284668927.png\"\n        alt=\"american english file 2\" />\n    <h3 id=\"h3_4\">کتاب American English file 3</h3>\n    <p>سطح کتاب&nbsp; American English File 3 متوسط رو به بالا می&zwnj;باشد که به نیمه دوم سطحB1&nbsp; و نیمه اول سطح B2\n        می&zwnj;پردازد و شامل 10 درس است.</p>\n    <ul>\n        <li>درس اول، ابتدا گرامر زمان حال ساده و زمان حال استمراری بررسی می&zwnj;شود و سپس انواع زمان&zwnj;ها شامل:\n            Present Continuous، Future Continuousو Future Simple(will/won&rsquo;t)&nbsp; مرور می&zwnj;شوند.</li>\n        <li>درس دوم، ابتدا مروری بر زمان حال کامل(Present Perfect) و گذشته ساده (Past Simple)دارد. در ادامه این درس،\n            آموزش حال کامل و حال کامل استمراری را تکمیل می&zwnj;کند.</li>\n        <li>درس سوم هم، در ابتدا، مروری بر صفات تفضیلی و عالی دارد و در ادامه نیز کاربرد حروف تعریف آورده شده است.</li>\n        <li>ابتدای درس چهارم، کاربرد افعال کمکیcan / could / be able to&nbsp; آموزش داده می&zwnj;شود و در ادامه آن هم به\n            آموزش ضمایر انعکاسی اشاره می&zwnj;کند همچنین افعال modal همچون must /&nbsp; have to / should&nbsp; در انتهای\n            این درس آموزش داده میشوند.</li>\n        <li>در ابتدای درس پنجم، مروری بر زمان گذشته ساده و استمراری و همچنین ماضی بعید خواهیم داشت. در ادامه این درس به\n            کاربرد usually&nbsp; وused to&nbsp; نیز خواهیم پرداخت.</li>\n        <li>درس ششم، گرامر تمامی زمانها در حالت مجهول را شامل می&zwnj;شود. همچنین در ادامه این درس به افعال modal همچون\n            might/can&rsquo;t/must هم پرداخته است.</li>\n        <li>ابتدای درس هفتم به یادگیری عبارات شرطی نوع اول و عبارات زمان آینده میپردازیم. و در ادامه آن هم به مرور\n            عبارات شرطی نوع دوم پرداخته می شود.</li>\n        <li>درس هشتم، نحوه بیان نقل قول در جملات خبری و سوالی تدریس شده است. در ادامه این درس مروری دوباره بر افعال\n            infinitive و gerund آورده شده است.</li>\n        <li>درس نهم، با گرامر عبارات شرطی نوع سوم آشنا میشویم. همچنین مباحثی درمورد quantifier ها و نکاتی پیرامون آنها\n            هم از دیگر مطالب این درس است.</li>\n        <li>درس دهم که درس پایانی این کتاب است به آموزش Relative clause ها و tag question&nbsp; پرداخته شده است.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284674128.png\"\n        alt=\"american english file 3\" />\n    <h3 id=\"h3_5\">کتاب American English file 4</h3>\n    <p>این جلد از کتاب دارای سطح متوسط بالا ، نزدیک به پیشرفته میباشد که به آموزش کامل سطح B2 میپردازد. جلد چهارم این\n        مجموعه نیز دارای 10 درس می&zwnj;باشد و هر درس دارای دو بخش است.</p>\n    <ul>\n        <li>در بخش اول درس اول این کتاب به ساختار جملات سوالی و پاسخ به آن ها آورده شده است که در قسمت تلفظ جملات نیز\n            نحوه صحیح ادا کردن عبارات دوستانه و علاقه نشان دادن در نحوه تلفظ مورد تاکید قرار می&zwnj;گیرد و در بخش دوم\n            نیز به افعال کمکی و عبارات تفضیلی پرداخته می&zwnj;شود و همچنین نحوه صحیح حفظ ریتم و آهنگ جملات در تلفظ کلمات\n            آمزش داده می&zwnj;شود.</li>\n        <li>در قسمت گرامر درس دوم با ساختار زمان حال کامل ساده و حال کامل استمراری در بخش اول و نحوه استفاده از صفت ها\n            به عنوان اسم در بخش دوم آشنا می&zwnj;شوید همچنین در قسمت تلفظ این درس نیز استرس صحیح کلمات و حروف صدا دار\n            برای شما توضیح داده شده است.</li>\n        <li>گرامر درس سوم شامل زمان های ماضی بعید استمراری و عبارات قیدی&nbsp; است و در قسمت تلفط این درس نیز به استرس\n            عبارات و آهنگ جملات اشاره می&zwnj;شود.</li>\n        <li>درس چهارم نیز در قسمت اول خود به گرامر به آینده کامل و آینده استمراری می&zwnj;پردازد و در قسمت دوم نیز به\n            ساختار جملات شرطی و نوع صفرم و نوع اول آن را شرح می&zwnj;دهد و در ادامه آن ها هم استرس و آهنگ عبارات و حروف\n            صدادار را در قسمت تلفط بیشتر توضیح می&zwnj;دهد.</li>\n        <li>گرامر قسمت اول درس پنجم ساختار جملات شرطی غیر واقعی را معرفی می&zwnj;کند و در گرامر قسمت دوم نیز ساختار\n            جملات بعد از عبارت wish آورده شده است و در ادامه نیز نحوه ادای استرس در صفات سه یا چهار سیلابی آموزش داده\n            شده است.</li>\n        <li>در درس ششم گرامر قسمت اول مربوط به gerund ها و عبارات&nbsp; infinitive و گرامر قسمت دوم نیز مربوط به\n            عبارت&nbsp; used to&nbsp; و مشتقات آن می&zwnj;شود.&nbsp;&nbsp;</li>\n        <li>افعال کمکی زمان گذشته مانند&nbsp; may , might , should و &hellip; گرامر بخش اول درس هفتم را تشکیل\n            می&zwnj;دهند .ساختار مجهول یکی از مهم ترین گرامر های زبان انگلیسی استکه این مبحث در بخش اول درس هشتم این\n            کتاب تدیس شده است و در بخش دوم آن نیز افعال نقل قولی آورده شده است.</li>\n        <li>گرامر بخش اول درس نهم این کتاب هم شامل عبارات مقایسه ای و عباراتی مانند whatever , whenever&nbsp; و&hellip;\n            خواهد بود که در بخش دوم آن هم اسامی جمع و غیرقابل شمارش نیز ارائه شده است.</li>\n        <li>در درس پایانی و دهم نیز quantifier ها و حروف تعریف آموزش داده شده اند .</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284679792.png\"\n        alt=\"american english file 4\" />\n    <h3 id=\"h3_6\">کتاب American English file 5</h3>\n    <p>جلد پنجم و آخر این مجموعه که در سطح&nbsp; c1 دسته بندی می&zwnj;شود نیز شامل 10 درس است.که در درس اول آن به آموزش\n        گرامرDiscourse marker ها&nbsp; و Connector ها می&zwnj;پردازد و در بخش دوم آن نیز نکاتی در مورد have&nbsp; اشاره\n        می&zwnj;کند.</p>\n    <ul>\n        <li>بخش اول درس دوم این کتاب به گرامر و نکاتی درمورد ضمایر اختصاص دارد و بخش دوم آن هم بخشی از زمان گذشته و\n            استفاده از would , used to&nbsp; را ارائه می&zwnj;کند.</li>\n        <li>در درس سوم به استفاده از فعل get و نحوه استفاده آن در شرایط مختلف اختصاص دارد و در بخش دو آن هم ادامه گرامر\n            Discourse marker&nbsp; ها از درس اول آورده شده است.</li>\n        <li>گرامر درس چهارم در بخش اول به مبحث Speculation&nbsp; و Deduction می&zwnj;پردازد و در بخش دوم نیز عبارات\n            تاکید و inversion آموزش داده شده است.</li>\n        <li>در درس پنجم این مجموعه با مفهوم&nbsp; distancing و استفاده های غیرواقعی از زمان گذشته آشنا می&zwnj;شوید.\n        </li>\n        <li>گرامر درس ششم آشنایی با ساختار verb + object + infinitive/gerund و همچنین جملات شرطی است.</li>\n        <li>در درس هفتم اما با گرامر های مربوط به مباحث permission &ndash; obligation &ndash; necessity ادامه پیدا\n            می&zwnj;کند.</li>\n        <li>گرامر درس هشتم به ادامه مباحث مربوط به gerund ها و infinitive&nbsp; ها در دروس گذشته می&zwnj;پردازد و همچنین\n            عبارات مربوط به بیان برنامه ها و قرار های آینده و می&zwnj;پردازد.</li>\n        <li>در گرامر درس نهم مباحث مریوط به Ellipsis&nbsp; و&nbsp; Substitution آورده شده است و در ادامه آن هم مباحثی\n            مربوط به اسم ها نیز آموزش داده شده است.</li>\n        <li>وگرامر در دهم نیز به آموزش Cleft sentences ها و همچنین نکات دیگری درمورد جملات مقایسه ای می&zwnj;پردازد.\n        </li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284685160.png\"\n        alt=\"american english file 5\" />",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "american-english-file",
+									"type": "text"
+								},
+								{
+									"key": "ageGrate",
+									"value": "12  تا 25",
+									"type": "text"
+								},
+								{
+									"key": "grate",
+									"value": "متوسط",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "links",
+									"value": "[\"<a href=\\\"#h2_1\\\">ویژگی‌های مجموعه کتاب‌های امریکن انگلیش فایل</a>\",\"<a href=\\\"#h3_1\\\">کتاب American English file starter</a>\",\"<a href=\\\"#h3_2\\\">کتاب American English file 1</a>\",\"<a href=\\\"#h3_3\\\">کتاب American English file 2</a>\",\"<a href=\\\"#h3_4\\\">کتاب American English file 3</a>\",\"<a href=\\\"#h3_5\\\">کتاب American English file 4</a>\",\"<a href=\\\"#h3_6\\\">کتاب American English file 5</a>\"]",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/american-english-file/1745940817884.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/upload-file",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "group",
+									"value": "Basic Grammar In Use",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "book",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "کتاب Basic Grammar In Use",
+									"type": "text"
+								},
+								{
+									"key": "fileName",
+									"value": "1___1753950771650___american-2.pdf",
+									"description": "تریجا از این الگو استفاده شود :  `${userInfo.id}___${Date.now()}___${file.name}`",
+									"type": "text"
+								},
+								{
+									"key": "bookId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/F:/project/english/files/images/articles/3_5d796313cc.jpg"
+								},
+								{
+									"key": "chunkNumber",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book/upload-file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								"upload-file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/delete-file",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileNames\" : [\"1___1753280758257___grammar-basic\" , \"1___1753280758259___grammar-basic\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book/delete-file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								"delete-file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/:id/get-all?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/:id/get-all?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								":id",
+								"get-all"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "tagId",
+									"value": "21",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/user-side/:slug",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/user-side/:slug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								"user-side",
+								":slug"
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "family-and-friends"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/get-group/:bookfile-group-id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/get-group/:bookfile-group-id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								"get-group",
+								":bookfile-group-id"
+							],
+							"variable": [
+								{
+									"key": "bookfile-group-id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/last-book",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/last-book",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								"last-book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/book/:id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "american english file",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "مجموعه American English File  که توسط انتشارات Oxford به چاپ رسیده است، دارای 6 سطح است (American English File Starter, level 1, level 2, level 3, level 4,level 5). از بهترین مجموعه هایی که برای آموزش زبان انگلیسی به بزرگسالان تاکنون به چاپ رسیده است، مجموعه American English File  می‌باشد. هر کتاب از مجموعه American English File، شامل 10 الی 12 درس است. که در این کتاب، تمرکز روی سه بخش Grammar، Vocabulary و pronunciation است. از نقاط قوت این مجموعه، به تقویت مهارت Speaking  می‌پردازد، که البته مجموعه American English File  به سه مهارت دیگر (Listening، Writing و Reading) نیز می پردازد. از لحاظ دشواری، سطح Starter American English File پایین ترین سطح و 5American English File  بالاترین سطح می باشند. تمامی کتاب‌های این مجموعه شامل کتاب دانش آموز (به همراه فابل های صوتی)، کتاب کار (به همراه فابل های صوتی)، کتاب معلم و چند نوع ویدئوی آموزشی می باشد.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "<h2 id=\"h2_1\">ویژگی&zwnj;های مجموعه کتاب&zwnj;های امریکن انگلیش فایل</h2>\n    <h3 id=\"h3_1\">کتاب American English file starter&nbsp;</h3>\n    <p>این کتاب از مجموعه&zwnj;&zwnj;ی American English File&nbsp; یک کتاب مکالمه محور است که بیشترین تمرکز بر روی تقویت\n        مهارت Speaking می&zwnj;پردازد. هرچند که کتاب 1American English File&nbsp; به آموزش هر چهار مهارت\n        زبان&zwnj;انگلیسی می&zwnj;پردازد. لازم به ذکر است که کتاب در سطح مبتدی نیست. حال به بررسی محتوای درس به درس این\n        کتاب می&zwnj;پردازیم:</p>\n    <ul>\n        <li>درس اول به ضمایر فاعلی، افعالی To be (مثبت ، منفی و سوالی) و صفات ملکی می&zwnj;پردازد.</li>\n        <li>درس دوم در مورد اسامی مفرد و جمع، صفات و جملات امری بحث و گفتگو می&zwnj;شود.</li>\n        <li>در درس سوم به زمان حال ساده (مثبت، منفی و سوالی) و همچنین در مورد ساختار جمله خبری و سوالی می&zwnj;پردازد.\n        </li>\n        <li>درس چهارم سوالات مربوط به مالکیت، حروف اضافه مربوط به بیان زمان، و نقش قیود در جملات، این درس آموزش داده\n            میشوند.</li>\n        <li>درس پنجم هم به آموزش و کاربرد فعل can و زمان حال استمراری پرداخته می&zwnj;شود، از طرفی به تفاوت بین زمان حال\n            ساده و حال استمراری در این درس توجه می&zwnj;شود.</li>\n        <li>درس ششم به آموزش ضمایر مفعولی، و همچنین کاربرد فعل like&nbsp; می&zwnj;پردازد، از طرفی این درس مروری به افعال\n            be و do دارد.</li>\n        <li>درس هفتم به نکات و گرامرهای جدیدتری می&zwnj;پردازد. چرا که تا درس ششم، مطالب گذشته در کتاب کلا درس هفتم به\n            آموزش زمان گذشته ساده می&zwnj;پردازد.</li>\n        <li>درس هشتم در ادامه درس هفتم آموزش زمان گذشته است از طرفی به آموزش Some و any هم می&zwnj;پردازد.</li>\n        <li>درس نهم، مربوط به اسامی قابل شمارش و غیرقابل شمارش میباشند. همچنین صفات مقایسه ای نیز در این درس گفته\n            میشوند.</li>\n        <li>درس دهم ، صفات Superlative&nbsp; گفته میشوند. که به آموزش زمان آینده نیز میپردازد.</li>\n        <li>در درس یازدهم درمورد قیود و افعال Infinitive و همچنین حروف تعریف صحبت می&zwnj;شود.</li>\n        <li>در آخر درس دوازدهم، به بررسی، زمان حال کامل و تفاوت این زمان با زمان گذشته ساده پرداخته می&zwnj;شود.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284656717.png\"\n        alt=\"american english file starter\" />\n    <h3 id=\"h3_2\">کتاب American English file 1&nbsp;</h3>\n    <p>پاین کتاب از مجموعه&zwnj;&zwnj;ی American English File&nbsp; یک کتاب مکالمه محور است که بیشترین تمرکز بر روی\n        تقویت مهارت Speaking می&zwnj;پردازد. هرچند که کتاب 1American English File&nbsp; به آموزش هر چهار مهارت\n        زبان&zwnj;انگلیسی می&zwnj;پردازد. لازم به ذکر است که کتاب در سطح مبتدی نیست. حال به بررسی محتوای درس به درس این\n        کتاب می&zwnj;پردازیم:</p>\n    <ul>\n        <li>درس اول به ضمایر فاعلی، افعالی To be (مثبت ، منفی و سوالی) و صفات ملکی می&zwnj;پردازد.</li>\n        <li>درس دوم در مورد اسامی مفرد و جمع، صفات و جملات امری بحث و گفتگو می&zwnj;شود.</li>\n        <li>در درس سوم به زمان حال ساده (مثبت، منفی و سوالی) و همچنین در مورد ساختار جمله خبری و سوالی می&zwnj;پردازد.\n        </li>\n        <li>درس چهارم سوالات مربوط به مالکیت، حروف اضافه مربوط به بیان زمان، و نقش قیود در جملات، این درس آموزش داده\n            میشوند.</li>\n        <li>درس پنجم هم به آموزش و کاربرد فعل can و زمان حال استمراری پرداخته می&zwnj;شود، از طرفی به تفاوت بین زمان حال\n            ساده و حال استمراری در این درس توجه می&zwnj;شود.</li>\n        <li>درس ششم به آموزش ضمایر مفعولی، و همچنین کاربرد فعل like&nbsp; می&zwnj;پردازد، از طرفی این درس مروری به افعال\n            be و do دارد.</li>\n        <li>درس هفتم به نکات و گرامرهای جدیدتری می&zwnj;پردازد. چرا که تا درس ششم، مطالب گذشته در کتاب کلا درس هفتم به\n            آموزش زمان گذشته ساده می&zwnj;پردازد.</li>\n        <li>درس هشتم در ادامه درس هفتم آموزش زمان گذشته است از طرفی به آموزش Some و any هم می&zwnj;پردازد.</li>\n        <li>درس نهم، مربوط به اسامی قابل شمارش و غیرقابل شمارش میباشند. همچنین صفات مقایسه ای نیز در این درس گفته\n            میشوند.</li>\n        <li>درس دهم ، صفات Superlative&nbsp; گفته میشوند. که به آموزش زمان آینده نیز میپردازد.</li>\n        <li>در درس یازدهم درمورد قیود و افعال Infinitive و همچنین حروف تعریف صحبت می&zwnj;شود.</li>\n        <li>در آخر درس دوازدهم، به بررسی، زمان حال کامل و تفاوت این زمان با زمان گذشته ساده پرداخته می&zwnj;شود.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284662702.png\"\n        alt=\"american english file 1\" />\n    <h3 id=\"h3_3\">کتاب American English file 2</h3>\n    <p>جلد دوم مجموعه&zwnj;&zwnj;ی American English File&nbsp; دارای سطح متوسط در زبان انگلیسی میباشد. کتاب American\n        English file 2&nbsp; در دروس ابتدایی خود مطالب مربوط به سطح A2 و در ادامه به تدریس سطح B1 می&zwnj;پردازد.&nbsp;\n        مطالب این کتاب در دوازده درس ارائه شده اند.</p>\n    <ul>\n        <li>در درس اول از جلد دوم این مجموعه گرامر جملات سوالی، زمان حال ساده و زمان حال استمراری را مرور می&zwnj;کنیم.\n        </li>\n        <li>درس دوم به گرامر های زمان گذشته ساده (افعال با قاعده و بی قاعده) و زمان گذشته استمراری اختصاص دارد.</li>\n        <li>در درس سوم با گرامر های زمان آینده و کاربرد Be going to&nbsp; برای بیان برنامه های آتی و زمان حال استمراری\n            (رویکرد آینده) آشنا می&zwnj;شویم.</li>\n        <li>در درس چهارم ، زمان حال کامل ، کاربرد عبارات yet و already و همچنین تفاوت آن با زمان گذشته ساده مطالبی هستند\n            که تدریس خواهند شد.</li>\n        <li>در درس پنجم، صفات و قیود مقایسه ای (as&hellip;as) ، صفات عالی (+ever+present perfect)&nbsp; را\n            می&zwnj;آموزید و در ادامه نیز کمیت سنج هایی مثل too و not enough&nbsp; نیز در این درس آموزش داده میشوند.\n        </li>\n        <li>درس ششم در ابتدا به آموزش will و won&rsquo;t برای بیان پیشبینی ها، تصمیم گیری، پیشنهاد دادن و یا قول دادن\n            می&zwnj;پردازد و در انتها نیز مروری کلی بر زمانهای حال ، گذشته و آینده نیز خواهد داشت.</li>\n        <li>در بخش اول از درس هفتم ، استفاده از infinitive ها ، و بکارگیری gerund&nbsp; ها&nbsp; تدریس می&zwnj;شود. و در\n            بخش دوم نیز کاربرد کمکی های have to ، don&rsquo;t have to ، must ،must not ، can&rsquo;t&nbsp; آموزش داده\n            می&zwnj;شود.</li>\n        <li>درس هشتم به کاربرد should و همچنین آموزش شرطی نوع اول و همچنین ضمایر ملکی می&zwnj;پردازد.</li>\n        <li>در درس نهم گرامر جملات شرطی نوع دوم آموزش داده می&zwnj;شود همچنین در ادامه این درس مروری بر زمان حال کامل و\n            کاربرد for و since در این زمان و تفاوت زمان حال کامل و زمان گذشته ساده خواهیم داشت.</li>\n        <li>درس دهم در ابتدا آموزش جملات مجهول را تدریس می&zwnj;کند و در ادامه نیز کاربرد used to و همچنین آموزش might\n            را شاهد خواهیم بود.</li>\n        <li>در بخش ابتدایی درس یازدهم، مروری بر آموزش Expressing movement و ترتیب قرار گیری کلمات در عبارات ارائه شده\n            است و در ادامه این درس نیز به so, neither + auxiliaries نیز اشاره میشود.</li>\n        <li>درس دوازدهم که درس انتهایی این کتاب است به آموزش ماضی بعید اختصاص دارد و همچنین آموزش نقل قول نیز در این درس\n            آورده شده است.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284668927.png\"\n        alt=\"american english file 2\" />\n    <h3 id=\"h3_4\">کتاب American English file 3</h3>\n    <p>سطح کتاب&nbsp; American English File 3 متوسط رو به بالا می&zwnj;باشد که به نیمه دوم سطحB1&nbsp; و نیمه اول سطح B2\n        می&zwnj;پردازد و شامل 10 درس است.</p>\n    <ul>\n        <li>درس اول، ابتدا گرامر زمان حال ساده و زمان حال استمراری بررسی می&zwnj;شود و سپس انواع زمان&zwnj;ها شامل:\n            Present Continuous، Future Continuousو Future Simple(will/won&rsquo;t)&nbsp; مرور می&zwnj;شوند.</li>\n        <li>درس دوم، ابتدا مروری بر زمان حال کامل(Present Perfect) و گذشته ساده (Past Simple)دارد. در ادامه این درس،\n            آموزش حال کامل و حال کامل استمراری را تکمیل می&zwnj;کند.</li>\n        <li>درس سوم هم، در ابتدا، مروری بر صفات تفضیلی و عالی دارد و در ادامه نیز کاربرد حروف تعریف آورده شده است.</li>\n        <li>ابتدای درس چهارم، کاربرد افعال کمکیcan / could / be able to&nbsp; آموزش داده می&zwnj;شود و در ادامه آن هم به\n            آموزش ضمایر انعکاسی اشاره می&zwnj;کند همچنین افعال modal همچون must /&nbsp; have to / should&nbsp; در انتهای\n            این درس آموزش داده میشوند.</li>\n        <li>در ابتدای درس پنجم، مروری بر زمان گذشته ساده و استمراری و همچنین ماضی بعید خواهیم داشت. در ادامه این درس به\n            کاربرد usually&nbsp; وused to&nbsp; نیز خواهیم پرداخت.</li>\n        <li>درس ششم، گرامر تمامی زمانها در حالت مجهول را شامل می&zwnj;شود. همچنین در ادامه این درس به افعال modal همچون\n            might/can&rsquo;t/must هم پرداخته است.</li>\n        <li>ابتدای درس هفتم به یادگیری عبارات شرطی نوع اول و عبارات زمان آینده میپردازیم. و در ادامه آن هم به مرور\n            عبارات شرطی نوع دوم پرداخته می شود.</li>\n        <li>درس هشتم، نحوه بیان نقل قول در جملات خبری و سوالی تدریس شده است. در ادامه این درس مروری دوباره بر افعال\n            infinitive و gerund آورده شده است.</li>\n        <li>درس نهم، با گرامر عبارات شرطی نوع سوم آشنا میشویم. همچنین مباحثی درمورد quantifier ها و نکاتی پیرامون آنها\n            هم از دیگر مطالب این درس است.</li>\n        <li>درس دهم که درس پایانی این کتاب است به آموزش Relative clause ها و tag question&nbsp; پرداخته شده است.</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284674128.png\"\n        alt=\"american english file 3\" />\n    <h3 id=\"h3_5\">کتاب American English file 4</h3>\n    <p>این جلد از کتاب دارای سطح متوسط بالا ، نزدیک به پیشرفته میباشد که به آموزش کامل سطح B2 میپردازد. جلد چهارم این\n        مجموعه نیز دارای 10 درس می&zwnj;باشد و هر درس دارای دو بخش است.</p>\n    <ul>\n        <li>در بخش اول درس اول این کتاب به ساختار جملات سوالی و پاسخ به آن ها آورده شده است که در قسمت تلفظ جملات نیز\n            نحوه صحیح ادا کردن عبارات دوستانه و علاقه نشان دادن در نحوه تلفظ مورد تاکید قرار می&zwnj;گیرد و در بخش دوم\n            نیز به افعال کمکی و عبارات تفضیلی پرداخته می&zwnj;شود و همچنین نحوه صحیح حفظ ریتم و آهنگ جملات در تلفظ کلمات\n            آمزش داده می&zwnj;شود.</li>\n        <li>در قسمت گرامر درس دوم با ساختار زمان حال کامل ساده و حال کامل استمراری در بخش اول و نحوه استفاده از صفت ها\n            به عنوان اسم در بخش دوم آشنا می&zwnj;شوید همچنین در قسمت تلفظ این درس نیز استرس صحیح کلمات و حروف صدا دار\n            برای شما توضیح داده شده است.</li>\n        <li>گرامر درس سوم شامل زمان های ماضی بعید استمراری و عبارات قیدی&nbsp; است و در قسمت تلفط این درس نیز به استرس\n            عبارات و آهنگ جملات اشاره می&zwnj;شود.</li>\n        <li>درس چهارم نیز در قسمت اول خود به گرامر به آینده کامل و آینده استمراری می&zwnj;پردازد و در قسمت دوم نیز به\n            ساختار جملات شرطی و نوع صفرم و نوع اول آن را شرح می&zwnj;دهد و در ادامه آن ها هم استرس و آهنگ عبارات و حروف\n            صدادار را در قسمت تلفط بیشتر توضیح می&zwnj;دهد.</li>\n        <li>گرامر قسمت اول درس پنجم ساختار جملات شرطی غیر واقعی را معرفی می&zwnj;کند و در گرامر قسمت دوم نیز ساختار\n            جملات بعد از عبارت wish آورده شده است و در ادامه نیز نحوه ادای استرس در صفات سه یا چهار سیلابی آموزش داده\n            شده است.</li>\n        <li>در درس ششم گرامر قسمت اول مربوط به gerund ها و عبارات&nbsp; infinitive و گرامر قسمت دوم نیز مربوط به\n            عبارت&nbsp; used to&nbsp; و مشتقات آن می&zwnj;شود.&nbsp;&nbsp;</li>\n        <li>افعال کمکی زمان گذشته مانند&nbsp; may , might , should و &hellip; گرامر بخش اول درس هفتم را تشکیل\n            می&zwnj;دهند .ساختار مجهول یکی از مهم ترین گرامر های زبان انگلیسی استکه این مبحث در بخش اول درس هشتم این\n            کتاب تدیس شده است و در بخش دوم آن نیز افعال نقل قولی آورده شده است.</li>\n        <li>گرامر بخش اول درس نهم این کتاب هم شامل عبارات مقایسه ای و عباراتی مانند whatever , whenever&nbsp; و&hellip;\n            خواهد بود که در بخش دوم آن هم اسامی جمع و غیرقابل شمارش نیز ارائه شده است.</li>\n        <li>در درس پایانی و دهم نیز quantifier ها و حروف تعریف آموزش داده شده اند .</li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284679792.png\"\n        alt=\"american english file 4\" />\n    <h3 id=\"h3_6\">کتاب American English file 5</h3>\n    <p>جلد پنجم و آخر این مجموعه که در سطح&nbsp; c1 دسته بندی می&zwnj;شود نیز شامل 10 درس است.که در درس اول آن به آموزش\n        گرامرDiscourse marker ها&nbsp; و Connector ها می&zwnj;پردازد و در بخش دوم آن نیز نکاتی در مورد have&nbsp; اشاره\n        می&zwnj;کند.</p>\n    <ul>\n        <li>بخش اول درس دوم این کتاب به گرامر و نکاتی درمورد ضمایر اختصاص دارد و بخش دوم آن هم بخشی از زمان گذشته و\n            استفاده از would , used to&nbsp; را ارائه می&zwnj;کند.</li>\n        <li>در درس سوم به استفاده از فعل get و نحوه استفاده آن در شرایط مختلف اختصاص دارد و در بخش دو آن هم ادامه گرامر\n            Discourse marker&nbsp; ها از درس اول آورده شده است.</li>\n        <li>گرامر درس چهارم در بخش اول به مبحث Speculation&nbsp; و Deduction می&zwnj;پردازد و در بخش دوم نیز عبارات\n            تاکید و inversion آموزش داده شده است.</li>\n        <li>در درس پنجم این مجموعه با مفهوم&nbsp; distancing و استفاده های غیرواقعی از زمان گذشته آشنا می&zwnj;شوید.\n        </li>\n        <li>گرامر درس ششم آشنایی با ساختار verb + object + infinitive/gerund و همچنین جملات شرطی است.</li>\n        <li>در درس هفتم اما با گرامر های مربوط به مباحث permission &ndash; obligation &ndash; necessity ادامه پیدا\n            می&zwnj;کند.</li>\n        <li>گرامر درس هشتم به ادامه مباحث مربوط به gerund ها و infinitive&nbsp; ها در دروس گذشته می&zwnj;پردازد و همچنین\n            عبارات مربوط به بیان برنامه ها و قرار های آینده و می&zwnj;پردازد.</li>\n        <li>در گرامر درس نهم مباحث مریوط به Ellipsis&nbsp; و&nbsp; Substitution آورده شده است و در ادامه آن هم مباحثی\n            مربوط به اسم ها نیز آموزش داده شده است.</li>\n        <li>وگرامر در دهم نیز به آموزش Cleft sentences ها و همچنین نکات دیگری درمورد جملات مقایسه ای می&zwnj;پردازد.\n        </li>\n    </ul><img src=\"http://localhost:4000/public/extraFiles/1753284685160.png\"\n        alt=\"american english file 5\" />",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "american-english-file",
+									"type": "text"
+								},
+								{
+									"key": "ageGrate",
+									"value": "12  تا 25",
+									"type": "text"
+								},
+								{
+									"key": "grate",
+									"value": "متوسط",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "links",
+									"value": "[\"<a href=\\\"#h2_1\\\">ویژگی‌های مجموعه کتاب‌های امریکن انگلیش فایل</a>\",\"<a href=\\\"#h3_1\\\">کتاب American English file starter</a>\",\"<a href=\\\"#h3_2\\\">کتاب American English file 1</a>\",\"<a href=\\\"#h3_3\\\">کتاب American English file 2</a>\",\"<a href=\\\"#h3_4\\\">کتاب American English file 3</a>\",\"<a href=\\\"#h3_5\\\">کتاب American English file 4</a>\",\"<a href=\\\"#h3_6\\\">کتاب American English file 5</a>\"]",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/american-english-file/1745940817884.png",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"book",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comment",
+			"item": [
+				{
+					"name": "{{baseUrl}}/comment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\": \"کامنت تست از سمت postman\",\r\n    \"score\" : 4, // عددی صحیح بین 1 تا 5\r\n    \"courseId\":3,\r\n    \"parentId\":2 //برای زمانی که کامنت، یک کامنت پاسخ از طرف مدیر باشد، parentId که id کامنت اصلی است، فرستاده شود.\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comment",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment?limit=10&offset=0&search",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comment?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "سرچ نام دوره ی مربوط به کامنت"
+								},
+								{
+									"key": "status",
+									"value": "accept",
+									"description": "accept | notAccept | none",
+									"disabled": true
+								},
+								{
+									"key": "parentStatus",
+									"value": "main",
+									"description": "answer | main",
+									"disabled": true
+								},
+								{
+									"key": "score",
+									"value": "4",
+									"description": "عدد صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/user-side/:courseId",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comment/user-side/:courseId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								"user-side",
+								":courseId"
+							],
+							"variable": [
+								{
+									"key": "courseId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comment/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comment/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "جستجو بر اساس نام دوره ای که کامنت برای آن ثبت شده است."
+								},
+								{
+									"key": "status",
+									"value": "accept",
+									"description": "accept | notAccept | none",
+									"disabled": true
+								},
+								{
+									"key": "parentStatus",
+									"value": "main",
+									"description": "main | answer",
+									"disabled": true
+								},
+								{
+									"key": "score",
+									"value": "4",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "2",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accept\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comment/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "جستجو بر اساس نام دوره ای که کامنت برای آن ثبت شده است."
+								},
+								{
+									"key": "status",
+									"value": "accept",
+									"description": "accept | notAccept | none",
+									"disabled": true
+								},
+								{
+									"key": "parentStatus",
+									"value": "main",
+									"description": "main | answer",
+									"disabled": true
+								},
+								{
+									"key": "score",
+									"value": "4",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "2",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "19"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/comment-loop/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accept\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comment/comment-loop/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								"comment-loop",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "19"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/comment-loop/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comment/comment-loop/:id?mainCommentId=19",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								"comment-loop",
+								":id"
+							],
+							"query": [
+								{
+									"key": "mainCommentId",
+									"value": "19"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "21"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/answer?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\" : \"متن پاسخ\",\r\n    \"courseId\": 3,\r\n    \"parentId\": 19\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comment/answer?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								"answer"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "accept",
+									"description": "accept | notAccept | none",
+									"disabled": true
+								},
+								{
+									"key": "parentStatus",
+									"value": "main",
+									"description": "main | answer",
+									"disabled": true
+								},
+								{
+									"key": "score",
+									"value": "4",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null,
+									"description": "جستوجو بر اساس نام دوره ی مربوط به کامنت"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/comment/comment-loop/answer/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"content\" : \"متن پاسخ\",\r\n    \"courseId\": 3,\r\n    \"parentId\": 19\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comment/comment-loop/answer/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comment",
+								"comment-loop",
+								"answer",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "18"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "console",
+			"item": [
+				{
+					"name": "{{baseUrl}}/console/get-data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/console/get-data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"console",
+								"get-data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/console/course-data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/console/course-data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"console",
+								"course-data"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "contact",
+			"item": [
+				{
+					"name": "{{baseUrl}}/contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\":\"سلام. شرایط تدریس توی مجموعه شما چیه؟ من خیلی برای تدریس مشتاق هستم.\",\r\n    \"email\":\"mohsen.wsx@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/contact",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/contact?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "status",
+									"value": null,
+									"description": "seen | notSeen",
+									"disabled": true
+								},
+								{
+									"key": "answering",
+									"value": null,
+									"description": "answered | notAnswered",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/contact/:id?limit=10&offset=0&newStatus=seen",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact/:id?limit=10&offset=0&newStatus=seen",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "status",
+									"value": "seen ",
+									"description": "seen | notSeen",
+									"disabled": true
+								},
+								{
+									"key": "answering",
+									"value": "answered ",
+									"description": "answered | notAnswered",
+									"disabled": true
+								},
+								{
+									"key": "newStatus",
+									"value": "seen",
+									"description": "seen | notSeen"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/contact/answer/:id?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"mohsen.wsx@gmail.com\",\r\n    \"message\": \"پیام شما مشاهده شد.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/contact/answer/:id?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								"answer",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "status",
+									"value": "seen ",
+									"description": "seen | notSeen",
+									"disabled": true
+								},
+								{
+									"key": "answering",
+									"value": "answered ",
+									"description": "answered | notAnswered",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "13"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/contact/:id?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/contact/:id?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"contact",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "status",
+									"value": "seen ",
+									"description": "seen | notSeen",
+									"disabled": true
+								},
+								{
+									"key": "answering",
+									"value": "answered ",
+									"description": "answered | notAnswered",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "13"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "off",
+			"item": [
+				{
+					"name": "{{baseUrl}}/off",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"percent\" : 20,                                     //عددی بین 1 تا 100\r\n    \"expire\" : \"2025-09-30\",                            // از جنس Date,\r\n    \"times\" : 4,                                        // تعداد دفعات مجاز استفاده از کد تخفیف ( -1 به معنای بی نهایت اس)\r\n    \"public\" : 0,       // 0=>no , 1=>yes               // آیا همه می توانند از این کد استفاده کنند؟\r\n    \"courses\" : [3,4], \r\n    \"code\" : \"adsdscdcskjnkjn\",                // اگر مقدار public برابر با false باشد، باید برای تخفیف کد حداقل هشت رقمی تعیین شود. \r\n    \"isForAllCourses\" : false            // اکر این کد مخصوص تمام دوره  ها است، به جای وارد کردن آی دی تک تک دوره ها، این فیلد را تعیین کنید.\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/off",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"off"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/off/user-side/apply-off",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\" : \"Dsfsfsdfsdf\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/off/user-side/apply-off",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"off",
+								"user-side",
+								"apply-off"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/off?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/off?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"off"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "orderStatus",
+									"value": "infinity",
+									"description": "maxPercent | minPercent | maxExpire | minExpire | expired | maxTimes | minTimes | maxRemaining | minRemaining | infinity | finishRemaining",
+									"disabled": true
+								},
+								{
+									"key": "publicStatus",
+									"value": "public",
+									"description": "public | private",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/off/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/off/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"off",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "orderStatus",
+									"value": "infinity",
+									"description": "maxPercent | minPercent | maxExpire | minExpire | expired | maxTimes | minTimes | maxRemaining | minRemaining | infinity | finishRemaining",
+									"disabled": true
+								},
+								{
+									"key": "publicStatus",
+									"value": "public",
+									"description": "public | private",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "course",
+			"item": [
+				{
+					"name": "{{baseUrl}}/course",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "top notch fundamentals A",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "دوره Top Notch Fundamental A نخستین سطح از مجموعه مشهور Top Notch است که توسط انتشارات Pearson منتشر شده و یکی از پرکاربردترین منابع آموزشی زبان انگلیسی در سراسر جهان به شمار می‌رود. این دوره مناسب زبان‌آموزانی است که سطح بسیار ابتدایی دارند و می‌خواهند به صورت حرفه‌ای و ساختارمند، مسیر یادگیری زبان را آغاز کنند.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "    <h2>مناسب برای چه کسانی است؟</h2>\n    <p> این دوره برای نوجوانان و بزرگسالانی طراحی شده است که سطح پایه (Pre-A1) دارند یا تازه با زبان انگلیسی آشنا\n        شده‌اند. زبان‌آموزانی که کمی انگلیسی می‌دانند ولی نیاز به ساختار آموزشی منظم دارند نیز می‌توانند از این سطح شروع\n        کنند. </p>\n    <h2>اهداف دوره</h2>\n    <p> هدف اصلی این دوره، آماده‌سازی زبان‌آموز برای ورود به سطوح اصلی Top Notch و ایجاد پایه‌ای قوی در مهارت‌های\n        چهارگانه (شنیدن، صحبت کردن، خواندن، نوشتن) همراه با تلفظ صحیح و گرامر ابتدایی است. </p>\n    <h2>محتوای آموزشی</h2>\n    <ul>\n        <li>مکالمات پایه در موقعیت‌های روزمره مثل معرفی خود، احوال‌پرسی، بیان احساسات، و صحبت درباره خانواده و شغل</li>\n        <li>گرامرهای ابتدایی مانند فعل to be، ضمایر فاعلی، افعال ساده، سوالات بله/خیر و wh- questions</li>\n        <li>واژگان اساسی در موضوعاتی مانند اعداد، کشورها، رنگ‌ها، اشیاء کلاس، اعضای خانواده، و زمان‌ها</li>\n        <li>تمرین‌های شنیداری با لهجه طبیعی و تمرکز بر درک مفهوم کلی</li>\n        <li>فعالیت‌های زوجی و گروهی برای تمرین مکالمه در کلاس</li>\n    </ul>\n    <h2>ویژگی‌های دوره</h2>\n    <ul>\n        <li>رویکرد ارتباطی (Communicative Approach) در آموزش زبان</li>\n        <li>استفاده از ویدیوها، فایل‌های صوتی و تصاویر برای درگیرسازی زبان‌آموز</li>\n        <li>دارای کتاب کار (Workbook) برای تمرین بیشتر در منزل</li>\n        <li>فعالیت‌های جفتی و نقش‌آفرینی برای تقویت مکالمه</li>\n        <li>ارزیابی منظم پیشرفت یادگیری در پایان هر درس و پایان ترم</li>\n    </ul>\n    <h2>نتایج مورد انتظار</h2>\n    <p> پس از گذراندن دوره Top Notch Fundamental A، زبان‌آموز قادر خواهد بود: </p>\n    <ul>\n        <li>مکالمات ساده و پایه را با اعتماد به نفس انجام دهد</li>\n        <li>ساختار جملات ابتدایی را درک و به کار ببرد</li>\n        <li>درک شنیداری بهتری نسبت به عبارات پرکاربرد پیدا کند</li>\n        <li>برای ورود به سطح Fundamental B آماده شود</li>\n    </ul>\n    <h2>پیش‌نیاز</h2>\n    <p> این دوره برای افراد مبتدی طراحی شده و هیچ پیش‌نیازی ندارد. مناسب برای زبان‌آموزانی است که تازه شروع به یادگیری\n        زبان کرده‌اند یا نیاز به مرور پایه دارند. </p>",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "top-notch-fundamentals-A",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "450000",
+									"type": "text"
+								},
+								{
+									"key": "videoLink",
+									"value": "http://localhost:4000/public/introductionVideo/1___1753636855972___FA.mp4",
+									"type": "text"
+								},
+								{
+									"key": "bookFileGroup",
+									"value": "family and friends 3",
+									"type": "text"
+								},
+								{
+									"key": "bookCollectionId",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "teacher",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "levelId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/top-notch/course-top-FA-min.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/course",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/upload-video",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": "/F:/project/english/files/images/articles/6_17a25a2e6a.jpg"
+								},
+								{
+									"key": "chunkNumber",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "fileName",
+									"value": "1___1753950771650___american-2.mp4",
+									"description": "تریجا از این الگو استفاده شود :  `${userInfo.id}___${Date.now()}___${file.name}`",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/course/upload-video",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"upload-video"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/creating-data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/creating-data",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"creating-data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/delete-video",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileName\" : \"1___1753950771651___american-2.pdf\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/course/delete-video",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"delete-video"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "completed | notCompleted",
+									"disabled": true
+								},
+								{
+									"key": "teacherId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "bookId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "levelId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | max | min",
+									"disabled": true
+								},
+								{
+									"key": "scoreStatus",
+									"value": "5",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/short-date",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/short-date",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"short-date"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/footer/popular-courses",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/footer/popular-courses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								"footer",
+								"popular-courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/last-course",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/last-course",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"last-course"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/related/:slug",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/related/:slug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								"related",
+								":slug"
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "top-notch-fundamentals-A",
+									"description": "اسلاگ دوره ای که قصد گرفتن دوره های مرتبط با آن را دارید."
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/related-to-article/:article-slug",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/related-to-article/:article-slug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								"related-to-article",
+								":article-slug"
+							],
+							"variable": [
+								{
+									"key": "article-slug",
+									"value": "dhrwrt-aamwzsh-zban-bh-kwdkan"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/:slug",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/:slug",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								":slug"
+							],
+							"variable": [
+								{
+									"key": "slug",
+									"value": "top-notch-fundamentals-A"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/:id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "top notch fundamentals A",
+									"type": "text"
+								},
+								{
+									"key": "shortDescription",
+									"value": "دوره Top Notch Fundamental A نخستین سطح از مجموعه مشهور Top Notch است که توسط انتشارات Pearson منتشر شده و یکی از پرکاربردترین منابع آموزشی زبان انگلیسی در سراسر جهان به شمار می‌رود. این دوره مناسب زبان‌آموزانی است که سطح بسیار ابتدایی دارند و می‌خواهند به صورت حرفه‌ای و ساختارمند، مسیر یادگیری زبان را آغاز کنند.",
+									"type": "text"
+								},
+								{
+									"key": "longDescription",
+									"value": "    <h2>مناسب برای چه کسانی است؟</h2>\n    <p> این دوره برای نوجوانان و بزرگسالانی طراحی شده است که سطح پایه (Pre-A1) دارند یا تازه با زبان انگلیسی آشنا\n        شده‌اند. زبان‌آموزانی که کمی انگلیسی می‌دانند ولی نیاز به ساختار آموزشی منظم دارند نیز می‌توانند از این سطح شروع\n        کنند. </p>\n    <h2>اهداف دوره</h2>\n    <p> هدف اصلی این دوره، آماده‌سازی زبان‌آموز برای ورود به سطوح اصلی Top Notch و ایجاد پایه‌ای قوی در مهارت‌های\n        چهارگانه (شنیدن، صحبت کردن، خواندن، نوشتن) همراه با تلفظ صحیح و گرامر ابتدایی است. </p>\n    <h2>محتوای آموزشی</h2>\n    <ul>\n        <li>مکالمات پایه در موقعیت‌های روزمره مثل معرفی خود، احوال‌پرسی، بیان احساسات، و صحبت درباره خانواده و شغل</li>\n        <li>گرامرهای ابتدایی مانند فعل to be، ضمایر فاعلی، افعال ساده، سوالات بله/خیر و wh- questions</li>\n        <li>واژگان اساسی در موضوعاتی مانند اعداد، کشورها، رنگ‌ها، اشیاء کلاس، اعضای خانواده، و زمان‌ها</li>\n        <li>تمرین‌های شنیداری با لهجه طبیعی و تمرکز بر درک مفهوم کلی</li>\n        <li>فعالیت‌های زوجی و گروهی برای تمرین مکالمه در کلاس</li>\n    </ul>\n    <h2>ویژگی‌های دوره</h2>\n    <ul>\n        <li>رویکرد ارتباطی (Communicative Approach) در آموزش زبان</li>\n        <li>استفاده از ویدیوها، فایل‌های صوتی و تصاویر برای درگیرسازی زبان‌آموز</li>\n        <li>دارای کتاب کار (Workbook) برای تمرین بیشتر در منزل</li>\n        <li>فعالیت‌های جفتی و نقش‌آفرینی برای تقویت مکالمه</li>\n        <li>ارزیابی منظم پیشرفت یادگیری در پایان هر درس و پایان ترم</li>\n    </ul>\n    <h2>نتایج مورد انتظار</h2>\n    <p> پس از گذراندن دوره Top Notch Fundamental A، زبان‌آموز قادر خواهد بود: </p>\n    <ul>\n        <li>مکالمات ساده و پایه را با اعتماد به نفس انجام دهد</li>\n        <li>ساختار جملات ابتدایی را درک و به کار ببرد</li>\n        <li>درک شنیداری بهتری نسبت به عبارات پرکاربرد پیدا کند</li>\n        <li>برای ورود به سطح Fundamental B آماده شود</li>\n    </ul>\n    <h2>پیش‌نیاز</h2>\n    <p> این دوره برای افراد مبتدی طراحی شده و هیچ پیش‌نیازی ندارد. مناسب برای زبان‌آموزانی است که تازه شروع به یادگیری\n        زبان کرده‌اند یا نیاز به مرور پایه دارند. </p>",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "top-notch-fundamentals-A",
+									"type": "text"
+								},
+								{
+									"key": "tags[]",
+									"value": "[[ \"tag 1\", \"tag 2\" ]]",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "450000",
+									"type": "text"
+								},
+								{
+									"key": "videoLink",
+									"value": "http://localhost:4000/public/introductionVideo/1___1753636855972___FA.mp4",
+									"type": "text"
+								},
+								{
+									"key": "bookFileGroup",
+									"value": "family and friends 3",
+									"type": "text"
+								},
+								{
+									"key": "bookCollectionId",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "teacher",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "levelId",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/F:/project/english/files/images/articles/3_5d796313cc.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/course/update/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"update",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/update-video/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "chunkNumber",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "fileName",
+									"value": "1___1753950771650___american-2.mp4",
+									"description": "تریجا از این الگو استفاده شود :  `${userInfo.id}___${Date.now()}___${file.name}`",
+									"type": "text"
+								},
+								{
+									"key": "prevLink",
+									"value": "http://localhost:4000/public/introductionVideo/1___1753636855972___FA.mp4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/course/update-video/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"update-video",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/change-status/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/change-status/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"change-status",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "completed | notCompleted",
+									"disabled": true
+								},
+								{
+									"key": "teacherId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "bookId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "levelId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | max | min",
+									"disabled": true
+								},
+								{
+									"key": "scoreStatus",
+									"value": "5",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/bag-courses",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/bag-courses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								"bag-courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/user-side/bag-courses/:courseId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/user-side/bag-courses/:courseId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								"user-side",
+								"bag-courses",
+								":courseId"
+							],
+							"variable": [
+								{
+									"key": "courseId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/course/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/course/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"course",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "completed | notCompleted",
+									"disabled": true
+								},
+								{
+									"key": "teacherId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "bookId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "levelId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | max | min",
+									"disabled": true
+								},
+								{
+									"key": "scoreStatus",
+									"value": "5",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "extra-file",
+			"item": [
+				{
+					"name": "{{baseUrl}}/extra-file",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/F:/project/english/files/images/articles/home-alone.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/extra-file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"extra-file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/extra-file/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/extra-file/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"extra-file",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "48"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/extra-file?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/extra-file?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"extra-file"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "books",
+									"value": "has",
+									"description": "has | not",
+									"disabled": true
+								},
+								{
+									"key": "articles",
+									"value": "has",
+									"description": "has | not",
+									"disabled": true
+								},
+								{
+									"key": "courses",
+									"value": "has",
+									"description": "has | not",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "level",
+			"item": [
+				{
+					"name": "{{baseUrl}}/level",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/level",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"level"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/level",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/level",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"level"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/level/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/level/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"level",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/level/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"newTest\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/level/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"level",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "sale",
+			"item": [
+				{
+					"name": "{{baseUrl}}/sale",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 3,\r\n    \"userId\": 2,\r\n    \"price\": 100000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sale",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sale"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/sale/get-all?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"startDate\":\"2025-07-19\",  //optional\r\n    // \"endDate\":\"2025-08-03\"  //optional\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sale/get-all?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sale",
+								"get-all"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "hasOff",
+									"description": "hasOff | hasNotOff",
+									"disabled": true
+								},
+								{
+									"key": "saleStatus",
+									"value": "user",
+									"description": "admin | user",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | notFree",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/sale/user-side",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 110000\r\n    // \"offCode\" : \"aaaaaaaa\" //optinal\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/sale/user-side",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sale",
+								"user-side"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/sale/delete/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/sale/delete/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"sale",
+								"delete",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "hasOff",
+									"description": "hasOff | hasNotOff",
+									"disabled": true
+								},
+								{
+									"key": "saleStatus",
+									"value": "user",
+									"description": "admin | user",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | notFree",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "3",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "37"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "session",
+			"item": [
+				{
+					"name": "{{baseUrl}}/session/upload-video",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fileName",
+									"value": "1___1753635591709___i.mp4",
+									"description": "ترجیحا از این قالب استفاده شود: {userId}__{Date.now()}__{fileName}",
+									"type": "text"
+								},
+								{
+									"key": "courseId",
+									"value": "19",
+									"type": "text"
+								},
+								{
+									"key": "time",
+									"value": "10:23",
+									"type": "text"
+								},
+								{
+									"key": "video",
+									"description": "chunk",
+									"type": "file",
+									"src": "/C:/Users/TUF/Downloads/خفن-17.jpg"
+								},
+								{
+									"key": "chunkNumber",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "21",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/session/upload-video",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"upload-video"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/update-video",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video",
+									"type": "file",
+									"src": "/C:/Users/TUF/Downloads/images.jpg"
+								},
+								{
+									"key": "fileName",
+									"value": "1___1753635591709___i.mp4",
+									"description": "ترجیحا از این قالب استفاده شود: {userId}__{Date.now()}__{fileName}",
+									"type": "text"
+								},
+								{
+									"key": "sessionId",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "time",
+									"value": "10:23",
+									"type": "text"
+								},
+								{
+									"key": "chunkNumber",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/session/update-video",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"update-video"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/TUF/Downloads/MyResume-205[www.cvbuilder.me]611.pdf"
+								},
+								{
+									"key": "chunkNumber",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "totalChunks",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "fileName",
+									"value": "1___1753635591709___i.mp4",
+									"description": "ترجیحا از این قالب استفاده شود: {userId}__{Date.now()}__{fileName}",
+									"type": "text"
+								},
+								{
+									"key": "sessionId",
+									"value": "22",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "testName",
+									"type": "text"
+								},
+								{
+									"key": "isFree",
+									"value": "0",
+									"description": "0=> false , 1=>true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/session",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/without-file",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"test name\",\r\n    \"isFree\" : 0,  // 1 ===> free , 0 ===> not free\r\n    \"sessionId\" : 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/session/without-file",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"without-file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/user-side/get-single/:courseId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/session/user-side/get-single/:courseId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"user-side",
+								"get-single",
+								":courseId"
+							],
+							"variable": [
+								{
+									"key": "courseId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/user-side/:courseId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// سه جلسه اول باز گردانداه نمی شوند. از جلسه چهارم به بعد، داده میشوند.\r",
+									"// سه جلسه اول، در هنگام دریافت اطلاعات دوره، داده می شوند."
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/session/user-side/:courseId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"user-side",
+								":courseId"
+							],
+							"variable": [
+								{
+									"key": "courseId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/:courseId?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/session/:courseId?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								":courseId"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "free",
+									"description": "free | notFree",
+									"disabled": true
+								},
+								{
+									"key": "fileStatus",
+									"value": "fileExist",
+									"description": "fileExist | fileNotExist",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "courseId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/single/:sessionId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/session/single/:sessionId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								"single",
+								":sessionId"
+							],
+							"variable": [
+								{
+									"key": "sessionId",
+									"value": "17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/session/:sessionId/:courseId?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/session/:sessionId/:courseId?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"session",
+								":sessionId",
+								":courseId"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "free",
+									"description": "free | notFree",
+									"disabled": true
+								},
+								{
+									"key": "fileStatus",
+									"value": "fileExist",
+									"description": "fileExist | fileNotExist",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "sessionId",
+									"value": "222"
+								},
+								{
+									"key": "courseId",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tag",
+			"item": [
+				{
+					"name": "{{baseUrl}}/tag?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"test tag\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tag?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tag"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/tag?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tag?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tag"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/tag/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"new name\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/tag/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tag",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "112"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/tag/:id?limit=10&offset=0&search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/tag/:id?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"tag",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "43"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ticket",
+			"item": [
+				{
+					"name": "{{baseUrl}}/ticket",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"subject\": \"other\",      // fiscal | scholastic | counseling | offer | support | other\r\n    \"message\": \"سلام. لطفا این تیکت را فقط ببینید.\",\r\n    \"title\": \"دیدن تیکت\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ticket",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "subject",
+									"value": "fiscal",
+									"description": "fiscal | scholastic | counseling | offer | support | other",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "open",
+									"description": "open | pending | answered | closed",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/user-side/close/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/user-side/close/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								"user-side",
+								"close",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "111"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/user-side/answer/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"پاسخ به تیکت\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ticket/user-side/answer/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								"user-side",
+								"answer",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "212"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"پاسخ به تیکت\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "212"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId/answer",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\"  : \"پاسخ به تیکت\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId/answer",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId",
+								"answer"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "233"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "subject",
+									"value": "fiscal",
+									"description": "fiscal | scholastic | counseling | offer | support | other",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "open",
+									"description": "open | pending | answered | closed",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "2",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "54"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId/message/:messageId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId/message/:messageId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId",
+								"message",
+								":messageId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "213"
+								},
+								{
+									"key": "messageId",
+									"value": "433"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/user-side",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/user-side",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								"user-side"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/user-side/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/user-side/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								"user-side",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/ticket/:ticketId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ticket/:ticketId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ticket",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "{{baseUrl}}/user?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "searchName",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "searchPhone",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "roleStatus",
+									"value": "1",
+									"description": "ای دی مربوط به نقش",
+									"disabled": true
+								},
+								{
+									"key": "purchaseStatus",
+									"value": "max",
+									"description": "max | min",
+									"disabled": true
+								},
+								{
+									"key": "scoreStatus",
+									"value": "max",
+									"description": "max | min",
+									"disabled": true
+								},
+								{
+									"key": "levelStatus",
+									"value": "2",
+									"description": "ای دی مربوط به سطح",
+									"disabled": true
+								},
+								{
+									"key": "deletedUser",
+									"value": "1",
+									"description": "0=> کاربران موجود | 1=> کاربران حذف شده | به صورت پیشفرض، فقط کاربران موجود را بر می گرداند.",
+									"disabled": true
+								},
+								{
+									"key": "scorePriority",
+									"value": "1",
+									"description": "اگر هم گزینه مرتب سازی بر اساس امتیاز و هم گزینه مرتب سازی بر اساس میزان خرید فعال باشد. این مورد می گوید که اول بر ساس امتیاز دسته بندی شود، و سپس بر اساس میزان خرید.",
+									"disabled": true
+								},
+								{
+									"key": "banStatus",
+									"value": "ban",
+									"description": "ban | notBan",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/get-finders",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/get-finders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"get-finders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/get-admins",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/get-admins",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"get-admins"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/user-side/get-courses",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/user-side/get-courses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"user-side",
+								"get-courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/:userId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/:userId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/change-role",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 5,\r\n    \"roleId\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/change-role",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"change-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/user-side/update-profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/user-side/update-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"user-side",
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/user-side/edit-info",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"سید محسن موسوی 2\",\r\n    \"username\" : \"mohsen moosav\"\r\n    // ,\"password\" : \"\", \r\n    // \"confirmPassword\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/user-side/edit-info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"user-side",
+								"edit-info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/ban/:userId",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isBan\" : false,\r\n    \"description\" : \"دلیل بن شدن.\"  // اگر isBan برابر با true  باشد، این پارامتر اجباری است.\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/ban/:userId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"ban",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/:userId/update-profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/:userId/update-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"update-profile"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/user-side/delete-profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/user-side/delete-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"user-side",
+								"delete-profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/:userId/delete-course/:courseId?limit=10&offset=0&search",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/:userId/delete-course/:courseId?limit=10&offset=0&search",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"delete-course",
+								":courseId"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "search",
+									"value": null
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "completed | notCompleted",
+									"disabled": true
+								},
+								{
+									"key": "teacherId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "bookId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "levelId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "priceStatus",
+									"value": "free",
+									"description": "free | max | min",
+									"disabled": true
+								},
+								{
+									"key": "scoreStatus",
+									"value": "5",
+									"description": "عددی صحیح بین 1 تا 5",
+									"disabled": true
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "tagId",
+									"value": "1",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "9"
+								},
+								{
+									"key": "courseId",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/:userId/delete-profile",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/:userId/delete-profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								":userId",
+								"delete-profile"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/user/add-bag",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/add-bag",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"add-bag"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search",
+			"item": [
+				{
+					"name": "{{baseUrl}}/search/course-only?limit=10&offset=0",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// need to accessToken in cookies  <=============="
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/search/course-only?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"course-only"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "searchWord",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "free",
+									"description": "free | notFree | ease | medum | high | children \nبه اضافه مواردی که در route زیر وجود داشته باشند:\n{{baseUrl}}/search/course-only/category",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/search/book-only/category",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/search/book-only/category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"book-only",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/search/course-only/category",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/search/course-only/category",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"course-only",
+								"category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/search/book-only?limit=10&offset=0",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/search/book-only?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"book-only"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "searchWord",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": null,
+									"description": "موارد دریافت شده از route زیر:\n{{baseUrl}}/search/book-only/category",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{baseUrl}}/search/article-only?limit=10&offset=0",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/search/article-only?limit=10&offset=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"article-only"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "searchWord",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

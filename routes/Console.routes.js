@@ -7,7 +7,7 @@ const { createCommentValidator, getCommentsValidator, changeAcceptValidator, ans
 
 const router = Router();
 
-router.get('/get-data' ,authMiddleware , createCommentValidator() ,controller.getData);
-router.get('/course-data' ,authMiddleware , createCommentValidator() ,controller.getCourseData);
+router.get('/get-data' ,authMiddleware ,roleGardMiddleware([]), createCommentValidator() ,controller.getData);
+router.get('/course-data' ,authMiddleware ,roleGardMiddleware([]), createCommentValidator() ,controller.getCourseData);
 
 module.exports = router;

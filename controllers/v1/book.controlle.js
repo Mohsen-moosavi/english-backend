@@ -58,7 +58,9 @@ const createBook = async (req, res, next) => {
     const cover = req.file;
 
     if (validationError?.errors && validationError?.errors[0]) {
-      removeImage(cover.filename)
+      if(cover?.filename){
+        removeImage(cover?.filename)
+      }
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
@@ -68,7 +70,7 @@ const createBook = async (req, res, next) => {
       trim: true
     })
 
-    const copyOfTags = tags[0].split(',')
+    const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
 
     const [newBook, isNewBook] = await Book.findOrCreate({
@@ -112,6 +114,12 @@ const deleteBookWhitoutGettingAll = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
+    const relatedCourse = await Course.findOne({where:{book_collection_id : id},paranoid:false})
+
+    if(relatedCourse){
+      return errorResponse(res,400,'شما نمی توانید کتابی را که برای آن دوره تعریف شده را پاک کنید!')
+    }
+
     const deletedBook = await Book.findOne({
       where: { id }
     })
@@ -131,6 +139,12 @@ const deleteBookWhitoutGettingAll = async (req, res, next) => {
 const deleteFile = async (req, res, next) => {
   try {
     const { fileNames } = req.body;
+    const validationError = validationResult(req)
+
+    if (validationError?.errors && validationError?.errors[0]) {
+      return errorResponse(res, 400, validationError.errors[0].msg)
+    }
+
     const dirPath = path.join(__dirname, '..', '..', 'public', 'files')
 
     fileNames.forEach(async (fileName) => {
@@ -180,7 +194,12 @@ const deleteBookWithGettingAll = async (req, res, next) => {
       return errorResponse(res, 400, validationError.errors[0].msg)
     }
 
-    const { limit, offset, search } = req.query;
+    
+    const relatedCourse = await Course.findOne({where:{book_collection_id : id},paranoid:false})
+
+    if(relatedCourse){
+      return errorResponse(res,400,'شما نمی توانید کتابی را که برای آن دوره تعریف شده را پاک کنید!')
+    }
 
     const deletedBook = await Book.findOne({
       where: { id }
@@ -286,7 +305,7 @@ const updateBook = async (req, res, next) => {
       }
     }
 
-    const copyOfTags = tags[0].split(',')
+    const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
     cover && removeImage(updatedBook.cover?.split('/')?.reverse()[0])
 

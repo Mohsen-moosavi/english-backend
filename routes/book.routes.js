@@ -43,11 +43,11 @@ router.post('/upload-file' ,authMiddleware , roleGardMiddleware([configs.roles.a
 router.post('/delete-file' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),deleteFileValidator() ,controller.deleteFile);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),deleteBookWhitoutGettingAllValidator(),controller.deleteBookWhitoutGettingAll);
 router.delete('/:id/get-all' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),getAllBooksValidator(),controller.deleteBookWithGettingAll);
-router.get('/' ,getAllBooksValidator() , controller.getAllBooks);
+router.get('/' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),getAllBooksValidator() , controller.getAllBooks);
 router.get('/user-side/:slug' ,controller.getUserSideBook );
 router.get('/get-group/:id' , controller.getBooksGroup);
 router.get('/last-book' , controller.getLastBook);
-router.get('/:id' , controller.getBook);
+router.get('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin]), controller.getBook);
 router.put('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.admin]),uploadCoverFile.single('cover'), createBookValidator() ,controller.updateBook);
 
 module.exports = router;

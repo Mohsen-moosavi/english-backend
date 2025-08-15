@@ -66,7 +66,7 @@ const getCourseData = async (req, res, next) => {
       include:[
         { model: User, attributes: ['name','id'] , paranoid : false},
         { model: Level, attributes: ['name'], as: 'level' },
-        { model: Off, attributes: ['id', 'percent','public'] }
+        { model: Off, attributes: ['id', 'percent','public'],where:{public:1,remainingTimes:{[Op.gt] : 0}} , required:false }
       ]
     })
 

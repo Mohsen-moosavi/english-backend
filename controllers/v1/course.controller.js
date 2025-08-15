@@ -99,7 +99,7 @@ const createCourse = async (req, res, next) => {
       trim: true
     })
 
-    const copyOfTags = tags[0].split(',')
+    const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
 
     const [newCourse, isNewCourse] = await Course.findOrCreate({
@@ -255,7 +255,7 @@ const updateCourse = async (req, res, next) => {
       trim: true
     })
 
-    const copyOfTags = tags[0].split(',')
+    const copyOfTags = tags[0].split(',').map(tag=> tag.trim().replaceAll(" " , '-'))
 
 
     const course = await Course.findOne({
@@ -418,7 +418,7 @@ const getLastCourses = async (req,res,next)=>{
       include:[
         {model: User , attributes:['id','name'], paranoid:false},
         {model: Level , attributes:['id','name'], as:'level'},
-        {model: Off , attributes:['percent'] ,where:{public : 1}, required:false},
+        {model: Off , attributes:['percent'] ,where:{public : 1,remainingTimes : {[Op.gt] : 0}}, required:false},
       ]
     })
 
@@ -453,7 +453,7 @@ const getUserSideCourse = async (req, res, next) => {
         { model: Book, attributes: ["id", 'name', 'ageGrate'], as: 'book_collection' },
         { model: Level, attributes: ['id', 'name'], as: 'level' },
         {model: Tag, attributes: ['name'], through: { attributes: [] }},
-        {model: Off , attributes:['percent','id'] ,where:{public : 1}, required:false},
+        {model: Off , attributes:['percent','id'] ,where:{public : 1,remainingTimes : {[Op.gt] : 0}}, required:false},
         {model: Session , attributes:['id','name','time','isFree'], order:[['id']], limit: 3, required:false},
         {model: Comment ,
           attributes:['id','content','score','created_at'],
@@ -469,7 +469,7 @@ const getUserSideCourse = async (req, res, next) => {
         },
       ],
       attributes: {
-        exclude: ['teacherId', 'levelId', 'book_collection_id']
+        exclude: ['teacherId', 'levelId']
       }
     });
 
@@ -500,7 +500,7 @@ const getUserSideCourse = async (req, res, next) => {
     const courseTime = (result.total_minutes === null) ? 'منتشر نشده' : `${result.total_minutes}:${result.remaining_seconds}`
 
     const files = await File.findAll({
-      where:{group : course.book_file_group},
+      where:{group : course.book_file_group , book_id : course.book_collection_id},
       attributes:['id','name','link','type','group']
     })
 
@@ -586,9 +586,9 @@ const getRelatedCourseToArticle = async (req, res, next) => {
     let relatedType2 = [];
 
     
-      const tagIds = mainArticle.tags.map(tag=>tag.id)
+      const tagIds = mainArticle?.tags.map(tag=>tag.id)
 
-      if(tagIds.length){
+      if(tagIds?.length){
         const results = await db.query(
           `SELECT 
             c.id,
@@ -638,7 +638,7 @@ const getUserBagCourses = async (req,res,next)=>{
         attributes : [],
         include:[
           {model:Course,attributes:['id','name','cover','price','slug'],include:[
-            {model: Off , attributes:['id','percent'] ,where:{public : 1}, required:false},
+            {model: Off , attributes:['id','percent'] ,where:{public : 1,remainingTimes : {[Op.gt] : 0}}, required:false},
           ]}
         ],
       })

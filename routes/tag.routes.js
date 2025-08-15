@@ -8,7 +8,7 @@ const { createTagValidator, getTagValidator } = require("../validators/tag.valid
 const router = Router();
 
 router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]), createTagValidator() ,controller.createTag);
-router.get('/' ,getTagValidator() ,controller.getTags);
+router.get('/' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]),getTagValidator() ,controller.getTags);
 router.delete('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]) , getTagValidator() ,controller.deleteTag);
 router.put('/:id' ,authMiddleware , roleGardMiddleware([configs.roles.teacher]), createTagValidator() ,controller.updateTag);
 

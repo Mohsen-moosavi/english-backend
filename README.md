@@ -105,6 +105,12 @@ npm run dev
 
 ---
 
+## 📁 فایل sql
+
+یک فایل sql هم در مخزن پروژه قرار دارد. می توانید با import کردن آن درون دیتابیس خود، اطلاعات محتوای تستی را به طور کامل مشاهده کنید.
+
+---
+
 ## 🔗 لینک‌های مرتبط
 
 - 🌐 فرانت کاربری: [english-userSide](https://github.com/Mohsen-moosavi/English-userSide)

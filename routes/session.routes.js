@@ -18,7 +18,7 @@ router.post('/' ,authMiddleware , roleGardMiddleware([configs.roles.writter,conf
 router.post('/without-file' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),updateDetailsWithoutFileValidator(),controller.uploadSessionDetailsWithoutFile);
 router.get('/user-side/get-single/:courseId',authMiddleware,getSessionOffCourseValidator() , controller.getSingleSessionForUser);
 router.get('/user-side/:id' , controller.getSessionsForUserSide);
-router.get('/:courseId' ,getSessionValidator() , controller.getSessions);
+router.get('/:courseId' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),getSessionValidator() , controller.getSessions);
 router.get('/single/:id' ,authMiddleware , roleGardMiddleware([configs.roles.writter,configs.roles.admin]),controller.getSingleSessionforAdmin);
 // router.get('/:id' , controller.getArticle);
 router.delete('/:id/:courseId' ,authMiddleware , roleGardMiddleware([configs.roles.admin , configs.roles.writter]),getSessionValidator(),controller.deleteSession);

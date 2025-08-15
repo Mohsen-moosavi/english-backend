@@ -4,18 +4,21 @@ const path = require("path");
 const configs = require("../../configs");
 const { Extrafile } = require("../../db");
 const { successResponse, errorResponse } = require("../../utils/responses");
+const { validationResult } = require("express-validator");
 
 const uploadFile = async (req, res, next) => {
     const image = req.file;
     try {
-        const extrafile = await Extrafile.create({
-            link: `${configs.domain}/public/extraFiles/${image.filename}`,
-            books: 0,
-            courses: 0,
-            articles: 0,
-        })
-
-        return successResponse(res, 201, 'فایل با موفقیت آپلود شد.', { extrafile })
+        if(image){
+            const extrafile = await Extrafile.create({
+                link: `${configs.domain}/public/extraFiles/${image?.filename}`,
+                books: 0,
+                courses: 0,
+                articles: 0,
+            })   
+            return successResponse(res, 201, 'فایل با موفقیت آپلود شد.', { extrafile })
+        }
+        return errorResponse(res,400,"تصویر یافت نشد.")
     } catch (error) {
         if (fs.existsSync(path.join(__dirname, '..', 'public', 'extraFiles', image.filename))) {
             fs.unlinkSync(path.join(__dirname, '..', 'public', 'extraFiles', image.filename))
@@ -26,6 +29,10 @@ const uploadFile = async (req, res, next) => {
 
 const getFiles = async (req, res, next) => {
     try {
+        const validationError = validationResult(req)
+        if (validationError?.errors && validationError?.errors[0]) {
+            return errorResponse(res, 400, validationError.errors[0].msg)
+        }
         const { items, count, error } = await findExtrafileByQuery(req)
 
         if (error) {
